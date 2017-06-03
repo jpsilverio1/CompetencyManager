@@ -45,17 +45,18 @@ class CompetenceController extends Controller
 	
 	public function store(CreateCompetenceFormRequest $request)
 	{
+		$names = $request->get('name');
+		$description = $request->get('description');
 
-		$competence = new \App\Competency; 
-
-		$competence->name = $request->get('name');
-		$competence->description = $request->get('description');
-
-		$competence->save();
-
+		for ($i=0; $i<sizeOf($names); $i++) {
+			$competence = new \App\Competency; 
+			$competence->name = $names[$i];
+			$competence->description = $description[$i];
+			$competence->save();
+			
+		} 
 		return \Redirect::route('competences.show', 
 			array($competence->id))
 			->with('message', 'A competência foi cadastrada.');
-
 	}	
 }

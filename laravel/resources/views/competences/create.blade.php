@@ -24,9 +24,16 @@ $(document).ready(function(){
                                 .insertBefore($template);
             // Update the name attributes
             $clone
+				
+                //.find('[name="name"]').attr('name', 'competency[' + competencyIndex + '].name').end()
+                //.find('[name="description"]').attr('name', 'competency[' + competencyIndex + '].description').end();
                 .find('[name="name"]').attr('name', 'competency[' + competencyIndex + '].name').end()
                 .find('[name="description"]').attr('name', 'competency[' + competencyIndex + '].description').end();
         
+    });
+	
+	$('.btn-primary').click(function(){
+            $('#competencyTemplate').remove()
     });
 
     
@@ -37,17 +44,14 @@ $(document).ready(function(){
 
 
             // Remove element containing the fields
-            $row.remove();
-        
-
-        
+            $row.remove();   
     }); 
 
         
 });
 
 </script>
-
+<div id="box">
 {!! Form::open(
   array(
     'route' => 'competences.store', 
@@ -67,24 +71,23 @@ $(document).ready(function(){
  <div class="form-group">
         <label class="col-xs-1 control-label">Competência</label>
         <div class="col-xs-4">
-            <input type="text" class="form-control" name="competency[0].name" placeholder="Nome da competência" />
+            <input type="text" class="form-control" name="name[]" placeholder="Nome da competência" />
         </div>
         <div class="col-xs-4">
-            <input type="text" class="form-control" name="competency[0].description" placeholder="Descrição da competência" />
+            <input type="text" class="form-control" name="description[]" placeholder="Descrição da competência" />
         </div>
         <div class="col-xs-1">
             <button type="button" class="btn btn-default addButton">+</button>
         </div>
     </div>
     
-
         <!-- The template for adding new field -->
     <div class="form-group hide" id="competencyTemplate">
         <div class="col-xs-4 col-xs-offset-1">
-            <input type="text" class="form-control" name="name" placeholder="Nome da competência" />
+            <input type="text" class="form-control" name="name[]" placeholder="Nome da competência" />
         </div>
         <div class="col-xs-4">
-            <input type="text" class="form-control" name="description" placeholder="Descrição da competência" />
+            <input type="text" class="form-control" name="description[]" placeholder="Descrição da competência" />
         </div>
       
         <div class="col-xs-1">
