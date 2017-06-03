@@ -4,6 +4,8 @@
 namespace App\Http\Controllers;
 use App\Http\Requests\CreateCompetenceFormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 use App\Category;
 
 class CompetenceController extends Controller
@@ -45,6 +47,12 @@ class CompetenceController extends Controller
 	
 	public function store(CreateCompetenceFormRequest $request)
 	{
+			
+		$this->validate($request, [
+			'name.*' => 'required|unique:competencies,name',
+			'description.*' => 'required',
+		]);
+		
 		$names = $request->get('name');
 		$description = $request->get('description');
 

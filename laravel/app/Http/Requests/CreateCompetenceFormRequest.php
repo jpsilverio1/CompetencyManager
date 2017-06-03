@@ -24,9 +24,28 @@ class CreateCompetenceFormRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-			'name' => 'required',
-			'description' => 'required'
-		];
+		$rules = [];
+				
+		/* foreach($this->request->get('names') as $key => $val)
+		{
+			$rules['names.'.$key] = 'required|min:2';
+		}
+		foreach($this->request->get('description') as $key => $val)
+		{
+			$rules['description.'.$key] = 'required|min:2';
+		} */
+		
+		return $rules;
+		
     }
+	
+	/* public function messages() 
+	{
+		$messages = [];
+		foreach($this->request->get('items') as $key => $val)
+		{
+			$messages['items.'.$key.'.max'] = 'The field labeled "Book Title '.$key.'" must be less than :max characters.';
+		}
+		return $messages;
+	} */
 }
