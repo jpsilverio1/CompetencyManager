@@ -12,34 +12,41 @@
 <script>
 
 $(document).ready(function(){
-    
-    $('#add').click(function(){
-        
-        var inp = $('#box');
-        
-        var i = $('input').size() + 1;
-        
-        $('<div id="box' + i +'"><input type="text" id="name" class="name" name="name' + i +'" placeholder="Input '+i+'"/><img src="remove.png" width="32" height="32" border="0" align="top" class="add" id="remove" /> </div>').appendTo(inp);
-        
-        i++;
+    competencyIndex = 0;
+    $('.addButton').click(function(){
+      competencyIndex++;
+            var $template = $('#competencyTemplate'),
+                $clone    = $template
+                                .clone()
+                                .removeClass('hide')
+                                .removeAttr('id')
+                                .attr('data-book-index', competencyIndex)
+                                .insertBefore($template);
+            // Update the name attributes
+            $clone
+                .find('[name="name"]').attr('name', 'competency[' + competencyIndex + '].name').end()
+                .find('[name="description"]').attr('name', 'competency[' + competencyIndex + '].description').end();
         
     });
+
     
-    
-    
-    $('body').on('click','#remove',function(){
+    $('body').on('click','.removeButton',function(){
+      var $row  = $(this).parents('.form-group'),
+                index = $row.attr('data-book-index');
+
+
+
+            // Remove element containing the fields
+            $row.remove();
         
-        $(this).parent('div').remove();
 
         
-    });
+    }); 
 
         
 });
 
 </script>
-
-<a href="#" id="add">Add More Input Field</a>
 
 {!! Form::open(
   array(
@@ -57,27 +64,40 @@ $(document).ready(function(){
     </ul>
 </div>
 @endif
+ <div class="form-group">
+        <label class="col-xs-1 control-label">Competência</label>
+        <div class="col-xs-4">
+            <input type="text" class="form-control" name="competency[0].name" placeholder="Nome da competência" />
+        </div>
+        <div class="col-xs-4">
+            <input type="text" class="form-control" name="competency[0].description" placeholder="Descrição da competência" />
+        </div>
+        <div class="col-xs-1">
+            <button type="button" class="btn btn-default addButton">+</button>
+        </div>
+    </div>
+    
 
-<div class="form-group">
-    {!! Form::label('Competência') !!}
-    {!! Form::text('name', null, 
-      array(
-        'class'=>'form-control', 
-        'placeholder'=>'Nome da Competência'
-      )) !!}
-	  {!! Form::label('Descrição') !!}
-    {!! Form::text('description', null, 
-      array(
-        'class'=>'form-control', 
-        'placeholder'=>'Descrição da Competência'
-      )) !!}
-</div>
+        <!-- The template for adding new field -->
+    <div class="form-group hide" id="competencyTemplate">
+        <div class="col-xs-4 col-xs-offset-1">
+            <input type="text" class="form-control" name="name" placeholder="Nome da competência" />
+        </div>
+        <div class="col-xs-4">
+            <input type="text" class="form-control" name="description" placeholder="Descrição da competência" />
+        </div>
+      
+        <div class="col-xs-1">
+            <button type="button" class="btn btn-default removeButton">-</button>
+        </div>
+    </div>
 
-<div class="form-group">
-    {!! Form::submit('Cadastrar Competência', 
-      array('class'=>'btn btn-primary'
-    )) !!}
-</div>
+    <div class="form-group">
+        <div class="col-xs-5 col-xs-offset-1">
+            <button type="submit" class="btn btn-primary">Cadastrar Competência</button>
+        </div>
+    </div>
+
 {!! Form::close() !!}
 </div>
 
