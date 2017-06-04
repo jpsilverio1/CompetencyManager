@@ -81,4 +81,8 @@ class UserController extends Controller
     {
         //
     }
-}
+
+    public function deleteUserFromTeam($teamId) {
+        \Auth::user()->teams()->detach($teamId);
+        return redirect('/home');
+    }}

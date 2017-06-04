@@ -23,10 +23,17 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $teams = \Auth::user()->teams;
         // Logic that determines where to send the user
         if (\Auth::user()->level == 'manager') {
-            return view('manager_home');
+            return view('manager_home', [
+                'teams' => $teams
+            ]);
         }
-        return view('home');
+        return view('home', [
+            'teams' => $teams
+        ]);
     }
+
+
 }

@@ -23,11 +23,6 @@ class LoginController extends Controller
 
 protected function redirectPath()
 {
-    // Logic that determines where to send the user
-    if (\Auth::user()->level == 'manager') {
-        return '/manager_home';
-    }
-
     return '/home';
 }
 

@@ -18,6 +18,12 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::delete('/task/{id}', function ($id) {
+    Task::findOrFail($id)->delete();
+
+    return redirect('/');
+});
+Route::delete('/user-team/{teamId}', 'UserController@deleteUserFromTeam');
 Route::resource('competences', 'CompetenceController');
 Route::resource('users', 'UserController');
 Route::resource('teams', 'TeamController');
