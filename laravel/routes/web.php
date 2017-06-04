@@ -18,6 +18,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/manager_home', 'ManagerHomeController@index')->name('manager_home');
 Route::resource('competences', 'CompetenceController');
 Route::resource('users', 'UserController');
 Route::resource('teams', 'TeamController');
