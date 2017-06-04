@@ -23,6 +23,10 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // Logic that determines where to send the user
+        if (\Auth::user()->level == 'manager') {
+            return view('manager_home');
+        }
         return view('home');
     }
 }
