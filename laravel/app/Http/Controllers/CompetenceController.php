@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateCompetenceFormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use DB;
 
 use App\Category;
 
@@ -39,10 +40,11 @@ class CompetenceController extends Controller
         return view('competences.create', ['competency' => $competence]);
 	}
 	
-	public function show() 
+	public function show($id) 
 	{
-		$competence = new \App\Competency; 
-        return view('competences.create', ['competency' => $competence]);
+		
+		$competence = DB::table('competencies')->where('id', $id)->first();
+		return view('competences.create', ['competency' => $competence]);
 	}
 	
 	public function store(CreateCompetenceFormRequest $request)
