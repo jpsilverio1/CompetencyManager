@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\CreateTaskFormRequest;
+use Illuminate\Support\Facades\Validator;
+use DB;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -13,7 +15,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        $task = new \App\Task; 
+        return view('tasks.create', ['task' => $task]);
     }
 
     /**
@@ -23,7 +26,8 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        $task = new \App\Task; 
+        return view('tasks.create', ['task' => $task]);
     }
 
     /**
@@ -34,7 +38,30 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+			'title.*' => 'required|unique:tasks,title',
+			'description.*' => 'required',
+		]);
+		
+		if ($validator->fails()) {
+            return redirect('tasks/create')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+		
+		$titles = $request->get('title');
+		$description = $request->get('description');
+
+		for ($i=0; $i<sizeOf($titles); $i++) {
+			$task = new \App\Task; 
+			$task->title = $titles[$i];
+			$task->description = $description[$i];
+			$task->save();
+			
+		} 
+		return \Redirect::route('tasks.show', 
+			array($task->id))
+			->with('message', 'A tarefa foi cadastrada.');
     }
 
     /**
@@ -44,8 +71,10 @@ class TaskController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
+    {		
+		$task = DB::table('tasks')->where('id', $id)->first();
+		$task_competences = DB::table('task_competencies')->where('task_id', $id)->join('competencies', 'competencies.id', '=', 'task_competencies.competency_id')->get();
+		return view('tasks.create', ['task' => $task, 'task_competences' => $task_competences]);
     }
 
     /**

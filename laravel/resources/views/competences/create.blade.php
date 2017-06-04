@@ -68,7 +68,8 @@ $(document).ready(function(){
     </ul>
 </div>
 @endif
- <div class="form-group">
+
+	<div class="form-group">
  
         <label class="col-xs-1 control-label">Competência</label>
         <div class="col-xs-4">

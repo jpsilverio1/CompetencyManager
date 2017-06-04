@@ -34,9 +34,7 @@ class CreateCompetenceFormRequest extends FormRequest
 		{
 			$rules['description.'.$key] = 'required|min:2';
 		}
-		
 		return $rules;
-		
     }
 	
 	public function messages() 
