@@ -26,26 +26,30 @@ class CreateCompetenceFormRequest extends FormRequest
     {
 		$rules = [];
 				
-		/* foreach($this->request->get('names') as $key => $val)
+		foreach($this->request->get('name') as $key => $val)
 		{
-			$rules['names.'.$key] = 'required|min:2';
+			$rules['name.'.$key] = 'required|min:2|unique:competencies,name';
 		}
 		foreach($this->request->get('description') as $key => $val)
 		{
 			$rules['description.'.$key] = 'required|min:2';
-		} */
+		}
 		
 		return $rules;
 		
     }
 	
-	/* public function messages() 
+	public function messages() 
 	{
 		$messages = [];
-		foreach($this->request->get('items') as $key => $val)
+		foreach($this->request->get('name') as $key => $val)
 		{
-			$messages['items.'.$key.'.max'] = 'The field labeled "Book Title '.$key.'" must be less than :max characters.';
-		}
-		return $messages;
-	} */
+			$messages['name.'.$key.'.required'] = 'O campo nome é obrigatório';
+			$messages['name.'.$key.'.min'] = 'O campo nome está muito curto';
+			$messages['name.'.$key.'.unique'] = 'Uma competência já foi cadastrada com este nome. Por favor utilize outro nome.';
+			$messages['description.'.$key.'.required'] = 'O campo descrição é obrigatório';
+			$messages['description.'.$key.'.min'] = 'O campo descrição está muito curto';
+		} 
+		return $messages; 
+	}
 }

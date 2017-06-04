@@ -69,6 +69,7 @@ $(document).ready(function(){
 </div>
 @endif
  <div class="form-group">
+ 
         <label class="col-xs-1 control-label">Competência</label>
         <div class="col-xs-4">
             <input type="text" class="form-control" name="name[]" placeholder="Nome da competência" />

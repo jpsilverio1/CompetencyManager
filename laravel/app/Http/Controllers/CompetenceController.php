@@ -48,10 +48,16 @@ class CompetenceController extends Controller
 	public function store(CreateCompetenceFormRequest $request)
 	{
 			
-		$this->validate($request, [
+		/* $validator = Validator::make($request->all(), [
 			'name.*' => 'required|unique:competencies,name',
 			'description.*' => 'required',
 		]);
+		
+		if ($validator->fails()) {
+            return redirect('competences/create')
+                        ->withErrors($validator)
+                        ->withInput();
+        } */
 		
 		$names = $request->get('name');
 		$description = $request->get('description');
