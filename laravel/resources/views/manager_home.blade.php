@@ -55,7 +55,7 @@
         </div>
     </div>
 
-        <!-- Competencias -->
+        <!-- Add competencies -->
         <div class="row">
             <div class="col-md-10">
                 <div class="panel panel-default">
@@ -76,33 +76,20 @@
                                 </div>
                             </div>
                         </form>
-                        <table class="table table-striped task-table">
+                        <table class="table table-striped task-table" id="addCompetenceTable">
                             <!-- Table Headings -->
+                           <!-- <td style="display:none;"> -->
                             <thead>
                             <th>Competência</th>
                             <th> Nivel</th>
                             <th>&nbsp;</th>
+                            <th style="display:none;">id</th>
 
                             </thead>
 
                             <!-- Table Body -->
                             <tbody>
-                            <tr>
-                                <!-- Task Name -->
-                                <td class="table-text">
-                                    <div id="competence_name">Uma competencia</div>
-                                </td>
-                                <td class="table-text">
-                                    <div>
-                                        <span id="competence_level_label"></span>
-                                        <input type="range" id="competence_level_slider" name="rangeInput" min="1" max="3" value ="1" onchange="updateTextInput(this.value);">
-                                    </div>
-                                </td>
-                                <td>
-                                    <button id="remove_unsaved_competence">x</button>
 
-                                </td>
-                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -111,7 +98,7 @@
         </div>
 
 
-
+    <!-- Show competencies -->
         <div class="row">
             <div class="col-md-6">
                 <div class="panel panel-default">
@@ -119,7 +106,7 @@
 
                     <div class="panel-body">
                         @if (count($competences) > 0)
-                            <table class="table table-striped task-table">
+                            <table class="table table-striped task-table" id="showCompetencesTable">
                                 <!-- Table Headings -->
                                 <thead>
                                 <th>Competência</th>
@@ -140,7 +127,7 @@
                                         </td>
 
                                         <td>
-                                            <form action="/user-team/{{ $competence->id }}" method="POST">
+                                            <form action="/user-competency/{{ $competence->id }}" method="POST">
                                                 {{ csrf_field() }}
                                                 {{ method_field('DELETE') }}
 
@@ -174,12 +161,53 @@
                 return "Avançado";
             }
         }
+        function toggleTable() {
+            console.log(getCurrentNumberOfRows("showCompetencesTable"));
+            var lTable = document.getElementById("addCompetenceTable");
+            lTable.style.display = (lTable.style.display == "table") ? "none" : "table";
+        }
+        function getCurrentNumberOfRows(tableId) {
+            return document.getElementById(tableId).getElementsByTagName("tr").length-1;
+        }
+        function getRowCode(name, competenceId) {
+            var code = '<tr><td class="table-text"> <div class="competence_name" name="names[]">' + name +
+                '</div></td><td class="table-text"><td class="table-text"> <div class="competency_level"><span class="competence_level_label" name="levels[]">Basico</span>'
+            +'<input type="range" id="competence_level_slider" name="rangeInput" min="1" max="3" value ="1" onchange="updateTextInput(this.value);"></div></td>'
+            +'<td><button class="remove_unsaved_competence">x</button></td>'+
+            '<td><div class="competence_id" name="competence_id[]">'+competenceId+'</div></td></tr>';
+
+            return code;
+        }
+        function addCompetence(name, competenceId) {
+            console.log($("#search_competence").value);
+            var current_number_rows = getCurrentNumberOfRows("addCompetenceTable");
+            console.log(current_number_rows);
+            if (current_number_rows == 0) {
+                toggleTable();
+            }
+            //add new competenceToTable
+            //$("#addCompetenceTable").append('<tr valign="top"><th scope="row"><label for="customFieldName">Custom Field</label></th><td><input type="text" class="code" id="customFieldName" name="customFieldName[]" value="" placeholder="Input Name" /> &nbsp; <input type="text" class="code" id="customFieldValue" name="customFieldValue[]" value="" placeholder="Input Value" /> &nbsp; <a href="javascript:void(0);" class="remCF">Remove</a></td></tr>');
+            $("#addCompetenceTable").append(getRowCode(name, competenceId));
+        }
+        function removeCompetence() {
+            var current_number_rows = getCurrentNumberOfRows("addCompetenceTable");
+            if (current_number_rows == 0) {
+                toggleTable();
+            }
+        }
         function updateTextInput(val) {
             document.getElementById('competence_level_label').innerHTML = getLabelForSliderValue(val);
         }
         $(document).ready(function() {
-            $('#competence_level_label').text(getLabelForSliderValue($('#competence_level_slider').val()));
-            src = "{{ route('search') }}";
+            //$('#competence_level_label').text(getLabelForSliderValue($('#competence_level_slider').val()));
+            document.getElementById("addCompetenceTable").style.display="none";
+            ;
+            $("#addCompetenceTable").on('click','.remove_unsaved_competence',function(){
+                $(this).parent().parent().remove();
+                removeCompetence();
+            });
+
+                src = "{{ route('search') }}";
             $("#search_competence").autocomplete({
                 source: function(request, response) {
                     $.ajax({
@@ -189,7 +217,6 @@
                             term : request.term
                         },
                         success: function(data) {
-                            console.log(data);
                             response(data);
 
                         }
@@ -197,9 +224,9 @@
                 },
                 minLength: 2,
                 select:function(e,ui){
-                    console.log(ui);
-                    alert(ui.item.id);
-                    //alert(ui.item.value);
+                    addCompetence(ui.item.value, ui.item.id);
+                    $(this).val('');
+                    return false;
                 }
 
             });
