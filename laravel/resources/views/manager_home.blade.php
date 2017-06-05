@@ -152,13 +152,15 @@
 
                     <div class="panel-body">
                         <div class="control-group">
-                            <button type="submit" class="btn btn-primary">Cadastrar tarefa</button>
+                            <a href="{{ url('/tasks')}}" class="btn btn-primary">Cadastrar Tarefas</a>
                         </div>
                         <div class="control-group">
-                            <button type="submit" class="btn btn-primary">Cadastrar competências</button>
+                            <a href="{{ url('/competences')}}" class="btn btn-primary">Cadastrar Competências</a>
                         </div>
+
                         <div class="control-group">
-                            <button type="submit" class="btn btn-primary">Cadastrar equipe</button>
+                            <a href="#" class="btn btn-primary">Cadastrar Equipe</a>
+                             <!-- <a href="{{ url('/tasks')}}" class="btn btn-primary">Cadastrar Equipe</a> -->
                         </div>
                     </div>
                 </div>
