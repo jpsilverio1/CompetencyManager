@@ -68,13 +68,15 @@ $(document).ready(function(){
     </ul>
 </div>
 @endif
- <div class="form-group">
+
+	<div class="form-group">
+ 
         <label class="col-xs-1 control-label">Competência</label>
         <div class="col-xs-4">
-            <input type="text" class="form-control" name="name[]" placeholder="Nome da competência" />
+            <input type="text" class="form-control" name="name[]" value = "{{ $competency->name or '' }}" placeholder="Nome da competência" />
         </div>
         <div class="col-xs-4">
-            <input type="text" class="form-control" name="description[]" placeholder="Descrição da competência" />
+            <input type="text" class="form-control" name="description[]" value = "{{ $competency->description or '' }}" placeholder="Descrição da competência" />
         </div>
         <div class="col-xs-1">
             <button type="button" class="btn btn-default addButton">+</button>
