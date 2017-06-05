@@ -100,6 +100,12 @@ class UserController extends Controller
         \Auth::user()->competencies()->detach($competenceId);
         return redirect('/home');
     }
+	
+	//TODO 
+	public public changeLevelOfCompetency($competenceId) {
+		
+	}
+	
     public function addCompetences(Request $request) {
         //TODO check if the pair user_id competence_id exists before inserting it
         //TODO read competency level from form and save to the database
@@ -108,7 +114,10 @@ class UserController extends Controller
         $competenceIds = $request->get('competence_id');
         for ($i=0; $i<sizeOf($names); $i++) {
             $competenceId = $competenceIds[$i];
-            $user->competencies()->attach([$competenceId => ['competency_level'=>'basicao']]);
+			$results = $user->competencies()->where('competency_id', '=', $competenceId)->get();
+			if (empty($results)) {
+				$user->competencies()->attach([$competenceId => ['competency_level'=>'basicao']]);
+			}
         }
         return redirect('/home');
     }

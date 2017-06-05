@@ -159,8 +159,7 @@
                         </div>
 
                         <div class="control-group">
-                            <a href="#" class="btn btn-primary">Cadastrar Equipe</a>
-                             <!-- <a href="{{ url('/tasks')}}" class="btn btn-primary">Cadastrar Equipe</a> -->
+                             <a href="{{ url('/teams')}}" class="btn btn-primary">Cadastrar Equipe</a>
                         </div>
                     </div>
                 </div>
@@ -225,6 +224,9 @@
                 $(this).parent().parent().remove();
                 removeCompetence();
             });
+			$(".competence_level_slider").on('click', function (){
+				alert()
+			});
 
                 src = "{{ route('search') }}";
             $("#search_competence").autocomplete({

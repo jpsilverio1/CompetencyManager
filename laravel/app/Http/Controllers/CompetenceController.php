@@ -76,7 +76,7 @@ class CompetenceController extends Controller
 			
 		} 
 		//return redirect()->route('competences.show', ['id' => $competence->id, 'message' => 'oi' ]);
-		return \Redirect::route('competences.show', 
+		return \Redirect::route('competences.create', 
 			array($competence->id))
 			->with('message', 'A competência foi cadastrada.');
 	}	
