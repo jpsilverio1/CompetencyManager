@@ -18,6 +18,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::post('/user-competences', 'UserController@addCompetences');
 Route::get("/jessica", function(){
     return View::make("jessica");
 });
