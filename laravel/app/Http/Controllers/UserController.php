@@ -7,6 +7,15 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -89,6 +98,18 @@ class UserController extends Controller
     }
     public function deleteCompetencyFromUser($competenceId) {
         \Auth::user()->competencies()->detach($competenceId);
+        return redirect('/home');
+    }
+    public function addCompetences(Request $request) {
+        //TODO check if the pair user_id competence_id exists before inserting it
+        //TODO read competency level from form and save to the database
+        $user = \Auth::user();
+        $names = $request->get('name');
+        $competenceIds = $request->get('competence_id');
+        for ($i=0; $i<sizeOf($names); $i++) {
+            $competenceId = $competenceIds[$i];
+            $user->competencies()->attach([$competenceId => ['competency_level'=>'basicao']]);
+        }
         return redirect('/home');
     }
 }

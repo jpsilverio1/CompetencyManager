@@ -62,20 +62,20 @@
                     <div class="panel-heading">Cadastrar competências</div>
 
                     <div class="panel-body">
-                        <form action="/hms/accommodations" method="GET">
+                        <form action="/user-competences" method="POST">
+                            {{ csrf_field() }}
                             <div class="row">
                                 <div class="col-xs-6 col-md-4">
                                     <div class="input-group">
                                         <input type="text" name="search_competence" class="form-control" placeholder="Buscar competência" id="search_competence"/>
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-primary" type="submit">
-                                                <span class="glyphicon glyphicon-search"></span>
-                                            </button>
-                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-1">
+                                        <button type="submit" class="btn btn-primary"> Adicionar competências</button>
                                     </div>
                                 </div>
                             </div>
-                        </form>
                         <table class="table table-striped task-table" id="addCompetenceTable">
                             <!-- Table Headings -->
                            <!-- <td style="display:none;"> -->
@@ -92,7 +92,9 @@
 
                             </tbody>
                         </table>
+                    </form>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -144,6 +146,23 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Ações</div>
+
+                    <div class="panel-body">
+                        <div class="control-group">
+                            <button type="submit" class="btn btn-primary">Cadastrar tarefa</button>
+                        </div>
+                        <div class="control-group">
+                            <button type="submit" class="btn btn-primary">Cadastrar competências</button>
+                        </div>
+                        <div class="control-group">
+                            <button type="submit" class="btn btn-primary">Cadastrar equipe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
 </div>
@@ -162,7 +181,6 @@
             }
         }
         function toggleTable() {
-            console.log(getCurrentNumberOfRows("showCompetencesTable"));
             var lTable = document.getElementById("addCompetenceTable");
             lTable.style.display = (lTable.style.display == "table") ? "none" : "table";
         }
@@ -170,23 +188,22 @@
             return document.getElementById(tableId).getElementsByTagName("tr").length-1;
         }
         function getRowCode(name, competenceId) {
-            var code = '<tr><td class="table-text"> <div class="competence_name" name="names[]">' + name +
-                '</div></td><td class="table-text"><td class="table-text"> <div class="competency_level"><span class="competence_level_label" name="levels[]">Basico</span>'
+            var code = '<tr><td class="table-text"> <div class="competence_name">' + name +
+                '</div>'+ '<input type="hidden" name="name[]" value="'+ name+ '" />'
+                +'</td><td class="table-text"><td class="table-text"> <div class="competency_level"><span class="competence_level_label" name="levels[]">Basico</span>'
             +'<input type="range" id="competence_level_slider" name="rangeInput" min="1" max="3" value ="1" onchange="updateTextInput(this.value);"></div></td>'
             +'<td><button class="remove_unsaved_competence">x</button></td>'+
-            '<td><div class="competence_id" name="competence_id[]">'+competenceId+'</div></td></tr>';
+            '<td><div class="competence_id">'+competenceId+'</div>'+
+                '<input type="hidden" name="competence_id[]" value="'+ competenceId+ '" />'+'</td></tr>';
 
             return code;
         }
         function addCompetence(name, competenceId) {
-            console.log($("#search_competence").value);
             var current_number_rows = getCurrentNumberOfRows("addCompetenceTable");
-            console.log(current_number_rows);
             if (current_number_rows == 0) {
                 toggleTable();
             }
             //add new competenceToTable
-            //$("#addCompetenceTable").append('<tr valign="top"><th scope="row"><label for="customFieldName">Custom Field</label></th><td><input type="text" class="code" id="customFieldName" name="customFieldName[]" value="" placeholder="Input Name" /> &nbsp; <input type="text" class="code" id="customFieldValue" name="customFieldValue[]" value="" placeholder="Input Value" /> &nbsp; <a href="javascript:void(0);" class="remCF">Remove</a></td></tr>');
             $("#addCompetenceTable").append(getRowCode(name, competenceId));
         }
         function removeCompetence() {
