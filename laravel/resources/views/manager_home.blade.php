@@ -168,8 +168,7 @@
         </div>
 
 </div>
-
-
+    
     <script>
         function getLabelForSliderValue(val) {
             if (val == 1) {
@@ -193,7 +192,7 @@
             var code = '<tr><td class="table-text"> <div class="competence_name">' + name +
                 '</div>'+ '<input type="hidden" name="name[]" value="'+ name+ '" />'
                 +'</td><td class="table-text"><td class="table-text"> <div class="competency_level"><span class="competence_level_label" name="levels[]">Basico</span>'
-            +'<input type="range" id="competence_level_slider" name="rangeInput" min="1" max="3" value ="1" onchange="updateTextInput(this.value);"></div></td>'
+            +'<input type="range" class="competence_level_slider" name="rangeInput" min="1" max="3" value ="1" onchange="updateTextInput(this);"></div></td>'
             +'<td><button class="remove_unsaved_competence">x</button></td>'+
             '<td><div class="competence_id">'+competenceId+'</div>'+
                 '<input type="hidden" name="competence_id[]" value="'+ competenceId+ '" />'+'</td></tr>';
@@ -214,18 +213,17 @@
                 toggleTable();
             }
         }
-        function updateTextInput(val) {
-            document.getElementById('competence_level_label').innerHTML = getLabelForSliderValue(val);
+        function updateTextInput(slider) {
+            var rowHit = $(slider).parent().parent().parent();
+            var sliderLabel = rowHit.find(".competence_level_label");
+            sliderLabel.html(getLabelForSliderValue(slider.value));
         }
         $(document).ready(function() {
-            //$('#competence_level_label').text(getLabelForSliderValue($('#competence_level_slider').val()));
             document.getElementById("addCompetenceTable").style.display="none";
-            ;
             $("#addCompetenceTable").on('click','.remove_unsaved_competence',function(){
                 $(this).parent().parent().remove();
                 removeCompetence();
             });
-
                 src = "{{ route('search') }}";
             $("#search_competence").autocomplete({
                 source: function(request, response) {
