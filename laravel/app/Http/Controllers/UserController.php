@@ -106,9 +106,11 @@ class UserController extends Controller
         $user = \Auth::user();
         $names = $request->get('name');
         $competenceIds = $request->get('competence_id');
+        $competenceLevels = $request->get('competence_level');
         for ($i=0; $i<sizeOf($names); $i++) {
             $competenceId = $competenceIds[$i];
-            $user->competencies()->attach([$competenceId => ['competency_level'=>'basicao']]);
+            $competenceLevel = $competenceLevels[$i];
+            $user->competencies()->attach([$competenceId => ['competency_level'=>$competenceLevel]]);
         }
         return redirect('/home');
     }
