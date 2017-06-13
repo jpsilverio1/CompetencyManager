@@ -9,17 +9,12 @@
 
         <div class="row">
             <!-- Show competencies -->
-            @include('users.show_competences')
-            <!-- Add competencies -->
-            @include('users.add_competences')
-            <!--Manager actions -->
+        @include('users.show_competences')
+        <!-- Add competencies -->
+        @include('users.add_competences')
+        <!--Manager actions -->
             @include('users.manager_actions')
         </div>
-
     </div>
-
-
-
-
 
 @endsection

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use DB;
 
 class TeamController extends Controller
 {
@@ -13,7 +15,8 @@ class TeamController extends Controller
      */
     public function index()
     {
-        //
+        $team = new \App\Team; 
+        return view('teams.create', ['team' => $team]);
     }
 
     /**
@@ -23,7 +26,8 @@ class TeamController extends Controller
      */
     public function create()
     {
-        //
+        $team = new \App\Team; 
+        return view('teams.create', ['team' => $team]);
     }
 
     /**
@@ -34,7 +38,30 @@ class TeamController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+			'name.*' => 'required|unique:teams,name',
+			'description.*' => 'required',
+		]);
+		
+		if ($validator->fails()) {
+            return redirect('teams/create')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+		
+		$names = $request->get('name');
+		$description = $request->get('description');
+
+		for ($i=0; $i<sizeOf($names); $i++) {
+			$team = new \App\Team; 
+			$team->name = $names[$i];
+			$team->description = $description[$i];
+			$team->save();
+			
+		} 
+		return \Redirect::route('teams.show', 
+			array($team->id))
+			->with('message', 'A tarefa foi cadastrada.');
     }
 
     /**
@@ -45,7 +72,8 @@ class TeamController extends Controller
      */
     public function show($id)
     {
-        //
+        $team = DB::table('teams')->where('id', $id)->first();
+		return view('teams.create', ['team' => $team]);
     }
 
     /**
