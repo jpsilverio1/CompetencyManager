@@ -5,35 +5,35 @@
 </head>
 @section('content')
 
-<h1>Cadastrar Competência</h1>
+<h1>Cadastrar Equipe</h1>
 
 
 
 <script>
 
 $(document).ready(function(){
-    competencyIndex = 0;
+    taskIndex = 0;
     $('.addButton').click(function(){
-      competencyIndex++;
-            var $template = $('#competencyTemplate'),
+      teamIndex++;
+            var $template = $('#teamTemplate'),
                 $clone    = $template
                                 .clone()
                                 .removeClass('hide')
                                 .removeAttr('id')
-                                .attr('data-book-index', competencyIndex)
+                                .attr('data-book-index', taskIndex)
                                 .insertBefore($template);
             // Update the name attributes
             $clone
 				
                 //.find('[name="name"]').attr('name', 'competency[' + competencyIndex + '].name').end()
                 //.find('[name="description"]').attr('name', 'competency[' + competencyIndex + '].description').end();
-                .find('[name="name"]').attr('name', 'competency[' + competencyIndex + '].name').end()
-                .find('[name="description"]').attr('name', 'competency[' + competencyIndex + '].description').end();
+                .find('[name="name"]').attr('name', 'competency[' + teamIndex + '].name').end()
+                .find('[name="description"]').attr('name', 'competency[' + teamIndex + '].description').end();
         
     });
 	
 	$('.btn-primary').click(function(){
-            $('#competencyTemplate').remove()
+            $('#teamTemplate').remove()
     });
 
     
@@ -54,13 +54,13 @@ $(document).ready(function(){
 <div id="box">
 {!! Form::open(
   array(
-    'route' => 'competences.store', 
+    'route' => 'teams.store', 
     'class' => 'form')
   ) !!}
 
 @if (count($errors) > 0)
 <div class="alert alert-danger">
-    Houve algum problema ao adicionar a Competência.<br />
+    Houve algum problema ao adicionar a Equipe.<br />
     <ul>
         @foreach ($errors->all() as $error)
             <li>{{ $error }}</li>
@@ -68,26 +68,40 @@ $(document).ready(function(){
     </ul>
 </div>
 @endif
- <div class="form-group">
-        <label class="col-xs-1 control-label">Competência</label>
+	<div class="form-group">
+        <label class="col-xs-1 control-label">Equipe</label>
         <div class="col-xs-4">
-            <input type="text" class="form-control" name="name[]" placeholder="Nome da competência" />
+            <input type="text" class="form-control" name="name[]" value = "{{ $team->name or '' }}" placeholder="Nome da Equipe" />
         </div>
         <div class="col-xs-4">
-            <input type="text" class="form-control" name="description[]" placeholder="Descrição da competência" />
+            <input type="text" class="form-control" name="description[]" value = "{{ $team->description or '' }}" placeholder="Descrição da Equipe" />
         </div>
+		
+		@if (isset($task_competences))
+			@if (count($task_competences) > 0)
+				@foreach ($task_competences as $task_competence_row)
+					<div class="col-xs-4">
+						<input type="text" class="form-control" name="task_competences[]" value = "{{ $task_competence_row->name or '' }}" placeholder="ID da Competência" />
+					</div>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" name="task_competences[]" value = "{{ $task_competence_row->competency_level or '' }}" placeholder="Nível da Competência" />
+					</div>
+				@endforeach
+			@endif
+		@endif
+			
         <div class="col-xs-1">
             <button type="button" class="btn btn-default addButton">+</button>
         </div>
     </div>
     
         <!-- The template for adding new field -->
-    <div class="form-group hide" id="competencyTemplate">
+    <div class="form-group hide" id="teamTemplate">
         <div class="col-xs-4 col-xs-offset-1">
-            <input type="text" class="form-control" name="name[]" placeholder="Nome da competência" />
+            <input type="text" class="form-control" name="name[]" placeholder="Nome da Equipe" />
         </div>
         <div class="col-xs-4">
-            <input type="text" class="form-control" name="description[]" placeholder="Descrição da competência" />
+            <input type="text" class="form-control" name="description[]" placeholder="Descrição da Equipe" />
         </div>
       
         <div class="col-xs-1">
@@ -97,7 +111,7 @@ $(document).ready(function(){
 
     <div class="form-group">
         <div class="col-xs-5 col-xs-offset-1">
-            <button type="submit" class="btn btn-primary">Cadastrar Competência</button>
+            <button type="submit" class="btn btn-primary">Cadastrar Equipe</button>
         </div>
     </div>
 

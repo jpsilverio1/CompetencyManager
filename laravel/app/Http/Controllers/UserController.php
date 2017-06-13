@@ -7,6 +7,15 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -81,4 +90,39 @@ class UserController extends Controller
     {
         //
     }
+
+
+    public function deleteUserFromTeam($teamId) {
+        \Auth::user()->teams()->detach($teamId);
+        return redirect('/home');
+    }
+    public function deleteCompetencyFromUser($competenceId) {
+        \Auth::user()->competencies()->detach($competenceId);
+        return redirect('/home');
+    }
+
+
+    public function addCompetences(Request $request) {
+        $user = \Auth::user();
+        $names = $request->get('name');
+        $competenceIds = $request->get('competence_id');
+        $competenceLevels = $request->get('competence_level');
+        for ($i=0; $i<sizeOf($names); $i++) {
+            $competenceId = $competenceIds[$i];
+            $competenceLevel = $competenceLevels[$i];
+            $results = $user->competencies()->where('competency_id', '=', $competenceId)->get();
+            echo $results;
+            if ($results->isEmpty()) {
+                echo "adicionar";
+                $user->competencies()->attach([$competenceId => ['competency_level'=>$competenceLevel]]);
+            } else {
+                echo "update";
+                //update competency level
+                $user->competencies()->updateExistingPivot($competenceId, ['competency_level'=>$competenceLevel]);
+            }
+        }
+        return redirect('/home');
+    }
 }
+
+

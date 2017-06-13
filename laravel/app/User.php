@@ -29,7 +29,12 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Competency', 'user_endorsements','endorsed_id', 'endorser_id')
         ->withPivot('competency_id', 'endorsement_level')
         ->join('competency', 'competency_id', 'competency.id');
-    } 
+    }
+
+    public function teams()
+    {
+        return $this->belongsToMany('App\Team', 'team_members');
+    }
 
     /**
      * The attributes that should be hidden for arrays.

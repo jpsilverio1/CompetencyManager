@@ -5,9 +5,16 @@
             @include('teams.show_teams')
             @include('tasks.show_tasks')
         </div>
+
+
         <div class="row">
-            @include('users.show_competences')
-            @include('users.add_competences')
+            <!-- Show competencies -->
+        @include('users.show_competences')
+        <!-- Add competencies -->
+        @include('users.add_competences')
+        <!--Manager actions -->
+            @include('users.manager_actions')
         </div>
     </div>
+
 @endsection
