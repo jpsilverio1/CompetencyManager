@@ -38,11 +38,12 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp;
+                        &nbsp; <li class="active"><a href="{{ route('home') }}">Home</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
+
                         <!-- Authentication Links -->
                         @if (Auth::guest())
                             <li><a href="{{ route('login') }}">Login</a></li>
@@ -69,6 +70,9 @@
                             </li>
                         @endif
                     </ul>
+                    @if (!Auth::guest())
+                        @include('users.search_user')
+                    @endif
                 </div>
             </div>
         </nav>
