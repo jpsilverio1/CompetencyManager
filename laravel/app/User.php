@@ -38,6 +38,13 @@ class User extends Authenticatable
         ])->count();
         return $numberOfTimesLoggedUserEndorsedCompetenceOfShownUser;
     }
+    public function getEndorsementLevel($competenceId) {
+        $loggedUserId = \Auth::user()->id;
+        echo $this->endorsements()->where([
+            ['endorser_id', '=', $loggedUserId],
+            ['competency_id', '=', $competenceId],
+        ])->first()->pivot->competency_level;
+    }
 
     public function getEndorsement($competence, $profileUser)
     {

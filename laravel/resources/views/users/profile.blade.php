@@ -12,9 +12,10 @@
                 <i class="icon-envelope"></i> {{$user->email}} <br>
             </center>
         </div>
+        <!--
         <div class="row">
             <div class="col-sm-10"><h2>{{ $user->name }}</h2></div>
-        </div>
+        </div> -->
         <div class="row">
             @include('users.show_competences_for_endorsement', ['competences' => $user->competencies, 'profile_user' => $user])
         </div>

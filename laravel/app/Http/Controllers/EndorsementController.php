@@ -8,17 +8,20 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+
+
 
 class EndorsementController
 {
-    public function show($endorsedId, $competenceId)
-    {
-        //
-        $competenceLevel = "legal";
+    public function addEndorsement(Request $request) {
+        $competenceId = $request->get('competence_id');
+        $competenceLevel = $request->get('competence_level');
+        $endorsedUserId = $request->get('endorsed_user_id');
         $endorser = \Auth::user();
-        $endorser->addEndorsement($endorsedId, $competenceId, $competenceLevel);
-
-        return redirect("users/$endorsedId");
+        $endorserId = $endorser->id;
+        $endorser->addEndorsement($endorsedUserId, $competenceId, $competenceLevel);
+        return redirect("users/$endorsedUserId");
     }
 
 }
