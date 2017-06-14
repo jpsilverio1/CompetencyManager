@@ -33,7 +33,7 @@
                             </td>
                             <td>
                                 <div>
-                                    @if($user->loggedUserEndorsedCompetence($user->endorsements(),$competence) > 0)
+                                    @if($user->loggedUserEndorsedCompetence($user->endorsements(),$competence->id) > 0)
                                         Você endossou essa competência
                                     @endif
                                 </div>

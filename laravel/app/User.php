@@ -21,21 +21,27 @@ class User extends Authenticatable
     public function competencies()
     {
         return $this->belongsToMany('App\Competency', 'user_competencies')
-        ->withPivot('competency_level');
+            ->withPivot('competency_level');
     }
-    public function getNumberOfEndorsementsForCompetence($userEndorsements, $competence) {
-        return $userEndorsements->where('competency_id',$competence->id)->count();
+
+    public function getNumberOfEndorsementsForCompetence($userEndorsements, $competence)
+    {
+        return $userEndorsements->where('competency_id', $competence->id)->count();
     }
-    public function loggedUserEndorsedCompetence($shownUserEndorsements, $competence) {
+
+    public function loggedUserEndorsedCompetence($shownUserEndorsements, $competenceId)
+    {
         $loggedUserId = \Auth::user()->id;
         $numberOfTimesLoggedUserEndorsedCompetenceOfShownUser = $shownUserEndorsements->where([
             ['endorser_id', '=', $loggedUserId],
-            ['competency_id', '=', $competence->id],
+            ['competency_id', '=', $competenceId],
         ])->count();
         return $numberOfTimesLoggedUserEndorsedCompetenceOfShownUser;
     }
-    public function getEndorsement($competence,$profileUser) {
-        $loggedUser =  \Auth::user();
+
+    public function getEndorsement($competence, $profileUser)
+    {
+        $loggedUser = \Auth::user();
         //var_dump($profileUser->endorsements);
         echo "helo <br>";
         $endorsementsForProfileUser = $profileUser->endorsements();
@@ -47,22 +53,47 @@ class User extends Authenticatable
         }*/
 
         //echo "count($profileUser->endorsements) oola";
-       // echo count($profileUser->endorsements);
-      // echo count($loggedUser->endorsements);
-       // echo "   olha me endorsement $competence->name $profileUser->name $loggedUser->name $profileUser->id $loggedUser->id";
+        // echo count($profileUser->endorsements);
+        // echo count($loggedUser->endorsements);
+        // echo "   olha me endorsement $competence->name $profileUser->name $loggedUser->name $profileUser->id $loggedUser->id";
     }
+
     //original endorsements function - delete
-    public function ola(){
-        return $this->belongsToMany('App\Competency', 'user_endorsements','endorsed_id', 'endorser_id')
+    public function ola()
+    {
+        return $this->belongsToMany('App\Competency', 'user_endorsements', 'endorsed_id', 'endorser_id')
             ->withPivot('competency_id', 'endorsement_level')
             ->join('competencies', 'competency_id', 'competencies.id');
     }
+
     //endorsements where the current user is the endorsed entity
     public function endorsements()
     {
-        return $this->belongsToMany('App\Competency', 'user_endorsements','endorsed_id', 'competency_id'/*,'endorser_id'*/)
-        ->withPivot( 'competency_level');
+        return $this->belongsToMany('App\Competency', 'user_endorsements', 'endorsed_id', 'competency_id'/*,'endorser_id'*/)
+            ->withPivot('competency_level');
         //->join('competencies', 'competency_id', 'competencies.id');
+    }
+
+    //endorsements where the current user is the endorser entity
+    public function endorsements_endorser()
+    {
+        return $this->belongsToMany('App\Competency', 'user_endorsements', 'endorser_id', 'competency_id'/*,'endorser_id'*/)
+            ->withPivot('competency_level');
+        //->join('competencies', 'competency_id', 'competencies.id');
+    }
+
+    public function addEndorsement($endorsedId, $competenceId, $competenceLevel)
+    {
+        $shownUser = User::find($endorsedId);
+        //echo $shownUser->name;
+        $numberOfEndorsementsToTheCompetence = $this->loggedUserEndorsedCompetence($shownUser->endorsements(), $competenceId);
+        if ($numberOfEndorsementsToTheCompetence == 0) {
+            //add
+            $this->endorsements_endorser()->attach([$competenceId => ['competency_level' => $competenceLevel, 'endorsed_id' => $endorsedId]]);
+        } else {
+            //update endorsement
+            $this->endorsements_endorser()->updateExistingPivot($competenceId, ['competency_level' => $competenceLevel]);
+        }
     }
 
     public function teams()
