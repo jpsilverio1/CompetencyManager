@@ -111,7 +111,6 @@ class UserController extends Controller
             $competenceId = $competenceIds[$i];
             $competenceLevel = $competenceLevels[$i];
             $results = $user->competencies()->where('competency_id', '=', $competenceId)->get();
-            echo $results;
             if ($results->isEmpty()) {
                 echo "adicionar";
                 $user->competencies()->attach([$competenceId => ['competency_level'=>$competenceLevel]]);
