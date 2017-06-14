@@ -33,6 +33,7 @@ Route::resource('competences', 'CompetenceController');
 Route::resource('users', 'UserController');
 Route::resource('teams', 'TeamController');
 Route::resource('tasks', 'TaskController');
+Route::resource('users.competency', 'EndorsementController');
 
 Route::get('search',array('as'=>'search','uses'=>'SearchController@autocomplete'));
 Route::get('autocomplete',array('as'=>'autocomplete','uses'=>'SearchController@index'));
