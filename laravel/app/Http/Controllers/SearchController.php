@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Competency;
 
+use App\User;
+
 class SearchController extends Controller
 {
     /**
@@ -27,8 +29,21 @@ class SearchController extends Controller
     {
         return redirect('/home');
     }
+    public function autoCompleteUser(Request $request) {
+        $query = $request->get('term','');
 
-    public function autoComplete(Request $request) {
+        $users=User::where('name','LIKE','%'.$query.'%')->get();
+
+        $data=array();
+        foreach ($users as $user) {
+            $data[]=array('value'=>$user->name,'id'=>$user->id);
+        }
+        if(count($data))
+            return $data;
+        else
+            return ['value'=>'No Result Found','id'=>''];
+    }
+    public function autoCompleteCompetence(Request $request) {
         $query = $request->get('term','');
         $competencies=Competency::where('name','LIKE','%'.$query.'%')->get();
 

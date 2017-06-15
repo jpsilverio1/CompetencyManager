@@ -118,11 +118,11 @@
             $(this).parent().parent().remove();
             removeCompetence();
         });
-        src = "{{ route('search') }}";
+        src_competence = "{{ route('search-competence') }}";
         $("#search_competence").autocomplete({
             source: function (request, response) {
                 $.ajax({
-                    url: src,
+                    url: src_competence,
                     dataType: "json",
                     data: {
                         term: request.term

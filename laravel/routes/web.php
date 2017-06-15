@@ -31,11 +31,16 @@ Route::delete('/task/{id}', function ($id) {
 Route::delete('/user-team/{teamId}', 'UserController@deleteUserFromTeam');
 Route::delete('/user-competency/{competencyId}', 'UserController@deleteCompetencyFromUser');
 Route::resource('competences', 'CompetenceController');
-Route::resource('users', 'UserController');
+
+
 Route::resource('teams', 'TeamController');
 Route::resource('tasks', 'TaskController');
+Route::resource('users','UserController');
 
-Route::get('search',array('as'=>'search','uses'=>'SearchController@autocomplete'));
-Route::get('autocomplete',array('as'=>'autocomplete','uses'=>'SearchController@index'));
+Route::get('search-competence',array('as'=>'search-competence','uses'=>'SearchController@autocompleteCompetence'));
+//Route::get('autocomplete',array('as'=>'autocomplete','uses'=>'SearchController@index'));
 //Route::get('autocomplete',array('as'=>'autocomplete','uses'=>'SearchController@index'));
 //Route::get('search',array('as'=>'searchajax','uses'=>'SearchController@autoComplete'));
+
+Route::get('search-user',array('as'=>'search-user','uses'=>'SearchController@autocompleteUser'));
+
