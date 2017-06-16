@@ -32,7 +32,7 @@ class SearchController extends Controller
     public function autoCompleteUser(Request $request) {
         $query = $request->get('term','');
 
-        $users=User::where('name','LIKE','%'.$query.'%')->get();
+        $users=User::where('name','LIKE','%'.$query.'%')->limit(20)->get();
 
         $data=array();
         foreach ($users as $user) {
@@ -45,7 +45,7 @@ class SearchController extends Controller
     }
     public function autoCompleteCompetence(Request $request) {
         $query = $request->get('term','');
-        $competencies=Competency::where('name','LIKE','%'.$query.'%')->get();
+        $competencies=Competency::where('name','LIKE','%'.$query.'%')->limit(20)->get();
 
         $data=array();
         foreach ($competencies as $competence) {
