@@ -43,8 +43,8 @@ class CompetenceController extends Controller
 	
 	public function show($id) 
 	{
-		$competence = DB::table('competencies')->where('id', $id)->first();
-		return view('competences.show', ['competency' => $competence]);
+        $competence = Competency::findOrFail($id);
+		return view('competences.show', ['competence' => $competence]);
 	}
 	
 	public function store(CreateCompetenceFormRequest $request)

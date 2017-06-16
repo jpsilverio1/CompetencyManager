@@ -12,5 +12,12 @@ class Competency extends Model
     protected $fillable = [
         'name', 'description',
     ];
+
+    public function skilledUsers() {
+        return $this->belongsToMany('App\User', 'user_competencies')
+            ->withPivot('competency_level');
+    }
+
+
     
 }
