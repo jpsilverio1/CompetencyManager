@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use DB;
+use App\Team;
+
 
 class TeamController extends Controller
 {
@@ -15,8 +17,8 @@ class TeamController extends Controller
      */
     public function index()
     {
-        $team = new \App\Team; 
-        return view('teams.create', ['team' => $team]);
+        $allTeams = Team::paginate(10);
+        return view('teams.index', ['teams' => $allTeams]);
     }
 
     /**
@@ -73,7 +75,7 @@ class TeamController extends Controller
     public function show($id)
     {
         $team = DB::table('teams')->where('id', $id)->first();
-		return view('teams.create', ['team' => $team]);
+		return view('teams.show', ['team' => $team]);
     }
 
     /**

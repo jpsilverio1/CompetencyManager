@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use DB;
 
 use App\Category;
+use App\Competency;
 
 class CompetenceController extends Controller
 {
@@ -29,8 +30,8 @@ class CompetenceController extends Controller
 	 
 	public function index()
 	{
-		$competence = new \App\Competency; 
-        return view('competences.create', ['competency' => $competence]);
+        $allCompetences = Competency::paginate(10);
+        return view('competences.index', ['competences' => $allCompetences]);
 	}
 	 
 	 
@@ -43,7 +44,7 @@ class CompetenceController extends Controller
 	public function show($id) 
 	{
 		$competence = DB::table('competencies')->where('id', $id)->first();
-		return view('competences.create', ['competency' => $competence]);
+		return view('competences.show', ['competency' => $competence]);
 	}
 	
 	public function store(CreateCompetenceFormRequest $request)

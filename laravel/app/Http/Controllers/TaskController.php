@@ -5,6 +5,7 @@ use App\Http\Requests\CreateTaskFormRequest;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use Illuminate\Http\Request;
+use App\Task;
 
 class TaskController extends Controller
 {
@@ -15,8 +16,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $task = new \App\Task; 
-        return view('tasks.create', ['task' => $task]);
+        $allTasks = Task::paginate(10);
+        return view('tasks.index', ['tasks' => $allTasks]);
     }
 
     /**
@@ -74,7 +75,7 @@ class TaskController extends Controller
     {		
 		$task = DB::table('tasks')->where('id', $id)->first();
 		$task_competences = DB::table('task_competencies')->where('task_id', $id)->join('competencies', 'competencies.id', '=', 'task_competencies.competency_id')->get();
-		return view('tasks.create', ['task' => $task, 'task_competences' => $task_competences]);
+		return view('tasks.show', ['task' => $task, 'task_competences' => $task_competences]);
     }
 
     /**

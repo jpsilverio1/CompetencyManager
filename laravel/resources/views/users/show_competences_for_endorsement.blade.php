@@ -9,9 +9,11 @@
                     <thead>
                     <th>Competência</th>
                     <th>Nível</th>
-                    <th>&nbsp;</th> <!-- number of endorsements -->
+                    <th>&nbsp;Número de endossos</th> <!-- number of endorsements -->
                     <th>&nbsp;</th> <!--endorsement status -->
-                    <th>Endossar</th>
+                    @if ($showEndorsementSection)
+                        <th>Endossar</th>
+                    @endif
                     </thead>
 
                     <!-- Table Body -->
@@ -46,19 +48,21 @@
                                     @endif
                                 </div>
                             </td>
-                                <td class="col-md-3">
-                                    <div class="competency_level">
-                                        <span class="competence_level_label" name="levels">Básico</span>
-                                        <input type="range" class="competence_level_slider"
-                                        name="rangeInput" min="1" max="3" value ="1" onchange="updateTextInput(this);">
-                                    </div>
-                                    <input type="hidden" class="competence_level_class" name="competence_level" value="Básico" />
-                                    <div class="form-group">
-                                        <div class=" col-sm-1">
-                                            <button type="submit" class="btn btn-primary"> Endossar</button>
+                                @if ($showEndorsementSection)
+                                    <td class="col-md-3">
+                                        <div class="competency_level">
+                                            <span class="competence_level_label" name="levels">Básico</span>
+                                            <input type="range" class="competence_level_slider"
+                                            name="rangeInput" min="1" max="3" value ="1" onchange="updateTextInput(this);">
                                         </div>
-                                    </div>
-                                </td>
+                                        <input type="hidden" class="competence_level_class" name="competence_level" value="Básico" />
+                                        <div class="form-group">
+                                            <div class=" col-sm-1">
+                                                <button type="submit" class="btn btn-primary"> Endossar</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    @endif
                             </form>
                         </tr>
                     @endforeach

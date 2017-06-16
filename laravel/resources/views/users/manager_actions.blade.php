@@ -5,14 +5,14 @@
 
         <div class="panel-body">
             <div class="control-group">
-                <a href="{{ url('/tasks')}}" class="btn btn-primary">Cadastrar Tarefas</a>
+                <a href="{{ route('tasks.create')}}" class="btn btn-primary">Cadastrar Tarefas</a>
             </div>
             <div class="control-group">
-                <a href="{{ url('/competences')}}" class="btn btn-primary">Cadastrar Competências</a>
+                <a href="{{ route('competences.create')}}" class="btn btn-primary">Cadastrar Competências</a>
             </div>
 
             <div class="control-group">
-                <a href="{{ url('/teams')}}" class="btn btn-primary">Cadastrar Equipe</a>
+                <a href="{{ route('teams.create')}}" class="btn btn-primary">Cadastrar Equipe</a>
             </div>
         </div>
     </div>

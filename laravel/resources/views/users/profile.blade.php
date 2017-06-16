@@ -17,7 +17,12 @@
             <div class="col-sm-10"><h2>{{ $user->name }}</h2></div>
         </div> -->
         <div class="row">
-            @include('users.show_competences_for_endorsement', ['competences' => $user->competencies, 'profile_user' => $user])
+            @if (Auth::user()->id == $user->id)
+                @include('users.show_competences_for_endorsement', ['competences' => $user->competencies, 'profile_user' => $user, 'showEndorsementSection' => False])
+            @else
+                @include('users.show_competences_for_endorsement', ['competences' => $user->competencies, 'profile_user' => $user, 'showEndorsementSection' => True])
+            @endif
+
         </div>
     </div>
 @endsection
