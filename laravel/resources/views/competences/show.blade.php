@@ -15,7 +15,19 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" >
                             Usuários que possuem a competência
-                        @include('users.show_paginated_users', ['users' => $competence->skilledUsers()->paginate(15)])
+                        @include('users.show_paginated_users', ['users' => $competence->skilledUsers()->paginate(10, ['*'],'users')])
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" >
+                        Tarefas que necessitam desta competência
+                        @include('tasks.show_paginated_tasks', ['tasks' => $competence->tasksThatRequireIt()->paginate(10, ['*'],'tasks')])
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" >
+                        Equipes que possuem esta competência
+                        @include('teams.show_paginated_teams', ['teams' => $competence->teamsThatHaveIt()->paginate(10, ['*'],'teams')])
                     </div>
                 </div>
             </div>

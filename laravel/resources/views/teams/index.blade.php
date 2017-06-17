@@ -8,25 +8,7 @@
                 <div class="panel-heading">Equipes</div>
 
                 <div class="panel-body">
-                    @if (count($teams) > 0)
-                        <table class="table table-striped task-table" id="showCompetencesTable">
-
-
-                            <!-- Table Body -->
-                            <tbody>
-                            @foreach ($teams as $team)
-                                <tr>
-                                    <!-- Task Name -->
-                                    <td class="table-text">
-                                        <div><a href="{{ route('teams.show', $team->id) }}">{{ $team->name }}</a></div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    @else
-                        Não há equipes para exibição.
-                    @endif
+                    @include('teams.show_paginated_teams')
                 </div>
             </div>
         </div>

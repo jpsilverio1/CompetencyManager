@@ -18,6 +18,15 @@ class Competency extends Model
             ->withPivot('competency_level');
     }
 
+    public function tasksThatRequireIt() {
+        return $this->belongsToMany('App\Task', 'task_competencies')
+            ->withPivot('competency_level');
+    }
+
+    public function teamsThatHaveIt() {
+        return $this->belongsToMany('App\Team', 'team_competencies');
+    }
+
 
     
 }

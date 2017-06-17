@@ -1,7 +1,5 @@
 @if (count($users) > 0)
     <table class="table table-striped task-table" id="showCompetencesTable">
-
-
         <!-- Table Body -->
         <tbody>
         @foreach ($users as $user)
