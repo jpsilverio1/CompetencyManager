@@ -24,6 +24,11 @@ class User extends Authenticatable
             ->withPivot('competency_level');
     }
 
+    public function isManager() {
+        return $this->level == 'manager';
+        //\Auth::user()->level == 'manager'
+    }
+
     public function getNumberOfEndorsementsForCompetence($userEndorsements, $competence)
     {
         return $userEndorsements->where('competency_id', $competence->id)->count();

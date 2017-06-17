@@ -28,8 +28,13 @@ class TeamController extends Controller
      */
     public function create()
     {
-        $team = new \App\Team; 
-        return view('teams.create', ['team' => $team]);
+        $team = new \App\Team;
+        if (\Auth::user()->isManager()) {
+            return view('teams.create', ['team' => $team]);
+        } else {
+            return redirect('/home');
+        }
+        //
     }
 
     /**

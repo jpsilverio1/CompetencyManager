@@ -103,7 +103,6 @@ class UserController extends Controller
         return redirect('/home');
     }
 
-
     public function addCompetences(Request $request) {
         $user = \Auth::user();
         $names = $request->get('name');

@@ -27,8 +27,14 @@ class TaskController extends Controller
      */
     public function create()
     {
-        $task = new \App\Task; 
-        return view('tasks.create', ['task' => $task]);
+        $task = new \App\Task;
+        if (\Auth::user()->isManager()) {
+            return view('tasks.create', ['task' => $task]);
+        } else {
+            return redirect('/home');
+        }
+
+
     }
 
     /**

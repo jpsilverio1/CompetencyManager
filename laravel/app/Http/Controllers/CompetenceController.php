@@ -37,8 +37,13 @@ class CompetenceController extends Controller
 	 
 	public function create()
 	{
-		$competence = new \App\Competency; 
-        return view('competences.create', ['competency' => $competence]);
+		$competence = new \App\Competency;
+        if (\Auth::user()->isManager()) {
+            return view('competences.create', ['competency' => $competence]);
+        } else {
+            return redirect('/home');
+        }
+
 	}
 	
 	public function show($id) 
