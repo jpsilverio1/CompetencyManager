@@ -79,9 +79,10 @@ class TaskController extends Controller
      */
     public function show($id)
     {		
-		$task = DB::table('tasks')->where('id', $id)->first();
-		$task_competences = DB::table('task_competencies')->where('task_id', $id)->join('competencies', 'competencies.id', '=', 'task_competencies.competency_id')->get();
-		return view('tasks.show', ['task' => $task, 'task_competences' => $task_competences]);
+		//$task = DB::table('tasks')->where('id', $id)->first();
+		//$task_competences = DB::table('task_competencies')->where('task_id', $id)->join('competencies', 'competencies.id', '=', 'task_competencies.competency_id')->get();
+        $task = Task::findOrFail($id);
+		return view('tasks.show', ['task' => $task]);
     }
 
     /**

@@ -21,4 +21,17 @@ class Task extends Model
         return $this->belongsToMany('App\Competency', 'task_competencies')
         ->withPivot('competency_level');
     }
+
+    public function suitableAssignees()
+    {
+        //TODO
+        return $this->belongsToMany('App\Competency', 'task_competencies')
+            ->withPivot('competency_level');
+    }
+    public function suitableTeams()
+    {
+        //TODO
+        return $this->belongsToMany('App\Competency', 'task_competencies')
+            ->withPivot('competency_level');
+    }
 }
