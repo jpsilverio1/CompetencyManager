@@ -69,10 +69,8 @@ class TaskController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {		
-		//$task = DB::table('tasks')->where('id', $id)->first();
-		//$task_competences = DB::table('task_competencies')->where('task_id', $id)->join('competencies', 'competencies.id', '=', 'task_competencies.competency_id')->get();
-        $task = Task::findOrFail($id);
+    {	
+		$task = Task::findOrFail($id);
 		return view('tasks.show', ['task' => $task]);
     }
 
@@ -84,7 +82,8 @@ class TaskController extends Controller
      */
     public function edit($id)
     {
-        //
+        $task = Task::findOrFail($id);
+		return view('tasks.edit', ['task' => $task]);
     }
 
     /**
@@ -94,9 +93,17 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateTaskFormRequest $request, $id)
     {
-        //
+        $titles = $request->get('title');
+		$description = $request->get('description');
+
+		for ($i=0; $i<sizeOf($titles); $i++) {
+			Task::findOrFail($id)->update(['title' => $titles[$i], 'description' => $description[$i]]);
+		} 
+		
+		$task = Task::findOrFail($id);
+        return view('tasks.show', ['id' => $id, 'task' => $task, 'message' => 'A tarefa foi atualizada com sucesso!']);
     }
 
     /**

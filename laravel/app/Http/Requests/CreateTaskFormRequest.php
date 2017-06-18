@@ -27,7 +27,7 @@ class CreateTaskFormRequest extends FormRequest
 				
 		foreach($this->request->get('title') as $key => $val)
 		{
-			$rules['title.'.$key] = 'required|min:2|unique:tasks,title';
+			$rules['title.'.$key] = 'required|min:2|unique:tasks,title,' .$this->request->get("id");
 		}
 		foreach($this->request->get('description') as $key => $val)
 		{

@@ -68,7 +68,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('users.edit', ['user' => User::findOrFail($id)]);
     }
 
     /**
@@ -80,7 +80,24 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+		$name = $request->get('name');
+		$email = $request->get('email');
+		$level = $request->get('level');
+		$old_password = $request->get('password-old');
+		$new_password = $request->get('password-new');
+		$new_password_confirm = $request->get('password-new-confirm');
+		
+		#Checar senha antiga usando MD5 com senha neste form
+		#Checar senha nova com confirmação de senha nova 
+		#Checar nível
+
+		for ($i=0; $i<sizeOf($titles); $i++) {
+			Task::findOrFail($id)->update(['title' => $titles[$i], 'description' => $description[$i]]);
+		} 
+		
+		$task = Task::findOrFail($id);
+        return view('users.profile', ['id' => $id, 'user' => \Auth::user(), 'message' => 'Seu perfil foi atualizado com sucesso!']);
+		
     }
 
     /**
