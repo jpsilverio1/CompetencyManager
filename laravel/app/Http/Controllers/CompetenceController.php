@@ -90,6 +90,11 @@ class CompetenceController extends Controller
 	public function destroy($id)
 	{
 		$competence = Competency::findOrFail($id);
+		/* Deixando aqui para tentar fazer funcionar futuramente
+		foreach ($competence->skilledUsers() as $user) {
+			$user->endorsements()->detach();
+		} */
+		DB::table("user_endorsements")->where('competency_id', '=',$competence->id)->delete();
 		$competence->skilledUsers()->detach();
 		$competence->tasksThatRequireIt()->detach();
 		$competence->teamsThatHaveIt()->detach(); 

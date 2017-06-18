@@ -44,6 +44,15 @@
                         @include('teams.show_paginated_teams', ['teams' => $task->suitableTeams()->paginate(5, ['*'],'teams')])
                     </div>
                 </div>
+				
+				<td><a href='{{ $task->id."/edit"}}'/><button type="submit" class="btn btn-primary">Editar Tarefa</button></td>
+				<form class="col-xs-offset-1" id="deleteTaskForm" role="form" method="POST" action="{{ route('tasks.destroy', ['id' => $task->id] ) }}">
+					{{ csrf_field() }}
+					<input type="hidden" name="_method" value="DELETE" />
+					<input type="hidden" name="id" value="{{ $task->id }}" />       
+					<td><button type="" class="btn btn-danger">Excluir Tarefa</button></td>
+				</form>
+				
             </div>
         </div>
     </div>

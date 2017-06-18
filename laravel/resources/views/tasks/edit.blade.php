@@ -51,6 +51,12 @@
                                 </div>
                             </div>
                         </form>
+						<form class="col-xs-offset-1" id="deleteTasksForm" role="form" method="POST" action="{{ route('tasks.destroy', ['id' => $task->id] ) }}">
+							{{ csrf_field() }}
+							<input type="hidden" name="_method" value="DELETE" />
+							<input type="hidden" name="id" value="{{ $task->id }}" />       
+							<button type="" class="btn btn-danger">Excluir Tarefa</button>
+						</form>
                     </div>
                 </div>
         </div>
