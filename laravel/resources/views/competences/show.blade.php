@@ -37,6 +37,13 @@
                         @include('teams.show_paginated_teams', ['teams' => $competence->teamsThatHaveIt()->paginate(10, ['*'],'teams')])
                     </div>
                 </div>
+				<td><a href='{{ "competences/".$competence->id."/edit"}}'/><button type="submit" class="btn btn-primary">Salvar Competência</button></td>
+				<form class="col-xs-offset-1" id="deleteCompetencesForm" role="form" method="POST" action="{{ route('competences.destroy', ['id' => $competence->id] ) }}">
+					{{ csrf_field() }}
+					<input type="hidden" name="_method" value="DELETE" />
+					<input type="hidden" name="id" value="{{ $competence->id }}" />       
+					<td><button type="" class="btn btn-danger">Excluir Competência</button></td>
+				</form>
             </div>
         </div>
     </div>

@@ -84,5 +84,19 @@ class CompetenceController extends Controller
         }
 		$competence = Competency::findOrFail($id);
         return view('competences.show', ['id' => $id, 'competence' => $competence, 'message' => 'A competência foi atualizada com sucesso!']);
-	}	
+	}
+
+	
+	public function destroy($id)
+	{
+		$competence = Competency::findOrFail($id);
+		$competence->skilledUsers()->detach();
+		$competence->tasksThatRequireIt()->detach();
+		$competence->teamsThatHaveIt()->detach(); 
+		$competence->delete(); 
+
+		$allCompetences = Competency::paginate(10);
+        return view('competences.index', ['competences' => $allCompetences, 'message' => 'A competência foi excluída com sucesso!']);
+	}
+	
 }
