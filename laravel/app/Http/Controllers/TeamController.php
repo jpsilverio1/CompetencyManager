@@ -79,7 +79,7 @@ class TeamController extends Controller
      */
     public function show($id)
     {
-        $team = DB::table('teams')->where('id', $id)->first();
+		$team = Team::where('id', $id)->first();
 		return view('teams.show', ['team' => $team]);
     }
 
