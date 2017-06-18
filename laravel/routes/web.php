@@ -32,7 +32,6 @@ Route::delete('/user-team/{teamId}', 'UserController@deleteUserFromTeam');
 Route::delete('/user-competency/{competencyId}', 'UserController@deleteCompetencyFromUser');
 Route::resource('competences', 'CompetenceController');
 
-
 Route::resource('teams', 'TeamController');
 Route::resource('tasks', 'TaskController');
 Route::resource('users','UserController');
