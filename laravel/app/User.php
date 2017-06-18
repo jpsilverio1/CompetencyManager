@@ -33,6 +33,40 @@ class User extends Authenticatable
     {
         return $userEndorsements->where('competency_id', $competence->id)->count();
     }
+    public function userEndorsementsForCompetence($competenceId) {
+        return $this->endorsements()->where('competency_id', $competenceId)->get();
+    }
+    public function computeThings($competenceId) {
+        $meuMapa = [];
+        $totalEndorsements = 0;
+        $maximumValue = 0;
+        $maximumKeys = [];
+        foreach($this->userEndorsementsForCompetence($competenceId) as $competenceEndorsement) {
+            $totalEndorsements++;
+            $endorsementLevel = $competenceEndorsement->pivot->competency_level;
+            if (isset($meuMapa[$endorsementLevel])) {
+                $meuMapa[$endorsementLevel]++;
+            }else {
+                $meuMapa[$endorsementLevel] = 1;
+            }
+            if ($meuMapa[$endorsementLevel] >$maximumValue) {
+                $maximumValue = $meuMapa[$endorsementLevel];
+                $maximumKeys = [];
+                $maximumKeys[] = $endorsementLevel;
+            } else {
+                if ($meuMapa[$endorsementLevel] ==$maximumValue) {
+                    $maximumValue = $meuMapa[$endorsementLevel];
+                    $maximumKeys[] = $endorsementLevel;
+                }
+            }
+        }
+        if (isset($maximumKeys)) {
+            return [($maximumValue/$totalEndorsements)*100, $maximumKeys];
+        } else {
+            return [];
+        }
+
+    }
 
     public function loggedUserEndorsedCompetence($shownUserEndorsements, $competenceId)
     {

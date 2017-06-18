@@ -19,6 +19,8 @@
                     <!-- Table Body -->
                     <tbody>
                     @foreach ($competences as $competence)
+                        <?php $numberOfEndorsementsForCompetence = $user->getNumberOfEndorsementsForCompetence($user->endorsements(),$competence); ?>
+
                         <tr>
                             <form action="/user-endorsements" method="POST">
                             {{ csrf_field() }}
@@ -30,11 +32,20 @@
                             </td>
                             <td class="table-text">
                                 <div>{{ $competence->pivot->competency_level }}</div>
-                                <div class="most-endorsed-level-percentage">23</div>
+
                             </td>
 
                             <td>
-                                <div class="btn btn-info btn-circle">{{$user->getNumberOfEndorsementsForCompetence($user->endorsements(),$competence)}}</div>
+                                <div class="btn btn-info btn-circle">{{$numberOfEndorsementsForCompetence}}</div>
+                                    @if ($numberOfEndorsementsForCompetence >0)
+                                    <div class="most-endorsed-level-percentage">
+                                        <?php $result = $user->computeThings($competence->id); ?>
+                                        {{$result[0]}}%
+                                    @foreach ($result[1] as $maximumKey)
+                                        {{$maximumKey}}
+                                    @endforeach
+                                </div>
+                                 @endif
                             </td>
                             <td>
                                 <div class="col-md-8">
