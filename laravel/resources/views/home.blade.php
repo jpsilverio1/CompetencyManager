@@ -7,7 +7,7 @@
         </div>
         <div class="row">
             @include('users.show_competences')
-            @include('users.add_competences')
+            @include('users.add_competences_with_button')
         </div>
     </div>
 @endsection
