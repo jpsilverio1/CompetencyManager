@@ -8,6 +8,12 @@
                 <div class="panel-heading">Competências</div>
 
                 <div class="panel-body">
+
+                    @if (!empty($message) > 0)
+                        <div class="alert alert-success">
+                            {{$message}}<br />
+                        </div>
+                    @endif
                     @if (count($competences) > 0)
                         <table class="table table-striped task-table" id="showCompetencesTable">
 

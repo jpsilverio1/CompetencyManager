@@ -12,54 +12,86 @@
                             {{ csrf_field() }}
                             @if (count($errors) > 0)
                                 <div class="alert alert-danger">
-                                    Houve algum problema ao adicionar a Competência.<br />
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
+                                    Houve algum problema ao adicionar as competências.<br />
                                 </div>
                             @endif
                             <table class="table table-striped task-table" id="addCompetencesTable">
                                 <tbody>
-                                    <tr>
-                                        <td class="form-group  col-md-5{{ $errors->has('name') ? ' has-error' : '' }}">
-                                            <label for="name" class="col-md-1 control-label">Competência</label>
-                                            <div class=" col-md-offset-4">
-                                                <input type="text" class="form-control" name="name[]" placeholder="Nome da competência" value="{{ old('name') }}">
+                                <tr>
+                                    <td class="form-group  col-md-5{{ $errors->has('name.0') ? ' has-error' : '' }}">
+                                        <label for="name" class="col-md-1 control-label">Competência</label>
+                                        <div class=" col-md-offset-4">
+                                            <input type="text" class="form-control" name="name[]" placeholder="Nome da competência"  value="{{ old("name.0") }}">
+                                            @if ($errors->has('name.0'))
+                                                <span class="help-block">
+                                        <strong>{{ $errors->first('name.0') }}</strong>
+                                    </span>
+                                            @endif
+                                        </div>
 
-                                            </div>
+                                    </td>
+                                    <td class="form-group col-md-5 col-md-offset-2{{ $errors->has('description.0') ? ' has-error' : '' }}">
+                                        <div class="">
+                                            <input type="text" class="form-control" name="description[]" placeholder="Descrição da competência" value="{{ old("description.0") }}">
+                                            @if ($errors->has('description.0'))
+                                                <span class="help-block">
+                                        <strong>{{ $errors->first('description.0') }}</strong>
+                                    </span>
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td class="form-group">
+                                        <button type="button" class="btn btn-default addButton">+</button>
+                                    </td>
+                                </tr>
+                                <tr class="hide start-form-row" id="competenceTemplate">
+                                    <td class="form-group  col-md-5">
+                                        <label for="name" class="col-md-1 control-label">Competência</label>
+                                        <div class=" col-md-offset-4">
+                                            <input type="text" class="form-control" name="name[]" placeholder="Nome da competência"  >
 
-                                        </td>
-                                        <td class="form-group col-md-5 col-md-offset-2{{ $errors->has('description') ? ' has-error' : '' }}">
-                                            <div class="">
-                                                <input type="text" class="form-control" name="description[]" placeholder="Descrição da competência" value="{{ old('description') }}">
+                                        </div>
 
-                                            </div>
-                                        </td>
-                                        <td class="form-group">
-                                            <button type="button" class="btn btn-default addButton">+</button>
-                                        </td>
-                                    </tr>
-                                    <tr class="hide start-form-row" id="competenceTemplate">
-                                        <td class="form-group  col-md-5{{ $errors->has('name') ? ' has-error' : '' }}">
-                                            <label for="name" class="col-md-1 control-label">Competência</label>
-                                            <div class=" col-md-offset-4">
-                                                <input type="text" class="form-control" name="name[]" placeholder="Nome da competência" value="{{ old('name') }}" >
+                                    </td>
+                                    <td class="form-group col-md-5 col-md-offset-2">
+                                        <div class="">
+                                            <input type="text" class="form-control" name="description[]" placeholder="Descrição da competência">
 
-                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="form-group">
+                                        <button type="button" class="btn btn-default removeButton">-</button>
+                                    </td>
+                                </tr>
+                                    @for ($i=1; $i<sizeOf(old('name')); $i++)
+                                        <tr class="start-form-row">
+                                            <td class="form-group  col-md-5{{ $errors->has("name.$i") ? ' has-error' : '' }}">
+                                                <label for="name" class="col-md-1 control-label">Competência</label>
+                                                <div class=" col-md-offset-4">
+                                                    <input type="text" class="form-control" name="name[]" placeholder="Nome da competência"  value="{{ old("name.$i") }}">
+                                                    @if ($errors->has("name.$i"))
+                                                        <span class="help-block">
+                                        <strong>{{ $errors->first("name.$i") }}</strong>
+                                    </span>
+                                                    @endif
+                                                </div>
 
-                                        </td>
-                                        <td class="form-group col-md-5 col-md-offset-2{{ $errors->has('description') ? ' has-error' : '' }}">
-                                            <div class="">
-                                                <input type="text" class="form-control" name="description[]" placeholder="Descrição da competência" value="{{ old('description') }}">
-
-                                            </div>
-                                        </td>
-                                        <td class="form-group">
-                                            <button type="button" class="btn btn-default removeButton">-</button>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                            <td class="form-group col-md-5 col-md-offset-2{{ $errors->has("description.$i") ? ' has-error' : '' }}">
+                                                <div class="">
+                                                    <input type="text" class="form-control" name="description[]" placeholder="Descrição da competência" value="{{ old("description.$i") }}">
+                                                    @if ($errors->has("description.$i"))
+                                                        <span class="help-block">
+                                        <strong>{{ $errors->first("description.$i") }}</strong>
+                                    </span>
+                                                    @endif
+                                                </div>
+                                            </td>
+                                            <td class="form-group">
+                                                <button type="button" class="btn btn-default removeButton">-</button>
+                                            </td>
+                                        </tr>
+                                    @endfor
                                 </tbody>
                             </table>
 
@@ -79,21 +111,27 @@
     $(document).ready(function(){
         var competencyIndex = 0;
         $('.addButton').click(function(){
-            competencyIndex++;
-            var $template = $('#competenceTemplate'),
-                $clone    = $template
-                    .clone()
-                    .removeClass('hide')
-                    .removeAttr('id')
-                    .insertBefore($template);
-            $clone.find('[name="name"]').attr('name', 'competency[' + competencyIndex + '].name').end()
-                .find('[name="description"]').attr('name', 'competency[' + competencyIndex + '].description').end();
+            if (competencyIndex <9) {
+                competencyIndex++;
+                console.log(competencyIndex);
+                var $template = $('#competenceTemplate'),
+                    $clone    = $template
+                        .clone()
+                        .removeClass('hide')
+                        .removeAttr('id')
+                        .insertBefore($template);
+                $clone.find('[name="name"]').attr('name', 'competency[' + competencyIndex + '].name').end()
+                    .find('[name="description"]').attr('name', 'competency[' + competencyIndex + '].description').end();
+            }
+            else {
+                alert("Não é possível criar mais de 10 competências por vez");
+            }
+
 
         });
 
         $('.btn-primary').click(function(){
                 $('#competenceTemplate').remove();
-
 
         });
 
@@ -102,6 +140,7 @@
             var $row  = $(this).parents('.start-form-row');
             // Remove element containing the fields
             $row.remove();
+            competencyIndex--;
         });
 
 

@@ -31,7 +31,7 @@ class CompetenceController extends Controller
 	public function index()
 	{
         $allCompetences = Competency::paginate(10);
-        return view('competences.index', ['competences' => $allCompetences]);
+        return view('competences.index', ['competences' => $allCompetences, 'message' => '']);
 	}
 	 
 	 
@@ -39,7 +39,7 @@ class CompetenceController extends Controller
 	{
 		$competence = new \App\Competency;
         if (\Auth::user()->isManager()) {
-            return view('competences.create', ['competency' => $competence]);
+            return view('competences.create2');
         } else {
             return redirect('/home');
         }
@@ -54,36 +54,20 @@ class CompetenceController extends Controller
 	
 	public function store(CreateCompetenceFormRequest $request)
 	{
-		$names = $request->get('name');
-		$description = $request->get('description');
-		
-		/* tentativa de enviar dados de volta pra página do formulário quando há erro (não funciona) */
-		$competence = new \App\Competency; 
-		$competence->name = $names[0];
-		$competence->description = $description[0];
-		
-		$validator = Validator::make($request->all(), [
-			'name.*' => 'required|unique:competencies,name',
-			'description.*' => 'required',
-		]);
-		
-		if ($validator->fails()) {
-            return redirect('competences/create')
-                        ->withErrors($validator)
-						->with(['competency' => $competence]);
-        }
-		/* fim da tentativa */
+        $names = $request->get('name');
+        $description = $request->get('description');
 
-		for ($i=0; $i<sizeOf($names); $i++) {
-			$competence = new \App\Competency; 
-			$competence->name = $names[$i];
-			$competence->description = $description[$i];
-			$competence->save();
-			
-		} 
-		//return redirect()->route('competences.show', ['id' => $competence->id, 'message' => 'oi' ]);
-		return \Redirect::route('competences.create', 
-			array($competence->id))
-			->with('message', 'A competência foi cadastrada.');
+        for ($i=0; $i<sizeOf($names); $i++) {
+            $competence = new \App\Competency;
+            $competence->name = $names[$i];
+            $competence->description = $description[$i];
+            $competence->save();
+
+        }
+        $allCompetences = Competency::paginate(10);
+        return view('competences.index', ['competences' => $allCompetences, 'message' => 'As competências foram cadastradas com sucesso!']);
+
+
+
 	}	
 }
