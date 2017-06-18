@@ -20,20 +20,23 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" >
                         Usuários aptos a realizar a tarefa
-                        @include('users.show_paginated_users', ['users' => $task->suitableAssignees()->paginate(10, ['*'],'users')])
+                        @include('users.show_paginated_users', ['users' => $task->suitableAssignees()->paginate(5, ['*'],'users')])
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading" >
                         Competências requeridas pela tarefa
-                        @include('competences.show_paginated_competences', ['competences' => $task->competencies()->paginate(1, ['*'],'competences'),  'showCompetenceLevel' => True])
+                        @include('competences.show_paginated_competences', ['competences' => $task->competencies()->paginate(5, ['*'],'competences'),
+                        'showCompetenceLevel' => True,
+                        'showDeleteButton' => False,
+                        'noCompetencesMessage' => 'Não há competências para exibição.'])
                     </div>
                 </div>
 
                 <div class="panel panel-default">
                     <div class="panel-heading" >
                         Equipes aptas a realizar a tarefa
-                        @include('teams.show_paginated_teams', ['teams' => $task->suitableTeams()->paginate(10, ['*'],'teams')])
+                        @include('teams.show_paginated_teams', ['teams' => $task->suitableTeams()->paginate(5, ['*'],'teams')])
                     </div>
                 </div>
             </div>

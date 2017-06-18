@@ -43,19 +43,23 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         &nbsp; <li class="active"><a href="{{ route('home') }}">Home</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Visualizar <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li class="divider"></li>
-                                <li><a href="{{ route('competences.index') }}">Competências</a></li>
-                                <li class="divider"></li>
-                                <li><a href="{{ route('users.index') }}">Usuários</a></li>
-                                <li class="divider"></li>
-                                <li><a href="{{ route('tasks.index') }}">Tarefas</a></li>
-                                <li class="divider"></li>
-                                <li><a href="{{ route('teams.index') }}">Equipes</a></li>
-                            </ul>
-                        </li>
+                        @if (!Auth::guest())
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Visualizar <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('users.show', Auth::user()->id) }}">Seu perfil</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('competences.index') }}">Competências</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('users.index') }}">Usuários</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('tasks.index') }}">Tarefas</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('teams.index') }}">Equipes</a></li>
+                                </ul>
+                            </li>
+                            @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->

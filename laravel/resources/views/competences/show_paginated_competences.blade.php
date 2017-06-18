@@ -4,6 +4,16 @@
     <!-- Table Body -->
     <tbody>
     @if (count($competences) > 0)
+        @if ($showCompetenceLevel)
+            <thead>
+            <th>Competência</th>
+
+                <th>Nível</th>
+            @if($showDeleteButton)
+                <th>Excluir?</th>
+            @endif
+            </thead>
+        @endif
         @foreach ($competences as $competence)
             <tr>
                 <!-- Task Name -->
@@ -13,6 +23,16 @@
                 @if ($showCompetenceLevel)
                     <td class="table-text text-capitalize">
                         {{$competence->pivot->competency_level}}
+                    </td>
+                @endif
+                @if($showDeleteButton)
+                    <td>
+                        <form action="/user-competency/{{ $competence->id }}" method="POST">
+                            {{ csrf_field() }}
+                            {{ method_field('DELETE') }}
+
+                            <button>x</button>
+                        </form>
                     </td>
                 @endif
             </tr>
@@ -28,7 +48,7 @@
     @else
         <tr>
             <td class="table-text">
-                Não há competências para exibição.
+                {{$noCompetencesMessage}}
             </td>
 
         </tr>
