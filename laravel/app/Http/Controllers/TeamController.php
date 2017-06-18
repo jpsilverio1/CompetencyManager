@@ -45,16 +45,6 @@ class TeamController extends Controller
      */
     public function store(CreateTeamFormRequest $request)
     {
-        /* $validator = Validator::make($request->all(), [
-			'name.*' => 'required|unique:teams,name',
-			'description.*' => 'required',
-		]); 
-		
-		if ($validator->fails()) {
-            return redirect('teams/create')
-                        ->withErrors($validator)
-                        ->withInput();
-        } */
 		
 		$names = $request->get('name');
 		$description = $request->get('description');
@@ -67,12 +57,9 @@ class TeamController extends Controller
 			
 		} 
 		
-		//$allTeams = Team::paginate(10);
-        //return view('teams.index', ['teams' => $allTeams, 'message' => 'As equipes foram cadastradas com sucesso!']);
-		
-		return \Redirect::route('teams.show', 
-			array($team->id))
-			->with('message', 'A tarefa foi cadastrada.');
+		$allTeams = Team::paginate(10);
+        return view('teams.index', ['teams' => $allTeams, 'message' => 'As equipes foram cadastradas com sucesso!']);
+
     }
 
     /**

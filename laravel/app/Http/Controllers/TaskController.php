@@ -45,16 +45,6 @@ class TaskController extends Controller
      */
     public function store(CreateTaskFormRequest $request)
     {
-        /* $validator = Validator::make($request->all(), [
-			'title.*' => 'required|unique:tasks,title',
-			'description.*' => 'required',
-		]);
-		
-		if ($validator->fails()) {
-            return redirect('tasks/create')
-                        ->withErrors($validator)
-                        ->withInput();
-        } */
 		
 		$titles = $request->get('title');
 		$description = $request->get('description');
@@ -66,9 +56,10 @@ class TaskController extends Controller
 			$task->save();
 			
 		} 
-		return \Redirect::route('tasks.show', 
-			array($task->id))
-			->with('message', 'A tarefa foi cadastrada.');
+		
+		$allTasks = Task::paginate(10);
+        return view('tasks.index', ['tasks' => $allTasks, 'message' => 'As tarefas foram cadastradas com sucesso!']);
+
     }
 
     /**
