@@ -11,7 +11,7 @@
             <!-- Show competencies -->
         @include('users.show_competences')
         <!-- Add competencies -->
-        @include('users.add_competences')
+        @include('users.add_competences_with_button')
         <!--Manager actions -->
             @include('users.manager_actions')
         </div>

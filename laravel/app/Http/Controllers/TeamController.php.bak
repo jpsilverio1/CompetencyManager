@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\CreateTeamFormRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateTeamFormRequest;
 use Illuminate\Support\Facades\Validator;
@@ -46,7 +46,23 @@ class TeamController extends Controller
      */
     public function store(CreateTeamFormRequest $request)
     {
-		$name = $request->get('name');
+<<<<<<< HEAD
+		
+		$names = $request->get('name');
+		$description = $request->get('description');
+
+		for ($i=0; $i<sizeOf($names); $i++) {
+			$team = new \App\Team; 
+			$team->name = $names[$i];
+			$team->description = $description[$i];
+			$team->save();	
+		} 
+		
+		$allTeams = Team::paginate(10);
+        return view('teams.index', ['teams' => $allTeams, 'message' => 'As equipes foram cadastradas com sucesso!']);
+
+=======
+        $name = $request->get('name');
         $description = $request->get('description');
         $team = new \App\Team;
         $team->name = $name;
@@ -70,6 +86,7 @@ class TeamController extends Controller
         }
         return view('teams.show', ['team' => $team, 'message' => 'A equipe foi cadastrada com sucesso!']);
 
+>>>>>>> jessica-showUserProfileAndAllowEndorsement
     }
 
     /**
@@ -80,7 +97,11 @@ class TeamController extends Controller
      */
     public function show($id)
     {
+<<<<<<< HEAD
 		$team = Team::where('id', $id)->first();
+=======
+        $team = Team::where('id', $id)->first();
+>>>>>>> jessica-showUserProfileAndAllowEndorsement
 		return view('teams.show', ['team' => $team]);
     }
 
