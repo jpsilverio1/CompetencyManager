@@ -18,13 +18,13 @@
 							<table class="table table-striped task-table" id="addTaskTable">
                                 <tbody>
                                 <tr>
-                                    <td class="form-group  col-md-5{{ $errors->has('name.0') ? ' has-error' : '' }}">
+                                    <td class="form-group  col-md-5{{ $errors->has('title.0') ? ' has-error' : '' }}">
                                         <label for="name" class="col-md-1 control-label">Tarefa</label>
                                         <div class=" col-md-offset-4">
                                             <input type="text" class="form-control" name="title[]" placeholder="Título da tarefa"  value="{{ old('title.0') }}">
-                                            @if ($errors->has('name.0'))
+                                            @if ($errors->has('title.0'))
                                                 <span class="help-block">
-													<strong>{{ $errors->first('name.0') }}</strong>
+													<strong>{{ $errors->first('title.0') }}</strong>
 												</span>
                                             @endif
                                         </div>
@@ -61,13 +61,13 @@
                                 </tr>
                                     @for ($i=1; $i<sizeOf(old('title')); $i++)
                                         <tr class="start-form-row">
-                                            <td class="form-group  col-md-5{{ $errors->has("name.$i") ? ' has-error' : '' }}">
+                                            <td class="form-group  col-md-5{{ $errors->has("title.$i") ? ' has-error' : '' }}">
                                                 <label for="name" class="col-md-1 control-label">Tarefa</label>
                                                 <div class=" col-md-offset-4">
                                                     <input type="text" class="form-control" name="title[]" placeholder="Título da tarefa"  value="{{ old('title.$i') }}">
-                                                    @if ($errors->has("name.$i"))
+                                                    @if ($errors->has("title.$i"))
                                                         <span class="help-block">
-															<strong>{{ $errors->first("name.$i") }}</strong>
+															<strong>{{ $errors->first("title.$i") }}</strong>
 														</span>
                                                     @endif
                                                 </div>

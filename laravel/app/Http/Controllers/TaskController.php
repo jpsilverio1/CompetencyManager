@@ -43,9 +43,9 @@ class TaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateTaskFormRequest $request)
     {
-        $validator = Validator::make($request->all(), [
+        /* $validator = Validator::make($request->all(), [
 			'title.*' => 'required|unique:tasks,title',
 			'description.*' => 'required',
 		]);
@@ -54,7 +54,7 @@ class TaskController extends Controller
             return redirect('tasks/create')
                         ->withErrors($validator)
                         ->withInput();
-        }
+        } */
 		
 		$titles = $request->get('title');
 		$description = $request->get('description');

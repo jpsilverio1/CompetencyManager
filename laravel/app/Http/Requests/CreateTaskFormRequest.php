@@ -13,7 +13,7 @@ class CreateTaskFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,30 @@ class CreateTaskFormRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+		$rules = [];
+				
+		foreach($this->request->get('title') as $key => $val)
+		{
+			$rules['title.'.$key] = 'required|min:2|unique:tasks,title';
+		}
+		foreach($this->request->get('description') as $key => $val)
+		{
+			$rules['description.'.$key] = 'required|min:2';
+		}
+		return $rules;
     }
+	
+	public function messages() 
+	{
+		$messages = [];
+		foreach($this->request->get('title') as $key => $val)
+		{
+			$messages['title.'.$key.'.required'] = 'O campo título é obrigatório';
+			$messages['title.'.$key.'.min'] = 'O campo título está muito curto';
+			$messages['title.'.$key.'.unique'] = 'Uma tarefa já foi cadastrada com este título. Por favor utilize outro título.';
+			$messages['description.'.$key.'.required'] = 'O campo descrição é obrigatório';
+			$messages['description.'.$key.'.min'] = 'O campo descrição está muito curto';
+		} 
+		return $messages; 
+	}
 }
