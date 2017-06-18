@@ -26,8 +26,7 @@ class CreateTeamFormRequest extends FormRequest
 		$rules = [];
 		foreach($this->request->get('name') as $key => $val)
 		{
-			$rules['name.'.$key] = 'required|min:2|unique:teams,name,$this->request->get("name")[$key]';
-			var_dump($this->request->get('name')[0]);
+			$rules['name.'.$key] = 'required|min:2|unique:teams,name,' .$this->request->get("id");
 		}
 		foreach($this->request->get('description') as $key => $val)
 		{
