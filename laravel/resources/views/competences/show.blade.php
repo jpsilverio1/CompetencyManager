@@ -21,7 +21,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" >
                         Tarefas que necessitam desta competência
-                        @include('tasks.show_paginated_tasks', ['tasks' => $competence->tasksThatRequireIt()->paginate(10, ['*'],'tasks')])
+                        @include('tasks.show_paginated_tasks', ['tasks' => $competence->tasksThatRequireIt()->paginate(10, ['*'],'tasks'), 'noTasksMessage' => 'Não há tarefas para exibição.'])
                     </div>
                 </div>
                 <div class="panel panel-default">

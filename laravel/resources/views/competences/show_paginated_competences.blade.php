@@ -19,9 +19,12 @@
 
 
         @endforeach
-        <div align="center">
-            {{$competences->render()}}
-        </div>
+
+    </tbody>
+</table>
+<div align="center">
+    {{$competences->render()}}
+</div>
     @else
         <tr>
             <td class="table-text">
@@ -29,7 +32,6 @@
             </td>
 
         </tr>
-
-    @endif
     </tbody>
 </table>
+    @endif

@@ -13,8 +13,4 @@
             </div>
         </div>
     </div>
-
-    <div align="center">
-        {{$teams->render()}}
-    </div>
 @endsection

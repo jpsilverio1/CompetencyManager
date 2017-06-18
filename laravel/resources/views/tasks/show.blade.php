@@ -15,8 +15,7 @@
                 <h4>
                     Autor
                 </h4>
-                <!--$task->author-->
-                <p> TODO!!</p>
+                <p> {{$task->author->name}}</p>
 
                 <div class="panel panel-default">
                     <div class="panel-heading" >

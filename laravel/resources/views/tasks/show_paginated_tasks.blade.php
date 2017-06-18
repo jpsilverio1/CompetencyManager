@@ -1,6 +1,4 @@
-<table class="table table-striped task-table" id="showCompetencesTable">
-
-
+<table class="table table-striped task-table" id="showCompetenceTable">
     <!-- Table Body -->
     <tbody>
         @if (count($tasks) > 0)
@@ -12,18 +10,20 @@
                     </td>
                 </tr>
             @endforeach
+    </tbody>
+</table>
             <div align="center">
                 {{$tasks->render()}}
             </div>
         @else
             <tr>
                 <td class="table-text">
-                    Não há tarefas para exibição.
+                    {{$noTasksMessage}}
                 </td>
 
             </tr>
-
+            </tbody>
+            </table>
         @endif
-    </tbody>
-    </table>
+
 

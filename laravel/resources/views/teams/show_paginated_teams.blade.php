@@ -12,9 +12,12 @@
                 </td>
             </tr>
         @endforeach
-        <div align="center">
-            {{$teams->render()}}
-        </div>
+
+    </tbody>
+</table>
+<div align="center">
+    {{$teams->render()}}
+</div>
     @else
         <tr>
             <td class="table-text">
@@ -22,8 +25,8 @@
             </td>
 
         </tr>
-
-    @endif
     </tbody>
 </table>
+    @endif
+
 

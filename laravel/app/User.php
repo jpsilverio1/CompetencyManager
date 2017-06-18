@@ -51,6 +51,11 @@ class User extends Authenticatable
         ])->first()->pivot->competency_level;
     }
 
+    public function createdTasks()
+    {
+        return $this->hasMany('App\Task', 'author_id');
+    }
+
     public function getEndorsement($competence, $profileUser)
     {
         $loggedUser = \Auth::user();
