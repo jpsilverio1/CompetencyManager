@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 use App\Http\Requests\CreateCompetenceFormRequest;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use DB;
@@ -77,7 +78,6 @@ class CompetenceController extends Controller
 	{
         $names = $request->get('name');
         $description = $request->get('description');
-		$competence = Competency::findOrFail($id);
 		
         for ($i=0; $i<sizeOf($names); $i++) {
 			Competency::findOrFail($id)->update(['name' => $names[$i], 'description' => $description[$i]]);

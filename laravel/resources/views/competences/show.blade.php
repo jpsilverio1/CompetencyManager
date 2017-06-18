@@ -8,6 +8,13 @@
                 </h2>
             </div>
             <div class="panel-body">
+			
+				@if (!empty($message) > 0)
+                    <div class="alert alert-success">
+                        {{$message}}<br />
+						</div>
+                @endif
+			
                <h4>
                    Descrição
                </h4>

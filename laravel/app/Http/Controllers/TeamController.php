@@ -53,8 +53,7 @@ class TeamController extends Controller
 			$team = new \App\Team; 
 			$team->name = $names[$i];
 			$team->description = $description[$i];
-			$team->save();
-			
+			$team->save();	
 		} 
 		
 		$allTeams = Team::paginate(10);
@@ -82,7 +81,8 @@ class TeamController extends Controller
      */
     public function edit($id)
     {
-        //
+        $team = Team::where('id', $id)->first();
+		return view('teams.edit', ['team' => $team]);
     }
 
     /**
@@ -92,9 +92,16 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateTeamFormRequest $request, $id)
     {
-        //
+        $names = $request->get('name');
+		$description = $request->get('description');
+
+		for ($i=0; $i<sizeOf($names); $i++) {
+			Team::findOrFail($id)->update(['name' => $names[$i], 'description' => $description[$i]]);
+		} 
+		$team = Team::findOrFail($id);
+        return view('teams.show', ['id' => $id, 'team' => $team, 'message' => 'A equipe foi atualizada com sucesso!']);
     }
 
     /**
