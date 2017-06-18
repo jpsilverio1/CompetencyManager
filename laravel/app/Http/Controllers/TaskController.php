@@ -48,13 +48,14 @@ class TaskController extends Controller
 		
 		$titles = $request->get('title');
 		$description = $request->get('description');
+		$author_id = \Auth::user()->id;
 
 		for ($i=0; $i<sizeOf($titles); $i++) {
 			$task = new \App\Task; 
 			$task->title = $titles[$i];
 			$task->description = $description[$i];
+			$task->author_id = $author_id;
 			$task->save();
-			
 		} 
 		
 		$allTasks = Task::paginate(10);
