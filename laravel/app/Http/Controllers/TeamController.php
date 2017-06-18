@@ -54,10 +54,8 @@ class TeamController extends Controller
         $team->save();
         $names = $request->get('competence_names');
         $competenceIds = $request->get('competence_ids');
-        $competenceLevels = $request->get('competence_levels');
         for ($i=0; $i<sizeOf($names); $i++) {
             $competenceId = $competenceIds[$i];
-            $competenceLevel = $competenceLevels[$i];
             $competenceName = $names[$i];
             $team->competencies()->attach($competenceId);
         }

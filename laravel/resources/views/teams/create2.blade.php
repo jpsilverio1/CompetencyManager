@@ -36,7 +36,7 @@
 
 
                         </div>
-                        @include('competences.add_competences_without_button')
+                        @include('competences.add_competences_without_button', ['showCompetenceLevel' => False])
                         @include('users.add_users_without_button')
                         <div class="form-group">
                             <div class="col-xs-5 col-xs-offset-1">

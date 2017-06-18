@@ -20,7 +20,9 @@
                     <!-- <td style="display:none;"> -->
                     <thead>
                     <th>Competência</th>
-                    <th> Nivel</th>
+                    @if($showCompetenceLevel)
+                        <th> Nivel</th>
+                    @endif
                     <th>&nbsp;</th>
                     <th style="display:none;">id</th>
 
@@ -56,7 +58,9 @@
         return document.getElementById(tableId).getElementsByTagName("tr").length - 1;
     }
     function getCompetenceRowCode(name, competenceId) {
-        var code = '<tr>' +
+        var code;
+        @if($showCompetenceLevel)
+            code = '<tr>' +
             '<td class="table-text"> ' +
             '<div class="competence_name">' +
             name +
@@ -80,6 +84,25 @@
             '<input type="hidden" name="competence_ids[]" value="' + competenceId + '" />' +
             '</td>' +
             '</tr>';
+        @else
+            code = '<tr>' +
+            '<td class="table-text"> ' +
+            '<div class="competence_name">' +
+            name +
+            '</div>' +
+            '   <input type="hidden" name="competence_names[]" value="' + name + '" />' +
+            '</td>' +
+            '<td>' +
+            '<button class="remove_unsaved_competence">x</button>' +
+            '</td>' +
+            '<td style="display:none;">' +
+            '<div class="competence_id">' + competenceId +
+            '</div>' +
+            '<input type="hidden" name="competence_ids[]" value="' + competenceId + '" />' +
+            '</td>' +
+            '</tr>';
+        @endif
+
 
         return code;
     }
