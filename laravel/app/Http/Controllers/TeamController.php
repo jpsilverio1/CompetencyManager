@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\CreateTeamFormRequest;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use App\Team;
@@ -30,7 +31,7 @@ class TeamController extends Controller
     {
         $team = new \App\Team;
         if (\Auth::user()->isManager()) {
-            return view('teams.create', ['team' => $team]);
+            return view('teams.create2', ['team' => $team]);
         } else {
             return redirect('/home');
         }
@@ -43,32 +44,34 @@ class TeamController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateTeamFormRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-			'name.*' => 'required|unique:teams,name',
-			'description.*' => 'required',
-		]);
-		
-		if ($validator->fails()) {
-            return redirect('teams/create')
-                        ->withErrors($validator)
-                        ->withInput();
+        $name = $request->get('name');
+        $description = $request->get('description');
+        $team = new \App\Team;
+        $team->name = $name;
+        $team->description = $description;
+        $team->save();
+        $names = $request->get('competence_names');
+        $competenceIds = $request->get('competence_ids');
+        $competenceLevels = $request->get('competence_levels');
+        for ($i=0; $i<sizeOf($names); $i++) {
+            $competenceId = $competenceIds[$i];
+            $competenceLevel = $competenceLevels[$i];
+            $competenceName = $names[$i];
+            $team->competencies()->attach($competenceId);
         }
-		
-		$names = $request->get('name');
-		$description = $request->get('description');
+        $userNames = $request->get('user_names');
+        $userIds = $request->get('user_ids');
+        var_dump($userNames);
+        var_dump($userIds);
+        for ($i=0; $i<sizeOf($userNames); $i++) {
+            $userId = $userIds[$i];
+            $userName = $userNames[$i];
+            $team->teamMembers()->attach($userId);
+        }
+        return view('teams.show', ['team' => $team, 'message' => 'A equipe foi cadastrada com sucesso!']);
 
-		for ($i=0; $i<sizeOf($names); $i++) {
-			$team = new \App\Team; 
-			$team->name = $names[$i];
-			$team->description = $description[$i];
-			$team->save();
-			
-		} 
-		return \Redirect::route('teams.show', 
-			array($team->id))
-			->with('message', 'A tarefa foi cadastrada.');
     }
 
     /**
@@ -79,7 +82,7 @@ class TeamController extends Controller
      */
     public function show($id)
     {
-        $team = DB::table('teams')->where('id', $id)->first();
+        $team = Team::where('id', $id)->first();
 		return view('teams.show', ['team' => $team]);
     }
 
