@@ -6,18 +6,18 @@
     <div class="container">
         <div class="row">
             <div class="panel panel-fullScreen">
-                <div class="panel-heading"><h3>Adicionar nova equipe</h3></div>
+                <div class="panel-heading"><h3>Adicionar nova tarefa</h3></div>
                 <div class="panel-body">
-                    <form class="form-horizontal" id="addTeamForm"role="form" method="POST" action="{{ route('teams.store') }}">
+                    <form class="form-horizontal" id="addTaskForm"role="form" method="POST" action="{{ route('tasks.store') }}">
                         {{ csrf_field() }}
-                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
                             <label for="name" class="col-md-2 control-label">Nome</label>
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" >
+                                <input id="title" type="text" class="form-control" name="title" value="{{ old('title') }}" >
 
-                                @if ($errors->has('name'))
+                                @if ($errors->has('title'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
+                                        <strong>{{ $errors->first('title') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -33,11 +33,18 @@
                                 @endif
                             </div>
                         </div>
-                        @include('competences.add_competences_without_button', ['showCompetenceLevel' => False])
-                        @include('users.add_users_without_button')
+                        <div>
+                            @if ($errors->has('competence_ids'))
+                                <span class="help-block">
+                                        <strong>{{ $errors->first('competence_ids') }}</strong>
+                                    </span>
+                            @endif
+                            @include('competences.add_competences_without_button', ['showCompetenceLevel' => True])
+                        </div>
+
                         <div class="form-group">
                             <div class="col-xs-5 col-xs-offset-1">
-                                <button type="submit" class="btn btn-primary">Cadastrar Equipe</button>
+                                <button type="submit" class="btn btn-primary">Cadastrar Tarefa</button>
                             </div>
                         </div>
                     </form>

@@ -28,12 +28,7 @@ class TaskController extends Controller
     public function create()
     {
         $task = new \App\Task;
-        if (\Auth::user()->isManager()) {
-            return view('tasks.create', ['task' => $task]);
-        } else {
-            return redirect('/home');
-        }
-
+        return view('tasks.create2');
 
     }
 
@@ -46,20 +41,27 @@ class TaskController extends Controller
     public function store(CreateTaskFormRequest $request)
     {
 		
-		$titles = $request->get('title');
+		$title = $request->get('title');
 		$description = $request->get('description');
 		$author_id = \Auth::user()->id;
 
-		for ($i=0; $i<sizeOf($titles); $i++) {
-			$task = new \App\Task; 
-			$task->title = $titles[$i];
-			$task->description = $description[$i];
-			$task->author_id = $author_id;
-			$task->save();
-		} 
-		
-		$allTasks = Task::paginate(10);
-        return view('tasks.index', ['tasks' => $allTasks, 'message' => 'As tarefas foram cadastradas com sucesso!']);
+        $task = new \App\Task;
+        $task->title = $title;
+        $task->description = $description;
+        $task->author_id = $author_id;
+        $task->save();
+
+        $names = $request->get('competence_names');
+        $competenceIds = $request->get('competence_ids');
+        $competenceLevels = $request->get('competence_levels');
+        for ($i=0; $i<sizeOf($names); $i++) {
+            $competenceId = $competenceIds[$i];
+            $competenceName = $names[$i];
+            $competenceLevel = $competenceLevels[$i];
+            $task->competencies()->attach([$competenceId => ['competency_level'=>$competenceLevel]]);
+        }
+
+        return view('tasks.show', ['task' => $task, 'message' => 'A tarefa foi cadastrada com sucesso!']);
 
     }
 

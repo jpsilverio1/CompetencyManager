@@ -26,6 +26,10 @@ class CreateTeamFormRequest extends FormRequest
         $rules = [];
         $rules['name'] = 'required|unique:teams|min:2|max:255';
         $rules['description'] = 'required|min:2';
+        /*foreach($this->request->get('competence_ids') as $key => $val)
+        {
+            $rules['competence_ids.'.$key] = 'required';
+        } */
         /*return [
             'title' => 'required|unique:posts|max:255',
             'body' => 'required',

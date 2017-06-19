@@ -17,10 +17,6 @@
                     Descrição
                 </h4>
                 <p>{{$team->description}}</p>
-                <h4>
-                    Autor
-                </h4>
-                <p> TODO? </p>
 
                 
                 <div class="panel panel-default">
@@ -41,7 +37,7 @@
                 </div>
                     <div>
                         <div class="col-md-2">
-                            <a href='{{ $team->id."/edit"}}'/><button type="submit" class="btn btn-primary">Editar Equipe</button>
+                            <a href="{{ route('teams.edit', $team->id) }}"/><button type="submit" class="btn btn-primary">Editar Equipe</button>
                         </div>
                         <div>
                             <form class="col-xs-offset-1" id="deleteTeamForm" role="form" method="POST" action="{{ route('teams.destroy', ['id' => $team->id] ) }}">

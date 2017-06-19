@@ -14,7 +14,7 @@ class CreateCompetenceFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return \Auth::user()->isManager();
     }
 
     /**
