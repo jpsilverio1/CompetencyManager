@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+    <?php include(app_path().'/includes/meuTeste.php'); ?>
     <div class="container">
         <div class="panel panel-default">
             <div class="panel-heading text-center text-capitalize" >
@@ -25,7 +26,27 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" >
                         Usuários aptos a realizar a tarefa
-                        @include('users.show_paginated_users', ['users' => $task->suitableAssignees()->paginate(5, ['*'],'users')])
+                    </div>
+                    <div class="panel-body">
+
+                            <?php $suitableAssigneesForTask = $task->suitableAssigneesSets(); ?>
+                                @if (count($suitableAssigneesForTask) > 0)
+                                    <ul>
+                                    @foreach($suitableAssigneesForTask as $users)
+                                        <li> Grupo
+                                            <ul>
+
+                                                @foreach($users as $user)
+                                                    <li><a href="{{ route('users.show', $user->id) }}">{{ $user->name }}</a></li>
+                                                @endforeach
+
+                                            </ul>
+                                        </li>
+                                    @endforeach
+                                    </ul>
+                                    @else
+                                        Não há usuários aptos a realizar esta tarefa
+                                    @endif
                     </div>
                 </div>
                 <div class="panel panel-default">
