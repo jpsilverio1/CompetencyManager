@@ -115,6 +115,11 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
+        $task = Task::findOrFail($id);
+		$task->competencies()->detach();
+		$task->delete(); 
+
+		$allTasks = Task::paginate(10);
+        return view('tasks.index', ['tasks' => $allTasks, 'message' => 'A tarefa foi excluída com sucesso!']);
+	}
 }
