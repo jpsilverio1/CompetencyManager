@@ -24,6 +24,17 @@ class User extends Authenticatable
             ->withPivot('competency_level');
     }
 
+    public function hasCompetence($competenceId) {
+        $userHasCompetence = $this->competencies()->where("competency_id", $competenceId)->get();
+        return !$userHasCompetence->isEmpty();
+    }
+
+    public function hasCompetenceInAcceptableLevel($competenceId, $acceptableCompetenceLevels) {
+        //wherePivotIn('competency_level', $acceptableCompetenceLevels)
+        $userHasCompetence = $this->competencies()->where("competency_id", $competenceId)->wherePivotIn('competency_level', $acceptableCompetenceLevels)->get();
+        return !$userHasCompetence->isEmpty();
+    }
+
     public function isManager() {
         return $this->level == 'manager';
         //\Auth::user()->level == 'manager'
