@@ -54,9 +54,9 @@ class Task extends Model
                     $foundUser = True;
                     break;
                 }
-                if (!$foundUser) {
-                    return False;
-                }
+            }
+            if (!$foundUser) {
+                return False;
             }
         }
         return True;
@@ -71,9 +71,26 @@ class Task extends Model
     }
     function getSuitableAssigneesFromSubset($allSubsetsOfMyUserSet, $allTaskCompetencesIds) {
         $suitableUserSubsets = [];
+        /*foreach ($allSubsetsOfMyUserSet as $olamundo) {
+            echo count($olamundo);
+            foreach ($olamundo as $user) {
+                echo "$user->name ";
+            }
+            echo "<br";
+        } */
+        //echo "to aqui!";
         foreach ($allSubsetsOfMyUserSet as $userSubset) {
+            /*echo count($userSubset);
+            foreach($userSubset as $user) {
+                echo ($user->name);
+                echo " ,";
+            }*/
+            /*echo "   ->  ";
+            $descricao = $this::isSubsetAcceptable($userSubset, $allTaskCompetencesIds) ? "Sim" : "Nao";
+            echo ($descricao);
+            echo " <br>";*/
             if ($this::isSubsetAcceptable($userSubset, $allTaskCompetencesIds)) {
-                $suitableUserSubsets[] = collect($userSubset);
+                $suitableUserSubsets[] = $userSubset;
                     //$this::getUserIdSet($userSubset);
             }
         }
@@ -123,15 +140,66 @@ class Task extends Model
         $allSubsetsOfMyUserSet = $this::powerSet($newArray,1);
         //echo "<br> oakoskaksokaksoaksokaoskoakoskoa <br>";
         //echo count($allSubsetsOfMyUserSet);
-
+        //echo count($allSubsetsOfMyUserSet);
+        /*foreach ($allSubsetsOfMyUserSet as $olamundo) {
+            echo count($olamundo);
+            foreach ($olamundo as $user) {
+                echo "$user->name ";
+            }
+            echo "<br";
+        } */
+        //echo "oi de novo";
         $suitableAssigneesIdsSet = $this::getSuitableAssigneesFromSubset($allSubsetsOfMyUserSet,$allTaskCompetencesIdsAndLevels);
         //echo "<br> <br>";
         //var_dump($allSubsetsOfMyUserSet);
         //echo "suitable results <br>:";
         //print_r($suitableAssigneesIdsSet);
-        return $suitableAssigneesIdsSet;
+        return $this::filterSets($suitableAssigneesIdsSet);
+        //return $suitableAssigneesIdsSet;
+        //return[];
         //$paginator = new Paginator($items->forPage($page,$per_page),$items->count(),$per_page,$page);
         //return this::getRelationList($suitableAssigneesIdsSet, $taskCompetences);
+
+    }
+
+    public function filterSets($suitableAssigneesIdsSet) {
+        $result = $suitableAssigneesIdsSet;
+        $flags = [];
+        foreach($suitableAssigneesIdsSet as $oi) {
+            $flags[] = True;
+        }
+        for ($i=0; $i<sizeOf($suitableAssigneesIdsSet); $i++) {
+            for ($j=$i+1; $j<sizeOf($suitableAssigneesIdsSet); $j++) {
+                /*echo "i = $i j= $j ";
+                echo sizeOf($suitableAssigneesIdsSet[$i]);
+                echo " - ";
+                echo sizeOf($suitableAssigneesIdsSet[$j]);
+                echo "<br>"; */
+                if ($flags[$j] && sizeOf($suitableAssigneesIdsSet[$i]) < sizeOf($suitableAssigneesIdsSet[$j])) {
+                    $oi = $diff = array_udiff($suitableAssigneesIdsSet[$i], $suitableAssigneesIdsSet[$j],
+                        function ($obj_a, $obj_b) {
+                            return $obj_a->id - $obj_b->id;
+                        }
+                    );
+                    if (!$oi) {
+                       // echo "$i is included in $j <br>";
+                        $flags[$j] = False;
+                    }
+                }
+            }
+        }
+        if (!in_array(False, $flags)) {
+            //nada a excluir
+            return $suitableAssigneesIdsSet;
+        }
+        $result =[];
+        for ($i=0; $i<sizeOf($suitableAssigneesIdsSet); $i++) {
+            if ($flags[$i]) {
+                $result[] = $suitableAssigneesIdsSet[$i];
+            }
+        }
+        //echo count($result);
+        return $result;
 
     }
 
