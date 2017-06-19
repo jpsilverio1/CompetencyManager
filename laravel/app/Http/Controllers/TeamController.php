@@ -123,6 +123,13 @@ class TeamController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $team = Team::findOrFail($id);
+		$team->competencies()->detach();
+		$team->teamMembers()->detach();
+		$team->delete(); 
+
+		$allTeams = Team::paginate(10);
+        return view('teams.index', ['teams' => $allTeams, 'message' => 'A equipe foi excluída com sucesso!']);
+	
     }
 }
