@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Http\Requests\CreateTaskFormRequest;
+use App\Http\Requests\EditTaskFormRequest;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use Illuminate\Http\Request;
@@ -61,7 +62,7 @@ class TaskController extends Controller
             $task->competencies()->attach([$competenceId => ['competency_level'=>$competenceLevel]]);
         }
 
-        return view('tasks.show', ['task' => $task, 'message' => 'A tarefa foi cadastrada com sucesso!']);
+        return $this->show($task->id, 'A tarefa foi cadastrada com sucesso!');
 
     }
 
@@ -71,10 +72,10 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {	
-		$task = Task::findOrFail($id);
-		return view('tasks.show', ['task' => $task]);
+    public function show($id, $message = null)
+    {
+        $task = Task::findOrFail($id);
+		return view('tasks.show', ['task' => $task, 'message' => $message]);
     }
 
     /**
@@ -96,17 +97,27 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateTaskFormRequest $request, $id)
+    public function update(EditTaskFormRequest $request, $id)
     {
-        $titles = $request->get('title');
+        $title = $request->get('title');
 		$description = $request->get('description');
+        $task = Task::findOrFail($id);
 
-		for ($i=0; $i<sizeOf($titles); $i++) {
-			Task::findOrFail($id)->update(['title' => $titles[$i], 'description' => $description[$i]]);
-		} 
-		
-		$task = Task::findOrFail($id);
-        return view('tasks.show', ['id' => $id, 'task' => $task, 'message' => 'A tarefa foi atualizada com sucesso!']);
+        $task->title = $title;
+        $task->description = $description;
+        $task->save();
+        $names = $request->get('competence_names');
+        $competenceIds = $request->get('competence_ids');
+        $competenceLevels = $request->get('competence_levels');
+        for ($i=0; $i<sizeOf($names); $i++) {
+            $competenceId = $competenceIds[$i];
+            $competenceName = $names[$i];
+            $competenceLevel = $competenceLevels[$i];
+            echo "$competenceName - $competenceLevel<br>";
+            $task->competencies()->attach([$competenceId => ['competency_level'=>$competenceLevel]]);
+        }
+
+        return $this->show($task->id, 'A tarefa foi atualizada com sucesso!');
     }
 
     /**
@@ -124,4 +135,10 @@ class TaskController extends Controller
 		$allTasks = Task::paginate(10);
         return view('tasks.index', ['tasks' => $allTasks, 'message' => 'A tarefa foi excluída com sucesso!']);
 	}
+
+	public function deleteCompetenceFromTask($taskId, $competenceId) {
+        $task = Task::findOrFail($taskId);
+        $task->competencies()->detach($competenceId);
+        return $this->edit($taskId);
+    }
 }

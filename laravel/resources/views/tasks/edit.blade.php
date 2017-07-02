@@ -10,33 +10,28 @@
                     <div class="panel-body">
                         <form class="form-horizontal" id="editTaskForm" role="form" method="POST" action="{{ route('tasks.update', ['id' => $task->id]) }}">
                             {{ csrf_field() }}
-                            @if (count($errors) > 0)
-                                <div class="alert alert-danger">
-                                    Houve algum problema ao editar a tarefa.<br />
-                                </div>
-                            @endif
 							<table class="table table-striped task-table" id="editTaskTable">
                                 <tbody>
                                 <tr>
 									<input type="hidden" name="_method" value="put" />
 									<input type="hidden" name="id" value="{{ $task->id }}" />
-                                    <td class="form-group  col-md-5{{ $errors->has('title.0') ? ' has-error' : '' }}">
+                                    <td class="form-group  col-md-5{{ $errors->has('title') ? ' has-error' : '' }}">
                                         <label for="name" class="col-md-1 control-label">Tarefa</label>
                                         <div class=" col-md-offset-4">
-                                            <input type="text" class="form-control" name="title[]" placeholder="Título da tarefa"  value="{{ old('title.0', $task->title) }}">
-                                            @if ($errors->has('title.0'))
+                                            <input type="text" class="form-control" name="title" placeholder="Título da tarefa"  value="{{ old('title', $task->title) }}">
+                                            @if ($errors->has('title'))
                                                 <span class="help-block">
-													<strong>{{ $errors->first('title.0') }}</strong>
+													<strong>{{ $errors->first('title') }}</strong>
 												</span>
                                             @endif
                                         </div>
                                     </td>
-                                    <td class="form-group col-md-5 col-md-offset-2{{ $errors->has('description.0') ? ' has-error' : '' }}">
+                                    <td class="form-group col-md-5 col-md-offset-2{{ $errors->has('description') ? ' has-error' : '' }}">
                                         <div class="">
-                                            <input type="text" class="form-control" name="description[]" placeholder="Descrição da tarefa" value="{{ old('description.0', $task->description) }}">
-                                            @if ($errors->has('description.0'))
+                                            <input type="text" class="form-control" name="description" placeholder="Descrição da tarefa" value="{{ old('description', $task->description) }}">
+                                            @if ($errors->has('description'))
                                                 <span class="help-block">
-													<strong>{{ $errors->first('description.0') }}</strong>
+													<strong>{{ $errors->first('description') }}</strong>
 												</span>
                                             @endif
                                         </div>
@@ -44,6 +39,14 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            <div>
+                                @if ($errors->has('competence_ids'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('competence_ids') }}</strong>
+                                    </span>
+                                @endif
+                                @include('competences.add_competences_without_button', ['showCompetenceLevel' => True])
+                            </div>
 
                             <div class="form-group">
                                 <div class="col-xs-5 col-xs-offset-1">
@@ -51,6 +54,9 @@
                                 </div>
                             </div>
                         </form>
+                        <div class="row">
+                            @include('tasks.show_paginated_competences_for_removal')
+                        </div>
 						<form class="col-xs-offset-1" id="deleteTasksForm" role="form" method="POST" action="{{ route('tasks.destroy', ['id' => $task->id] ) }}">
 							{{ csrf_field() }}
 							<input type="hidden" name="_method" value="DELETE" />

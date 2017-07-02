@@ -127,7 +127,6 @@ class Task extends Model
             }
         }
         if (count($allTaskCompetencesIdsAndLevels) == 0) {
-            echo "nao tem suitable assignees";
             return [];
         }
         $newArray = [];

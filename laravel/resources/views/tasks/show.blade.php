@@ -60,7 +60,7 @@
 
                     <div>
                         <div class="col-md-2">
-                            <td><a href='{{ $task->id."/edit"}}'/><button type="submit" class="btn btn-primary">Editar Tarefa</button></td>
+                            <td><a href='{{ route('tasks.edit', $task->id) }}'/><button type="submit" class="btn btn-primary">Editar Tarefa</button></td>
                         </div>
                         <div>
                             <form class="col-xs-offset-1" id="deleteTaskForm" role="form" method="POST" action="{{ route('tasks.destroy', ['id' => $task->id] ) }}">
