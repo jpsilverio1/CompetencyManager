@@ -31,6 +31,8 @@ Route::delete('/task/{id}', function ($id) {
 Route::delete('/user-team/{teamId}', 'UserController@deleteUserFromTeam');
 Route::delete('/user-competency/{competencyId}', 'UserController@deleteCompetencyFromUser');
 Route::delete('/task-competence/{taskId}/{competencyId}', 'TaskController@deleteCompetenceFromTask');
+Route::delete('/team-member/{teamId}/{memberId}', 'TeamController@deleteMemberFromTeam');
+
 
 Route::resource('competences', 'CompetenceController');
 

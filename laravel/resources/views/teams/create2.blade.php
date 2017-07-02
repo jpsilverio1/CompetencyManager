@@ -33,8 +33,10 @@
                                 @endif
                             </div>
                         </div>
-                        @include('competences.add_competences_without_button', ['showCompetenceLevel' => False])
-                        @include('users.add_users_without_button')
+                        <div class="row col-xs-offset-1f">
+                            @include('users.add_users_without_button')
+                        </div>
+
                         <div class="form-group">
                             <div class="col-xs-5 col-xs-offset-1">
                                 <button type="submit" class="btn btn-primary">Cadastrar Equipe</button>

@@ -27,7 +27,8 @@
                 @endif
                 @if($showDeleteButton)
                     <td>
-                        <form action="/user-competency/{{ $competence->id }}" method="POST">
+
+                        <form action="{{$path_to_removal}}{{ $competence->id }}" method="POST">
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
 

@@ -18,7 +18,9 @@ class Team extends Model
 
     public function competencies()
     {
-        return $this->belongsToMany('App\Competency', 'team_competencies');
+        //FIXME - NOT WORKING!!
+        return $this->teamMembers()->competencies;
+        //return $this->belongsToMany('App\Competency', 'team_competencies');
     }
 
     public function teamMembers()

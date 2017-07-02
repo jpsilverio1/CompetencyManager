@@ -32,7 +32,8 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" >
                         Integrantes desta equipe
-                        @include('users.show_paginated_users', ['users' => $team->teamMembers()->paginate(5, ['*'],'teams')])
+                        @include('users.show_paginated_users', ['users' => $team->teamMembers()->paginate(5, ['*'],'teams'),
+                        'showDeleteButton' => False])
                     </div>
                 </div>
                     <div>
