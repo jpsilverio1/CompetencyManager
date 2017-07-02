@@ -22,7 +22,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" >
                         Competências para esta Equipe
-                        @include('competences.show_paginated_competences', ['competences' => $team->competencies() ->paginate(5, ['*'],'competences'),
+                        @include('competences.show_paginated_competences', ['competences' => $team->competencies(),
                         'showCompetenceLevel' => False,
                         'showDeleteButton' => False,
                         'noCompetencesMessage' => 'Não há competências para exibição.'])
