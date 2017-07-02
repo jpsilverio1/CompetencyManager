@@ -20,6 +20,8 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/user-competences', 'UserController@addCompetences');
 Route::post('/user-endorsements', 'EndorsementController@addEndorsement');
+Route::post('/team-competences/{teamId}', 'TeamController@addCompetences');
+
 Route::get("/jessica", function(){
     return View::make("jessica");
 });
@@ -30,7 +32,12 @@ Route::delete('/task/{id}', function ($id) {
 });
 Route::delete('/user-team/{teamId}', 'UserController@deleteUserFromTeam');
 Route::delete('/user-competency/{competencyId}', 'UserController@deleteCompetencyFromUser');
+Route::delete('/team-competency/{competencyId}/{team}', 'TeamController@deleteCompetencyFromTeam');
+
+
 Route::resource('competences', 'CompetenceController');
+
+
 
 Route::resource('teams', 'TeamController');
 Route::resource('tasks', 'TaskController');

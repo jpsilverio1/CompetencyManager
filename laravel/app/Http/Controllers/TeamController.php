@@ -129,4 +129,24 @@ class TeamController extends Controller
         return view('teams.index', ['teams' => $allTeams, 'message' => 'A equipe foi excluída com sucesso!']);
 	
     }
+	
+	public function addCompetences(Request $request, $teamId) {
+		
+		$team = Team::findOrFail($teamId);
+
+        $names = $request->get('name');
+        $competenceIds = $request->get('competence_id');
+        $competenceLevels = $request->get('competence_level');
+        for ($i=0; $i<sizeOf($names); $i++) {
+            $competenceId = $competenceIds[$i];
+            $competenceLevel = $competenceLevels[$i];
+            $team->competencies()->attach($competenceId);
+        }
+    }
+	
+	public function deleteCompetencyFromTeam($competenceId, $team) {
+		$team->competencies()->detach($competenceId);
+        return redirect('/home');
+    }
+	
 }

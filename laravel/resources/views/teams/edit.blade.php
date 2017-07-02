@@ -45,19 +45,27 @@
                                 </tr>
                                 </tbody>
                             </table>
+							
+							
 
-                            <div class="form-group">
+                            <div class="form-group" >
                                 <div class="col-xs-5 col-xs-offset-1">
-                                    <button type="submit" class="btn btn-primary">Salvar Equipe</button>
+                                    <button type="submit" class="btn btn-primary">Salvar</button>
                                 </div>
                             </div>
                         </form>
+						
+						<div class="row">
+							@include('teams.show_competences')
+							@include('teams.add_competences_with_button')
+						</div>
 						<form class="col-xs-offset-1" id="deleteTeamsForm" role="form" method="POST" action="{{ route('teams.destroy', ['id' => $team->id] ) }}">
 							{{ csrf_field() }}
 							<input type="hidden" name="_method" value="DELETE" />
 							<input type="hidden" name="id" value="{{ $team->id }}" />       
 							<button type="" class="btn btn-danger">Excluir Equipe</button>
 						</form>
+						
                     </div>
                 </div>
         </div>
