@@ -8,7 +8,8 @@
                     <td class="table-text">
                         <div><a href="{{ route('tasks.show', $task->id) }}">{{ $task->title }}</a></div>
                     </td>
-					<td><a href='{{ "tasks/".$task->id."/edit"}}'/><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
+					
+					<td><a href="{{ route('tasks.edit', $task->id) }}"/><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
 									
 					<form class="col-xs-offset-1" id="deleteTaskForm" role="form" method="POST" action="{{ route('tasks.destroy', ['id' => $task->id] ) }}">
 						{{ csrf_field() }}

@@ -1,10 +1,12 @@
 @if (count($users) > 0)
     <table class="table table-striped task-table" id="showCompetencesTable">
-        @if($showDeleteButton)
-            <th>Nome </th>
-            <th> Função</th>
-            <th>Excluir membro?</th>
-        @endif
+        @if (isset($showDeleteButton))
+			@if($showDeleteButton)
+				<th>Nome </th>
+				<th> Função</th>
+				<th>Excluir membro?</th>
+			@endif
+		@endif
         <!-- Table Body -->
         <tbody>
         @foreach ($users as $user)
@@ -16,17 +18,19 @@
                 <td class="table-text text-capitalize">
                     <div>{{ $user->level}}</div>
                 </td>
-                @if($showDeleteButton)
-                    <td>
+				@if (isset($showDeleteButton))
+					@if($showDeleteButton)
+						<td>
 
-                        <form action="{{$path_to_removal}}{{ $user->id }}" method="POST">
-                            {{ csrf_field() }}
-                            {{ method_field('DELETE') }}
+							<form action="{{$path_to_removal}}{{ $user->id }}" method="POST">
+								{{ csrf_field() }}
+								{{ method_field('DELETE') }}
 
-                            <button>x</button>
-                        </form>
-                    </td>
-                @endif
+								<button>x</button>
+							</form>
+						</td>
+					@endif
+				@endif
             </tr>
         @endforeach
         </tbody>

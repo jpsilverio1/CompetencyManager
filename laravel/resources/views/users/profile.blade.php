@@ -22,6 +22,18 @@
             @else
                 @include('users.show_competences_for_endorsement', ['competences' => $user->competencies, 'profile_user' => $user, 'showEndorsementSection' => True])
             @endif
+			<div class="panel panel-default">
+                    <div class="panel-heading" >
+                        Tarefas criadas por este usuário
+                        @include('tasks.show_paginated_tasks', ['tasks' => Auth::user()->createdTasks()->paginate(10, ['*'],'tasks'), 'noTasksMessage' => 'Não há tarefas para exibição.'])
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" >
+                        Equipes das quais o usuário faz parte
+                        @include('teams.show_paginated_teams', ['teams' => Auth::user()->teams()->paginate(10, ['*'],'teams')])
+                    </div>
+                </div>
 
         </div>
     </div>
