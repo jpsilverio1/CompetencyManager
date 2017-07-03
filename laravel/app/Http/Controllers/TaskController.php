@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Http\Requests\CreateTaskFormRequest;
 use App\Http\Requests\EditTaskFormRequest;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use Illuminate\Http\Request;
@@ -130,10 +131,10 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
 		$task->competencies()->detach();
-		$task->delete(); 
+		$task->delete();
 
-		$allTasks = Task::paginate(10);
-        return view('tasks.index', ['tasks' => $allTasks, 'message' => 'A tarefa foi excluída com sucesso!']);
+        return Redirect::route('tasks.index')->withMessage('A tarefa foi excluída com sucesso!');
+
 	}
 
 	public function deleteCompetenceFromTask($taskId, $competenceId) {

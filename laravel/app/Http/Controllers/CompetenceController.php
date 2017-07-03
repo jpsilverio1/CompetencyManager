@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateCompetenceFormRequest;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+
 use Illuminate\Support\Facades\Validator;
 use DB;
 
@@ -98,10 +100,10 @@ class CompetenceController extends Controller
 		$competence->skilledUsers()->detach();
 		$competence->tasksThatRequireIt()->detach();
 		$competence->teamsThatHaveIt()->detach(); 
-		$competence->delete(); 
+		$competence->delete();
 
-		$allCompetences = Competency::paginate(10);
-        return view('competences.index', ['competences' => $allCompetences, 'message' => 'A competência foi excluída com sucesso!']);
+        return Redirect::route('competences.index')->withMessage('A competência foi excluída com sucesso!');
+
 	}
 	
 }

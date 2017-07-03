@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateTeamFormRequest;
 use App\Http\Requests\EditTeamFormRequest;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use App\Team;
@@ -132,11 +133,11 @@ class TeamController extends Controller
         $team = Team::findOrFail($id);
 		$team->competencies()->detach();
 		$team->teamMembers()->detach();
-		$team->delete(); 
+		$team->delete();
 
-		$allTeams = Team::paginate(10);
-        return view('teams.index', ['teams' => $allTeams, 'message' => 'A equipe foi excluída com sucesso!']);
-	
+
+        return Redirect::route('teams.index')->withMessage('A equipe foi excluída com sucesso!');
+
     }
 
     public function deleteMemberFromTeam($teamId, $memberId) {
