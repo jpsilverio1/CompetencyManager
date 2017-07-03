@@ -59,6 +59,19 @@
                                     <li><a href="{{ route('teams.index') }}">Equipes</a></li>
                                 </ul>
                             </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Cadastrar <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    @if (Auth::user()->isManager())
+                                        <li class="divider"></li>
+                                        <li><a href="{{ route('competences.create')}}">Competências</a></li>
+                                    @endif
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('teams.create') }}">Equipe</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('tasks.create') }}">Tarefa</a></li>
+                                </ul>
+                            </li>
                             @endif
                     </ul>
 
