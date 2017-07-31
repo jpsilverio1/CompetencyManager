@@ -4,10 +4,8 @@
 namespace App\Http\Controllers;
 use App\Http\Requests\CreateCompetenceFormRequest;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
-use Illuminate\Support\Facades\Validator;
 use DB;
 
 use App\Category;
@@ -40,13 +38,11 @@ class CompetenceController extends Controller
 	 
 	public function create()
 	{
-		$competence = new \App\Competency;
         if (\Auth::user()->isManager()) {
-            return view('competences.create2');
+            return view('competences.create');
         } else {
             return redirect('/home');
         }
-
 	}
 	
 	public function show($id) 

@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateTaskFormRequest;
 use App\Http\Requests\EditTaskFormRequest;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Validator;
 use DB;
-use Illuminate\Http\Request;
 use App\Task;
 
 class TaskController extends Controller
@@ -30,8 +28,7 @@ class TaskController extends Controller
     public function create()
     {
         $task = new \App\Task;
-        return view('tasks.create2');
-
+        return view('tasks.create');
     }
 
     /**
@@ -42,7 +39,6 @@ class TaskController extends Controller
      */
     public function store(CreateTaskFormRequest $request)
     {
-		
 		$title = $request->get('title');
 		$description = $request->get('description');
 		$author_id = \Auth::user()->id;
@@ -53,18 +49,14 @@ class TaskController extends Controller
         $task->author_id = $author_id;
         $task->save();
 
-        $names = $request->get('competence_names');
         $competenceIds = $request->get('competence_ids');
         $competenceLevels = $request->get('competence_levels');
-        for ($i=0; $i<sizeOf($names); $i++) {
+        for ($i=0; $i<sizeOf($competenceIds); $i++) {
             $competenceId = $competenceIds[$i];
-            $competenceName = $names[$i];
             $competenceLevel = $competenceLevels[$i];
             $task->competencies()->attach([$competenceId => ['competency_level'=>$competenceLevel]]);
         }
-
-        return $this->show($task->id, 'A tarefa foi cadastrada com sucesso!');
-
+        return Redirect::route('tasks.show',$task->id)->withMessage('A tarefa foi cadastrada com sucesso!');
     }
 
     /**
@@ -107,18 +99,14 @@ class TaskController extends Controller
         $task->title = $title;
         $task->description = $description;
         $task->save();
-        $names = $request->get('competence_names');
         $competenceIds = $request->get('competence_ids');
         $competenceLevels = $request->get('competence_levels');
-        for ($i=0; $i<sizeOf($names); $i++) {
+        for ($i=0; $i<sizeOf($competenceIds); $i++) {
             $competenceId = $competenceIds[$i];
-            $competenceName = $names[$i];
             $competenceLevel = $competenceLevels[$i];
-            echo "$competenceName - $competenceLevel<br>";
             $task->competencies()->attach([$competenceId => ['competency_level'=>$competenceLevel]]);
         }
-
-        return $this->show($task->id, 'A tarefa foi atualizada com sucesso!');
+        return Redirect::route('tasks.show',$task->id)->withMessage('A tarefa foi atualizada com sucesso!');
     }
 
     /**

@@ -19,34 +19,28 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-
-
-
-
-Route::resource('competences', 'CompetenceController');
+/* User has to be authenticated to acess all of the routes listed below*/
 Route::group(['middleware' => 'auth'], function() {
     Route::resource('tasks', 'TaskController');
     Route::resource('teams', 'TeamController');
+    Route::resource('competences', 'CompetenceController');
+    Route::resource('users','UserController');
+
+    /* pivot tables deletion routes */
     Route::delete('/user-team/{teamId}', 'UserController@deleteUserFromTeam');
     Route::delete('/user-competency/{competencyId}', 'UserController@deleteCompetencyFromUser');
     Route::delete('/task-competence/{taskId}/{competencyId}', 'TaskController@deleteCompetenceFromTask');
     Route::delete('/team-member/{teamId}/{memberId}', 'TeamController@deleteMemberFromTeam');
-    Route::resource('users','UserController');
-    Route::delete('/task/{id}', function ($id) {
-        Task::findOrFail($id)->delete();
 
-        return redirect('/');
-    });
     Route::post('/user-competences', 'UserController@addCompetences');
     Route::post('/user-endorsements', 'EndorsementController@addEndorsement');
+
+    /* autocomplete-related routes */
+    Route::get('search-competence',array('as'=>'search-competence','uses'=>'SearchController@autocompleteCompetence'));
+    Route::get('search-user',array('as'=>'search-user','uses'=>'SearchController@autocompleteUser'));
 });
 
 
 
-Route::get('search-competence',array('as'=>'search-competence','uses'=>'SearchController@autocompleteCompetence'));
-//Route::get('autocomplete',array('as'=>'autocomplete','uses'=>'SearchController@index'));
-//Route::get('autocomplete',array('as'=>'autocomplete','uses'=>'SearchController@index'));
-//Route::get('search',array('as'=>'searchajax','uses'=>'SearchController@autoComplete'));
 
-Route::get('search-user',array('as'=>'search-user','uses'=>'SearchController@autocompleteUser'));
 

@@ -19,7 +19,6 @@ class EndorsementController
         $competenceLevel = $request->get('competence_level');
         $endorsedUserId = $request->get('endorsed_user_id');
         $endorser = \Auth::user();
-        $endorserId = $endorser->id;
         $endorser->addEndorsement($endorsedUserId, $competenceId, $competenceLevel);
         return redirect("users/$endorsedUserId");
     }

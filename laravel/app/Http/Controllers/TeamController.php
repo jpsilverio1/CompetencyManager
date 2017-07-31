@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\CreateTeamFormRequest;
 use App\Http\Requests\EditTeamFormRequest;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Validator;
 use DB;
 use App\Team;
 
@@ -31,10 +29,7 @@ class TeamController extends Controller
      */
     public function create()
     {
-
-            return view('teams.create2');
-
-        //
+        return view('teams.create');
     }
 
     /**
@@ -51,22 +46,12 @@ class TeamController extends Controller
         $team->name = $name;
         $team->description = $description;
         $team->save();
-        /*$names = $request->get('competence_names');
-        $competenceIds = $request->get('competence_ids');
-        for ($i=0; $i<sizeOf($names); $i++) {
-            $competenceId = $competenceIds[$i];
-            $competenceName = $names[$i];
-            $team->competencies()->attach($competenceId);
-        } */
-        $userNames = $request->get('user_names');
         $userIds = $request->get('user_ids');
-        for ($i=0; $i<sizeOf($userNames); $i++) {
+        for ($i=0; $i<sizeOf($userIds); $i++) {
             $userId = $userIds[$i];
-            $userName = $userNames[$i];
             $team->teamMembers()->attach($userId);
         }
-        return view('teams.show', ['team' => $team, 'message' => 'A equipe foi cadastrada com sucesso!']);
-
+        return Redirect::route('teams.show',$team->id)->withMessage('A equipe foi cadastrada com sucesso!');
     }
 
     /**
@@ -102,24 +87,20 @@ class TeamController extends Controller
      */
     public function update(EditTeamFormRequest $request, $id)
     {
-
-        $descricao = $request->get('description');
-        $nome = $request->get('name');
-        $userNames = $request->get('user_names');
+        $description = $request->get('description');
+        $name = $request->get('name');
         $userIds = $request->get('user_ids');
 
         $team = Team::findOrFail($id);
-        $team->name = $nome;
-        $team->description = $descricao;
+        $team->name = $name;
+        $team->description = $description;
         $team->save();
 
-        for ($i=0; $i<sizeOf($userNames); $i++) {
+        for ($i=0; $i<sizeOf($userIds); $i++) {
             $userId = $userIds[$i];
-            $userName = $userNames[$i];
-            echo "<br> usuario = $userName - $userId";
             $team->teamMembers()->attach($userId);
         }
-        return $this->show($team->id, 'A equipe foi atualizada com sucesso!');
+        return Redirect::route('teams.show',$team->id)->withMessage('A equipe foi atualizada com sucesso!');
     }
 
     /**
@@ -134,8 +115,6 @@ class TeamController extends Controller
 		$team->competencies()->detach();
 		$team->teamMembers()->detach();
 		$team->delete();
-
-
         return Redirect::route('teams.index')->withMessage('A equipe foi excluída com sucesso!');
 
     }

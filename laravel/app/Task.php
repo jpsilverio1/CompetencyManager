@@ -25,6 +25,7 @@ class Task extends Model
     {
         return $this->belongsTo('App\User');
     }
+
     private function powerSet($in,$minLength = 1) {
         $count = count($in);
         $members = pow(2,$count);
@@ -42,14 +43,9 @@ class Task extends Model
         return $return;
     }
     function isSubsetAcceptable($userSubset, $allTaskCompetencesIds) {
-        //echo "allTaskCompetence Ids: ";
-        //print_r($allTaskCompetencesIds);
-        //echo "<br>";
         foreach ($allTaskCompetencesIds as $competenceId => $competenceAcceptableLevels) {
             $foundUser = False;
             foreach ($userSubset as $user) {
-                //$userHasComp = $user->hasCompetenceInAcceptableLevel($competenceId, $competenceAcceptableLevels) ? "tem competencia" : "nao tem competencia";
-                //echo "Competence: $competenceId User: $user->name -  $userHasComp <br> ";
                 if ($user->hasCompetenceInAcceptableLevel($competenceId, $competenceAcceptableLevels)) {
                     $foundUser = True;
                     break;
@@ -62,36 +58,12 @@ class Task extends Model
         return True;
 
     }
-    function getUserIdSet($userSet) {
-        $userIds = [];
-        foreach($userSet as $user) {
-            $userIds[] = $user->id;
-        }
-        return $userIds;
-    }
+
     function getSuitableAssigneesFromSubset($allSubsetsOfMyUserSet, $allTaskCompetencesIds) {
         $suitableUserSubsets = [];
-        /*foreach ($allSubsetsOfMyUserSet as $olamundo) {
-            echo count($olamundo);
-            foreach ($olamundo as $user) {
-                echo "$user->name ";
-            }
-            echo "<br";
-        } */
-        //echo "to aqui!";
         foreach ($allSubsetsOfMyUserSet as $userSubset) {
-            /*echo count($userSubset);
-            foreach($userSubset as $user) {
-                echo ($user->name);
-                echo " ,";
-            }*/
-            /*echo "   ->  ";
-            $descricao = $this::isSubsetAcceptable($userSubset, $allTaskCompetencesIds) ? "Sim" : "Nao";
-            echo ($descricao);
-            echo " <br>";*/
             if ($this::isSubsetAcceptable($userSubset, $allTaskCompetencesIds)) {
                 $suitableUserSubsets[] = $userSubset;
-                    //$this::getUserIdSet($userSubset);
             }
         }
         return $suitableUserSubsets;
@@ -112,18 +84,14 @@ class Task extends Model
             $allTaskCompetencesIdsAndLevels[$taskCompetence->id] = $acceptableCompetenceLevels;
             $usersThatHaveTheCompetenceInAnAcceptableLevel = $taskCompetence->skilledUsers()->wherePivotIn('competency_level', $acceptableCompetenceLevels)->get();
             if ($usersThatHaveTheCompetenceInAnAcceptableLevel->isEmpty()) {
-                //echo "Nao há um usuário com essa competencia no nivel aceitavel - $taskCompetence->name - $taskCompetence->id $taskRequiredCompetenceLevel <br>";
+                //there is no user that has the competency in an acceptable level
                 return [];
             } else {
-
-               // echo "tem algum usuario - $taskCompetence->name $taskCompetence->id - $taskRequiredCompetenceLevel <br> ";
-                //echo count($usersThatHaveTheCompetenceInAnAcceptableLevel);
                 foreach($usersThatHaveTheCompetenceInAnAcceptableLevel as $user) {
                     if (!array_key_exists($user->id, $myUserSet)) {
                         $myUserSet[$user->id] = $user;
                     }
                 }
-
             }
         }
         if (count($allTaskCompetencesIdsAndLevels) == 0) {
@@ -137,28 +105,8 @@ class Task extends Model
         // gerar todos os subsets desse set e ver se os usuarios tem todas as competencias
 
         $allSubsetsOfMyUserSet = $this::powerSet($newArray,1);
-        //echo "<br> oakoskaksokaksoaksokaoskoakoskoa <br>";
-        //echo count($allSubsetsOfMyUserSet);
-        //echo count($allSubsetsOfMyUserSet);
-        /*foreach ($allSubsetsOfMyUserSet as $olamundo) {
-            echo count($olamundo);
-            foreach ($olamundo as $user) {
-                echo "$user->name ";
-            }
-            echo "<br";
-        } */
-        //echo "oi de novo";
         $suitableAssigneesIdsSet = $this::getSuitableAssigneesFromSubset($allSubsetsOfMyUserSet,$allTaskCompetencesIdsAndLevels);
-        //echo "<br> <br>";
-        //var_dump($allSubsetsOfMyUserSet);
-        //echo "suitable results <br>:";
-        //print_r($suitableAssigneesIdsSet);
         return $this::filterSets($suitableAssigneesIdsSet);
-        //return $suitableAssigneesIdsSet;
-        //return[];
-        //$paginator = new Paginator($items->forPage($page,$per_page),$items->count(),$per_page,$page);
-        //return this::getRelationList($suitableAssigneesIdsSet, $taskCompetences);
-
     }
 
     public function filterSets($suitableAssigneesIdsSet) {
@@ -169,11 +117,6 @@ class Task extends Model
         }
         for ($i=0; $i<sizeOf($suitableAssigneesIdsSet); $i++) {
             for ($j=$i+1; $j<sizeOf($suitableAssigneesIdsSet); $j++) {
-                /*echo "i = $i j= $j ";
-                echo sizeOf($suitableAssigneesIdsSet[$i]);
-                echo " - ";
-                echo sizeOf($suitableAssigneesIdsSet[$j]);
-                echo "<br>"; */
                 if ($flags[$j] && sizeOf($suitableAssigneesIdsSet[$i]) < sizeOf($suitableAssigneesIdsSet[$j])) {
                     $oi = $diff = array_udiff($suitableAssigneesIdsSet[$i], $suitableAssigneesIdsSet[$j],
                         function ($obj_a, $obj_b) {
@@ -197,19 +140,7 @@ class Task extends Model
                 $result[] = $suitableAssigneesIdsSet[$i];
             }
         }
-        //echo count($result);
         return $result;
 
-    }
-
-    public function getRelationList($suitableAssigneesIdsSet, $taskCompetences) {
-
-    }
-
-    public function suitableTeams()
-    {
-        //TODO
-        return $this->belongsToMany('App\Competency', 'task_competencies')
-            ->withPivot('competency_level');
     }
 }

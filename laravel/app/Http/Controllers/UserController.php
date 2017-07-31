@@ -23,7 +23,6 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
         $allUsers = User::paginate(10);
         return view('users.index', ['users' => $allUsers]);
     }
@@ -46,7 +45,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -91,11 +90,6 @@ class UserController extends Controller
 		#Checar senha nova com confirmação de senha nova 
 		#Checar nível
 
-		for ($i=0; $i<sizeOf($titles); $i++) {
-			Task::findOrFail($id)->update(['title' => $titles[$i], 'description' => $description[$i]]);
-		} 
-		
-		$task = Task::findOrFail($id);
         return view('users.profile', ['id' => $id, 'user' => \Auth::user(), 'message' => 'Seu perfil foi atualizado com sucesso!']);
 		
     }
