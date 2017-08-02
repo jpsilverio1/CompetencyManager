@@ -1,6 +1,4 @@
 <table class="table table-striped task-table" id="showCompetencesTable">
-
-
     <!-- Table Body -->
     <tbody>
     @if (count($competences) > 0)

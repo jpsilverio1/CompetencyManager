@@ -68,11 +68,10 @@
                             <td><a href='{{ route('tasks.edit', $task->id) }}'/><button type="submit" class="btn btn-primary">Editar Tarefa</button></td>
                         </div>
                         <div>
-                            <form class="col-xs-offset-1" id="deleteTaskForm" role="form" method="POST" action="{{ route('tasks.destroy', ['id' => $task->id] ) }}">
+                            <form class="col-xs-offset-1" id="deleteTaskForm" role="form" method="POST" action="{{ route('tasks.destroy', $task->id ) }}">
                                 {{ csrf_field() }}
                                 <input type="hidden" name="_method" value="DELETE" />
-                                <input type="hidden" name="id" value="{{ $task->id }}" />
-                                <td><button type="" class="btn btn-danger">Excluir Tarefa</button></td>
+                                <td><button class="btn btn-danger">Excluir Tarefa</button></td>
                             </form>
                         </div>
                     </div>

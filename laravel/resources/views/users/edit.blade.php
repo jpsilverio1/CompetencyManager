@@ -7,10 +7,9 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Editar Informações do Perfil</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('users.update', ['id' => \Auth::user()->id]) }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ route('users.update', \Auth::user()->id) }}">
                         {{ csrf_field() }}
 						<input type="hidden" name="_method" value="put" />
-						<input type="hidden" name="id" value="{{ \Auth::user()->id }}" />
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="name" class="col-md-4 control-label">Name</label>
 

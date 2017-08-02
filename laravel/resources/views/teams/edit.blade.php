@@ -69,11 +69,10 @@
                             </div>
                         </div>
 
-						<form class="col-xs-offset-1" id="deleteTeamsForm" role="form" method="POST" action="{{ route('teams.destroy', ['id' => $team->id] ) }}">
+						<form class="col-xs-offset-1" id="deleteTeamsForm" role="form" method="POST" action="{{ route('teams.destroy', $team->id ) }}">
 							{{ csrf_field() }}
 							<input type="hidden" name="_method" value="DELETE" />
-							<input type="hidden" name="id" value="{{ $team->id }}" />       
-							<button type="" class="btn btn-danger">Excluir Equipe</button>
+							<button class="btn btn-danger">Excluir Equipe</button>
 						</form>
                     </div>
                 </div>

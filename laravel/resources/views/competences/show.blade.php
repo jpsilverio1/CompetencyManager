@@ -8,13 +8,11 @@
                 </h2>
             </div>
             <div class="panel-body">
-			
 				@if (!empty($message) > 0)
                     <div class="alert alert-success">
                         {{$message}}<br />
 						</div>
                 @endif
-			
                <h4>
                    Descrição
                </h4>
@@ -39,21 +37,18 @@
                 </div>
                     <div>
                         <div class="col-md-2">
-                            <a href='{{ $competence->id."/edit"}}'/><button type="submit" class="btn btn-primary">Editar Competência</button>
+                            <a href='{{ route('competences.edit', $competence->id) }}'/><button type="submit" class="btn btn-primary">Editar Competência</button>
                         </div>
                         <div>
-                            <form  id="deleteCompetencesForm" role="form" method="POST" action="{{ route('competences.destroy', ['id' => $competence->id] ) }}">
+                            <form  id="deleteCompetencesForm" role="form" method="POST" action="{{ route('competences.destroy', $competence->id ) }}">
                                 {{ csrf_field() }}
                                 <input type="hidden" name="_method" value="DELETE" />
-                                <input type="hidden" name="id" value="{{ $competence->id }}" />
                                 <td><button type="" class="btn btn-danger">Excluir Competência</button></td>
                             </form>
                         </div>
 
 
                     </div>
-
-
             </div>
         </div>
     </div>

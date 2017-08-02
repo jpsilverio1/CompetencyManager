@@ -53,11 +53,10 @@
                                 </div>
                             </div>
                         </form>
-                        <form class="col-xs-offset-1" id="deleteCompetencesForm" role="form" method="POST" action="{{ route('competences.destroy', ['id' => $competence->id] ) }}">
+                        <form class="col-xs-offset-1" id="deleteCompetencesForm" role="form" method="POST" action="{{ route('competences.destroy', $competence->id) }}">
 							{{ csrf_field() }}
 							<input type="hidden" name="_method" value="DELETE" />
-							<input type="hidden" name="id" value="{{ $competence->id }}" />       
-							<button type="" class="btn btn-danger">Excluir Competência</button>
+							<button class="btn btn-danger">Excluir Competência</button>
 						</form>
 					</div>
                 </div>

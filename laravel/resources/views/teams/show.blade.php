@@ -46,11 +46,10 @@
                             <a href="{{ route('teams.edit', $team->id) }}"/><button type="submit" class="btn btn-primary">Editar Equipe</button>
                         </div>
                         <div>
-                            <form class="col-xs-offset-1" id="deleteTeamForm" role="form" method="POST" action="{{ route('teams.destroy', ['id' => $team->id] ) }}">
+                            <form class="col-xs-offset-1" id="deleteTeamForm" role="form" method="POST" action="{{ route('teams.destroy', $team->id ) }}">
                                 {{ csrf_field() }}
                                 <input type="hidden" name="_method" value="DELETE" />
-                                <input type="hidden" name="id" value="{{ $team->id }}" />
-                                <td><button type="" class="btn btn-danger">Excluir Equipe</button></td>
+                                <td><button class="btn btn-danger">Excluir Equipe</button></td>
                             </form>
                         </div>
                     </div>

@@ -1,4 +1,3 @@
-<div class="col-md-12">
     <div class="panel panel-default">
         <div class="panel-heading">Competências de {{$user->name}}</div>
 
@@ -84,7 +83,6 @@
             @endif
         </div>
     </div>
-</div>
 
 <script>
     function getLabelForSliderValue(val) {
