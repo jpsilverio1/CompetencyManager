@@ -2,3 +2,10 @@ Finance team
  Charles
  Lisa
  John
+Marketing team
+ Collins
+ Linda
+ Patricia
+ Morgan
+ Amanda
+
