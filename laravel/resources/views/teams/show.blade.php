@@ -43,7 +43,7 @@
                 </div>
                     <div>
                         <div class="col-md-2">
-                            <a href="{{ route('teams.edit', $team->id) }}"/><button type="submit" class="btn btn-primary">Editar Equipe</button>
+                            <a href="{{ route('teams.show', $team->id) }}"/><button type="submit" class="btn btn-primary">Editar Equipe</button>
                         </div>
                         <div>
                             <form class="col-xs-offset-1" id="deleteTeamForm" role="form" method="POST" action="{{ route('teams.destroy', $team->id ) }}">
