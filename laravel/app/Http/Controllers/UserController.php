@@ -109,8 +109,8 @@ class UserController extends Controller
         \Auth::user()->teams()->detach($teamId);
         return redirect('/home');
     }
-    public function deleteCompetencyFromUser($competenceId) {
-        \Auth::user()->competencies()->detach($competenceId);
+    public function deleteCompetenceFromUser($competenceId) {
+        \Auth::user()->competences()->detach($competenceId);
         return redirect('/home');
     }
 
@@ -122,14 +122,14 @@ class UserController extends Controller
         for ($i=0; $i<sizeOf($names); $i++) {
             $competenceId = $competenceIds[$i];
             $competenceLevel = $competenceLevels[$i];
-            $results = $user->competencies()->where('competency_id', '=', $competenceId)->get();
+            $results = $user->competences()->where('competence_id', '=', $competenceId)->get();
             if ($results->isEmpty()) {
                 echo "adicionar";
-                $user->competencies()->attach([$competenceId => ['competency_level'=>$competenceLevel]]);
+                $user->competences()->attach([$competenceId => ['competence_level'=>$competenceLevel]]);
             } else {
                 echo "update";
                 //update competency level
-                $user->competencies()->updateExistingPivot($competenceId, ['competency_level'=>$competenceLevel]);
+                $user->competences()->updateExistingPivot($competenceId, ['competence_level'=>$competenceLevel]);
             }
         }
         return redirect('/home');

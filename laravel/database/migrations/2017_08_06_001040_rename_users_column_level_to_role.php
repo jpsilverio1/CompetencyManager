@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddAuthorToTasks extends Migration
+class RenameUsersColumnLevelToRole extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class AddAuthorToTasks extends Migration
      */
     public function up()
     {
-        //
-        Schema::table('tasks', function($table) {
-            $table->integer('author_id')->unsigned()->default(1);
-            $table->foreign('author_id')->references('id')->on('users');
+        Schema::table('users', function (Blueprint $table) {
+            $table->renameColumn('level', 'role');
         });
     }
 
@@ -27,9 +25,8 @@ class AddAuthorToTasks extends Migration
      */
     public function down()
     {
-        Schema::table('tasks', function($table) {
-            $table->dropForeign(['author_id']);
-            $table->dropColumn('author_id');
+        Schema::table('users', function (Blueprint $table) {
+            $table->renameColumn('role', 'level');
         });
     }
 }

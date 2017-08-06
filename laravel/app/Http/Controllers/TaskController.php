@@ -125,9 +125,9 @@ class TaskController extends Controller
 
 	}
 
-	public function deleteCompetenceFromTask($taskId, $competenceId) {
+	public function deleteCompetencyFromTask($taskId, $competencyId) {
         $task = Task::findOrFail($taskId);
-        $task->competencies()->detach($competenceId);
-        return $this->edit($taskId);
+        $task->competencies()->detach($competencyId);
+        return Redirect::route('tasks.edit', $taskId);
     }
 }

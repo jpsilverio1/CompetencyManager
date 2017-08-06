@@ -30,7 +30,7 @@
 
                             </td>
                             <td class="table-text">
-                                <div>{{ $competence->pivot->competency_level }}</div>
+                                <div>{{ $competence->pivot->competence_level }}</div>
 
                             </td>
 

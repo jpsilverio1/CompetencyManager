@@ -82,7 +82,7 @@ class Task extends Model
                 $acceptableCompetenceLevels = array_slice($allCompetenceLevels, $start);
             }
             $allTaskCompetencesIdsAndLevels[$taskCompetence->id] = $acceptableCompetenceLevels;
-            $usersThatHaveTheCompetenceInAnAcceptableLevel = $taskCompetence->skilledUsers()->wherePivotIn('competency_level', $acceptableCompetenceLevels)->get();
+            $usersThatHaveTheCompetenceInAnAcceptableLevel = $taskCompetence->skilledUsers()->wherePivotIn('competence_level', $acceptableCompetenceLevels)->get();
             if ($usersThatHaveTheCompetenceInAnAcceptableLevel->isEmpty()) {
                 //there is no user that has the competency in an acceptable level
                 return [];

@@ -7,7 +7,7 @@
             'showCompetenceLevel' => True,
             'showDeleteButton' => True,
             'noCompetencesMessage' => 'Você ainda não cadastrou competências.',
-             'path_to_removal' => '/task-competence/'.$task->id.'/'])
+             'path_to_removal' => '/task-competency/'.$task->id.'/'])
 
         </div>
     </div>

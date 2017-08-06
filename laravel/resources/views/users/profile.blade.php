@@ -7,16 +7,16 @@
                  -->
                 <h3>{{ $user->name }}</h3>
                 <div class="profile-usertitle-job text-capitalize">
-                    {{ $user->level }}
+                    {{ $user->role }}
                 </div>
                 <i class="icon-envelope"></i> {{$user->email}} <br>
             </center>
         </div>
 
         @if (Auth::user()->id == $user->id)
-            @include('users.show_competences_for_endorsement', ['competences' => $user->competencies, 'profile_user' => $user, 'showEndorsementSection' => False])
+            @include('users.show_competences_for_endorsement', ['competences' => $user->competences, 'profile_user' => $user, 'showEndorsementSection' => False])
         @else
-            @include('users.show_competences_for_endorsement', ['competences' => $user->competencies, 'profile_user' => $user, 'showEndorsementSection' => True])
+            @include('users.show_competences_for_endorsement', ['competences' => $user->competences, 'profile_user' => $user, 'showEndorsementSection' => True])
         @endif
 
         <div class="panel panel-default">

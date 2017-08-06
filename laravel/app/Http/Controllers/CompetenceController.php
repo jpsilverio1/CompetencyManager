@@ -92,7 +92,7 @@ class CompetenceController extends Controller
 		foreach ($competence->skilledUsers() as $user) {
 			$user->endorsements()->detach();
 		} */
-		DB::table("user_endorsements")->where('competency_id', '=',$competence->id)->delete();
+		DB::table("user_endorsements")->where('competence_id', '=',$competence->id)->delete();
 		$competence->skilledUsers()->detach();
 		$competence->tasksThatRequireIt()->detach();
 		$competence->teamsThatHaveIt()->detach(); 

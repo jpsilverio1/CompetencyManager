@@ -28,8 +28,8 @@ Route::group(['middleware' => 'auth'], function() {
 
     /* pivot tables deletion routes */
     Route::delete('/user-team/{teamId}', array('as'=>'user-team','uses'=>'UserController@deleteUserFromTeam'));
-    Route::delete('/user-competency/{competencyId}', 'UserController@deleteCompetencyFromUser');
-    Route::delete('/task-competence/{taskId}/{competencyId}', 'TaskController@deleteCompetenceFromTask');
+    Route::delete('/user-competence/{competenceId}', 'UserController@deleteCompetenceFromUser');
+    Route::delete('/task-competency/{taskId}/{competencyId}', 'TaskController@deleteCompetencyFromTask');
     Route::delete('/team-member/{teamId}/{memberId}', 'TeamController@deleteMemberFromTeam');
 
     Route::post('/user-competences', 'UserController@addCompetences');

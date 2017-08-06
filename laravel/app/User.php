@@ -15,35 +15,35 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'level', 'email', 'password',
+        'name', 'role', 'email', 'password',
     ];
 
-    public function competencies()
+    public function competences()
     {
-        return $this->belongsToMany('App\Competency', 'user_competencies')
-            ->withPivot('competency_level');
+        return $this->belongsToMany('App\Competency', 'user_competences', 'user_id', 'competence_id')
+            ->withPivot('competence_level');
     }
 
     public function hasCompetence($competenceId) {
-        $userHasCompetence = $this->competencies()->where("competency_id", $competenceId)->get();
+        $userHasCompetence = $this->competences()->where("competence_id", $competenceId)->get();
         return !$userHasCompetence->isEmpty();
     }
 
     public function hasCompetenceInAcceptableLevel($competenceId, $acceptableCompetenceLevels) {
-        $userHasCompetence = $this->competencies()->where("competency_id", $competenceId)->wherePivotIn('competency_level', $acceptableCompetenceLevels)->get();
+        $userHasCompetence = $this->competences()->where("competence_id", $competenceId)->wherePivotIn('competence_level', $acceptableCompetenceLevels)->get();
         return !$userHasCompetence->isEmpty();
     }
 
     public function isManager() {
-        return $this->level == 'manager';
+        return $this->role == 'manager';
     }
 
     public function getNumberOfEndorsementsForCompetence($userEndorsements, $competence)
     {
-        return $userEndorsements->where('competency_id', $competence->id)->count();
+        return $userEndorsements->where('competence_id', $competence->id)->count();
     }
     public function userEndorsementsForCompetence($competenceId) {
-        return $this->endorsements()->where('competency_id', $competenceId)->get();
+        return $this->endorsements()->where('competence_id', $competenceId)->get();
     }
     public function computeThings($competenceId) {
         $meuMapa = [];
@@ -52,7 +52,7 @@ class User extends Authenticatable
         $maximumKeys = [];
         foreach($this->userEndorsementsForCompetence($competenceId) as $competenceEndorsement) {
             $totalEndorsements++;
-            $endorsementLevel = $competenceEndorsement->pivot->competency_level;
+            $endorsementLevel = $competenceEndorsement->pivot->competence_level;
             if (isset($meuMapa[$endorsementLevel])) {
                 $meuMapa[$endorsementLevel]++;
             }else {
@@ -82,7 +82,7 @@ class User extends Authenticatable
         $loggedUserId = \Auth::user()->id;
         $numberOfTimesLoggedUserEndorsedCompetenceOfShownUser = $shownUserEndorsements->where([
             ['endorser_id', '=', $loggedUserId],
-            ['competency_id', '=', $competenceId],
+            ['competence_id', '=', $competenceId],
         ])->count();
         return $numberOfTimesLoggedUserEndorsedCompetenceOfShownUser;
     }
@@ -90,8 +90,8 @@ class User extends Authenticatable
         $loggedUserId = \Auth::user()->id;
         echo $this->endorsements()->where([
             ['endorser_id', '=', $loggedUserId],
-            ['competency_id', '=', $competenceId],
-        ])->first()->pivot->competency_level;
+            ['competence_id', '=', $competenceId],
+        ])->first()->pivot->competence_level;
     }
 
     public function createdTasks()
@@ -102,15 +102,15 @@ class User extends Authenticatable
     //endorsements where the current user is the endorsed entity
     public function endorsements()
     {
-        return $this->belongsToMany('App\Competency', 'user_endorsements', 'endorsed_id', 'competency_id'/*,'endorser_id'*/)
-            ->withPivot('competency_level');
+        return $this->belongsToMany('App\Competency', 'user_endorsements', 'endorsed_id', 'competence_id'/*,'endorser_id'*/)
+            ->withPivot('competence_level');
     }
 
     //endorsements where the current user is the endorser entity
     public function endorsements_endorser()
     {
-        return $this->belongsToMany('App\Competency', 'user_endorsements', 'endorser_id', 'competency_id'/*,'endorser_id'*/)
-            ->withPivot('competency_level');
+        return $this->belongsToMany('App\Competency', 'user_endorsements', 'endorser_id', 'competence_id'/*,'endorser_id'*/)
+            ->withPivot('competence_level');
     }
 
     public function addEndorsement($endorsedId, $competenceId, $competenceLevel)
@@ -119,10 +119,10 @@ class User extends Authenticatable
         $numberOfEndorsementsToTheCompetence = $this->loggedUserEndorsedCompetence($shownUser->endorsements(), $competenceId);
         if ($numberOfEndorsementsToTheCompetence == 0) {
             //add
-            $this->endorsements_endorser()->attach([$competenceId => ['competency_level' => $competenceLevel, 'endorsed_id' => $endorsedId]]);
+            $this->endorsements_endorser()->attach([$competenceId => ['competence_level' => $competenceLevel, 'endorsed_id' => $endorsedId]]);
         } else {
             //update endorsement
-            $this->endorsements_endorser()->updateExistingPivot($competenceId, ['competency_level' => $competenceLevel]);
+            $this->endorsements_endorser()->updateExistingPivot($competenceId, ['competence_level' => $competenceLevel]);
         }
     }
 
