@@ -19,7 +19,7 @@ class Task extends Model
     public function competencies()
     {
         return $this->belongsToMany('App\Competency', 'task_competencies')
-        ->withPivot('competency_level');
+        ->withPivot('competency_proficiency_level_id');
     }
     public function author()
     {
@@ -70,19 +70,19 @@ class Task extends Model
     }
     public function suitableAssigneesSets()
     {
-        $allCompetenceLevels = ["Básico", "Intermediário", "Avançado"];
+        $allCompetenceLevels = CompetenceProficiencyLevel::all()->pluck('id')->toArray();
         $myUserSet = [];
         $allTaskCompetencesIdsAndLevels = [];
         $taskCompetences = $this->competencies;
         foreach($taskCompetences as $taskCompetence) {
-            $taskRequiredCompetenceLevel = $taskCompetence->pivot->competency_level;
+            $taskRequiredCompetenceLevel = $taskCompetence->pivot->competency_proficiency_level_id;
             $acceptableCompetenceLevels = $allCompetenceLevels;
             if (in_array($taskRequiredCompetenceLevel, $allCompetenceLevels)) {
                 $start = array_search($taskRequiredCompetenceLevel, $allCompetenceLevels);
                 $acceptableCompetenceLevels = array_slice($allCompetenceLevels, $start);
             }
             $allTaskCompetencesIdsAndLevels[$taskCompetence->id] = $acceptableCompetenceLevels;
-            $usersThatHaveTheCompetenceInAnAcceptableLevel = $taskCompetence->skilledUsers()->wherePivotIn('competence_level', $acceptableCompetenceLevels)->get();
+            $usersThatHaveTheCompetenceInAnAcceptableLevel = $taskCompetence->skilledUsers()->wherePivotIn('competence_proficiency_level_id', $acceptableCompetenceLevels)->get();
             if ($usersThatHaveTheCompetenceInAnAcceptableLevel->isEmpty()) {
                 //there is no user that has the competency in an acceptable level
                 return [];
@@ -94,6 +94,7 @@ class Task extends Model
                 }
             }
         }
+
         if (count($allTaskCompetencesIdsAndLevels) == 0) {
             return [];
         }

@@ -15,12 +15,12 @@ class Competency extends Model
 
     public function skilledUsers() {
         return $this->belongsToMany('App\User', 'user_competences', 'competence_id', 'user_id')
-            ->withPivot('competence_level');
+            ->withPivot('competence_proficiency_level_id');
     }
 
     public function tasksThatRequireIt() {
         return $this->belongsToMany('App\Task', 'task_competencies')
-            ->withPivot('competency_level');
+            ->withPivot('competency_proficiency_level_id');
     }
 
     public function teamsThatHaveIt() {

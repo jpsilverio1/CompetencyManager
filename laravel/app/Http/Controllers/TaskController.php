@@ -50,11 +50,11 @@ class TaskController extends Controller
         $task->save();
 
         $competenceIds = $request->get('competence_ids');
-        $competenceLevels = $request->get('competence_levels');
+        $competenceProficiencyLevels = $request->get('competency_proficiency_levels');
         for ($i=0; $i<sizeOf($competenceIds); $i++) {
             $competenceId = $competenceIds[$i];
-            $competenceLevel = $competenceLevels[$i];
-            $task->competencies()->attach([$competenceId => ['competency_level'=>$competenceLevel]]);
+            $competenceProficiencyLevel = $competenceProficiencyLevels[$i];
+            $task->competencies()->attach([$competenceId => ['competency_proficiency_level_id'=>$competenceProficiencyLevel]]);
         }
         return Redirect::route('tasks.show',$task->id)->withMessage('A tarefa foi cadastrada com sucesso!');
     }
@@ -100,11 +100,11 @@ class TaskController extends Controller
         $task->description = $description;
         $task->save();
         $competenceIds = $request->get('competence_ids');
-        $competenceLevels = $request->get('competence_levels');
+        $competenceProficiencyLevels = $request->get('competency_proficiency_levels');
         for ($i=0; $i<sizeOf($competenceIds); $i++) {
             $competenceId = $competenceIds[$i];
-            $competenceLevel = $competenceLevels[$i];
-            $task->competencies()->attach([$competenceId => ['competency_level'=>$competenceLevel]]);
+            $competenceProficiencyLevel = $competenceProficiencyLevels[$i];
+            $task->competencies()->attach([$competenceId => ['competency_proficiency_level_id'=>$competenceProficiencyLevel]]);
         }
         return Redirect::route('tasks.show',$task->id)->withMessage('A tarefa foi atualizada com sucesso!');
     }

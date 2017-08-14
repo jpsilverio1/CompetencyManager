@@ -21,8 +21,9 @@ class User extends Authenticatable
     public function competences()
     {
         return $this->belongsToMany('App\Competency', 'user_competences', 'user_id', 'competence_id')
-            ->withPivot('competence_level');
+            ->withPivot('competence_proficiency_level_id');
     }
+
 
     public function hasCompetence($competenceId) {
         $userHasCompetence = $this->competences()->where("competence_id", $competenceId)->get();
@@ -30,7 +31,7 @@ class User extends Authenticatable
     }
 
     public function hasCompetenceInAcceptableLevel($competenceId, $acceptableCompetenceLevels) {
-        $userHasCompetence = $this->competences()->where("competence_id", $competenceId)->wherePivotIn('competence_level', $acceptableCompetenceLevels)->get();
+        $userHasCompetence = $this->competences()->where("competence_id", $competenceId)->wherePivotIn('competence_proficiency_level_id', $acceptableCompetenceLevels)->get();
         return !$userHasCompetence->isEmpty();
     }
 

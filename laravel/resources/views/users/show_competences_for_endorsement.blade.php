@@ -30,8 +30,7 @@
 
                             </td>
                             <td class="table-text">
-                                <div>{{ $competence->pivot->competence_level }}</div>
-
+                                <div> {{\App\CompetenceProficiencyLevel::findOrFail($competence->pivot->competence_proficiency_level_id)->name}}</div>
                             </td>
 
                             <td>

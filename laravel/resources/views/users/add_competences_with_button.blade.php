@@ -44,16 +44,9 @@
 </div>
 
 <script>
+    var dictionary;
     function getLabelForSliderValue(val) {
-        if (val == 1) {
-            return "Básico";
-        }
-        if (val == 2) {
-            return "Intermediário";
-        }
-        if (val == 3) {
-            return "Avançado";
-        }
+        return dictionary[val];
     }
     function toggleTable() {
         var lTable = document.getElementById("addCompetenceTable");
@@ -62,7 +55,7 @@
     function getCurrentNumberOfRows(tableId) {
         return document.getElementById(tableId).getElementsByTagName("tr").length - 1;
     }
-    function getRowCode(name, competenceId) {
+    function getRowCode(name, competenceId, numberOfLevels) {
         var code = '<tr>' +
             '<td class="table-text"> ' +
             '<div class="competence_name">' +
@@ -72,11 +65,10 @@
             '</td>' +
             '<td class="table-text">' +
             '<div class="competency_level">' +
-            '<span class="competence_level_label" name="levels[]">Básico</span>'
+            '<span class="competence_level_label" name="levels[]">'+getLabelForSliderValue(1)+'</span>'
             + '<input type="range" class="competence_level_slider" ' +
-            'name="rangeInput" min="1" max="3" value ="1" onchange="updateTextInput(this);">' +
+            'name="competence_proficiency_level[]" min="1" max="'+numberOfLevels+'" value ="1" onchange="updateTextInput(this)">' +
             '</div>' +
-            '<input type="hidden" class="competence_level_class" name="competence_level[]" value="Básico" />' +
             '</td>' +
             '<td>' +
             '<button class="remove_unsaved_competence">x</button>' +
@@ -90,13 +82,13 @@
 
         return code;
     }
-    function addCompetence(name, competenceId) {
+    function addCompetence(name, competenceId, numberOfLevels) {
         var current_number_rows = getCurrentNumberOfRows("addCompetenceTable");
         if (current_number_rows == 0) {
             toggleTable();
         }
         //add new competenceToTable
-        $("#addCompetenceTable").append(getRowCode(name, competenceId));
+        $("#addCompetenceTable").append(getRowCode(name, competenceId, numberOfLevels));
     }
     function removeCompetence() {
         var current_number_rows = getCurrentNumberOfRows("addCompetenceTable");
@@ -109,10 +101,28 @@
         var sliderLabel = rowHit.find(".competence_level_label");
         var newLabel = getLabelForSliderValue(slider.value);
         sliderLabel.html(newLabel);
-        var competenceLevelInputField = rowHit.find(".competence_level_class");
-        competenceLevelInputField.val(newLabel);
     }
     $(document).ready(function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        var url = "{{ route('competence-proficiency-level') }}";
+        dictionary = function () {
+            var tmp = null;
+            $.ajax({
+                'async': false,
+                'type': "GET",
+                'global': false,
+                'url': url,
+                'success': function (data) {
+                    tmp = data;
+                }
+            });
+            return tmp;
+        }();
+        var numberOfCategories = {{\App\CompetenceProficiencyLevel::count()}}
         document.getElementById("addCompetenceTable").style.display = "none";
         $("#addCompetenceTable").on('click', '.remove_unsaved_competence', function () {
             $(this).parent().parent().remove();
@@ -135,7 +145,7 @@
             },
             minLength: 2,
             select: function (e, ui) {
-                addCompetence(ui.item.value, ui.item.id);
+                addCompetence(ui.item.value, ui.item.id,numberOfCategories);
                 $(this).val('');
                 return false;
             }
