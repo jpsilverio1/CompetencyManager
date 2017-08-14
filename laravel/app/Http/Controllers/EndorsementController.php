@@ -16,7 +16,7 @@ class EndorsementController
 {
     public function addEndorsement(Request $request) {
         $competenceId = $request->get('competence_id');
-        $competenceLevel = $request->get('competence_level');
+        $competenceLevel = $request->get('competence_proficiency_level');
         $endorsedUserId = $request->get('endorsed_user_id');
         $endorser = \Auth::user();
         $endorser->addEndorsement($endorsedUserId, $competenceId, $competenceLevel);
