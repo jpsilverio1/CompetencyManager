@@ -31,8 +31,10 @@
     $(document).ready(function () {
 
         var numberOfCategories = {{\App\CompetenceProficiencyLevel::count()}}
-        console.log(numberOfCategories);
-        console.log(dictionary);
+        $('.competence_level_slider').each(function(i, obj) {
+            //console.log(obj.max);
+            obj.max = numberOfCategories;
+        });
         //information tooltip
         $('[data-toggle="tooltip"]').tooltip();
     });
