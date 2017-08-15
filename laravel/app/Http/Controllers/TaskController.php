@@ -54,7 +54,14 @@ class TaskController extends Controller
         for ($i=0; $i<sizeOf($competenceIds); $i++) {
             $competenceId = $competenceIds[$i];
             $competenceProficiencyLevel = $competenceProficiencyLevels[$i];
-            $task->competencies()->attach([$competenceId => ['competency_proficiency_level_id'=>$competenceProficiencyLevel]]);
+            $results = $task->competencies()->where('competency_id', '=', $competenceId)->get();
+            if ($results->isEmpty()) {
+                //add competency
+                $task->competencies()->attach([$competenceId => ['competency_proficiency_level_id'=>$competenceProficiencyLevel]]);
+            } else {
+                //update competency level
+                $task->competencies()->updateExistingPivot($competenceId, ['competency_proficiency_level_id'=>$competenceProficiencyLevel]);
+            }
         }
         return Redirect::route('tasks.show',$task->id)->withMessage('A tarefa foi cadastrada com sucesso!');
     }
