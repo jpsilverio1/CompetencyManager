@@ -98,13 +98,26 @@
 
         return code;
     }
+    function competenceInTable(competenceId) {
+        var result = false;
+        $('[name="competence_ids[]"]').each(function(){
+            if($(this).val() == competenceId) {
+                result = true;
+               return;
+            }
+        });
+        return result;
+    }
     function addCompetence(name, competenceId, numberOfLevels) {
         var current_number_rows = getCurrentNumberOfRows("addCompetenceTable");
         if (current_number_rows == 0) {
             toggleTable();
         }
-        //add new competenceToTable
-        $("#addCompetenceTable").append(getCompetenceRowCode(name, competenceId, numberOfLevels));
+        if(!competenceInTable(competenceId)) {
+            //add new competenceToTable
+            $("#addCompetenceTable").append(getCompetenceRowCode(name, competenceId, numberOfLevels));
+
+        }
     }
     function removeCompetence() {
         var current_number_rows = getCurrentNumberOfRows("addCompetenceTable");
@@ -117,6 +130,13 @@
         var sliderLabel = rowHit.find(".competence_level_label");
         var newLabel = getLabelForSliderValue(slider.value);
         sliderLabel.html(newLabel);
+    }
+    function getCurrentCompetenceIdsInTable() {
+        var lista = [];
+        $('[name="competence_ids[]"]').each(function(){
+            lista.push($(this).val());
+        });
+        return lista;
     }
     $(document).ready(function () {
         $.ajaxSetup({
@@ -139,8 +159,6 @@
             return tmp;
         }();
         var numberOfCategories = {{\App\CompetenceProficiencyLevel::count()}}
-        console.log(numberOfCategories);
-        console.log(dictionary);
         document.getElementById("addCompetenceTable").style.display = "none";
         $("#addCompetenceTable").on('click', '.remove_unsaved_competence', function () {
             $(this).parent().parent().remove();
@@ -153,7 +171,8 @@
                     url: src_competence,
                     dataType: "json",
                     data: {
-                        term: request.term
+                        term: request.term,
+                        blacklistedIds:  getCurrentCompetenceIdsInTable()
                     },
                     success: function (data) {
                         response(data);

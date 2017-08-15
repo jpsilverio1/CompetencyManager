@@ -45,11 +45,15 @@ class SearchController extends Controller
     }
     public function autoCompleteCompetence(Request $request) {
         $query = $request->get('term','');
+        $blackListedIds = $request->get('blacklistedIds',[]);
         $competencies=Competency::where('name','LIKE','%'.$query.'%')->limit(20)->get();
 
         $data=array();
         foreach ($competencies as $competence) {
-            $data[]=array('value'=>$competence->name,'id'=>$competence->id);
+            if (!in_array($competence->id, $blackListedIds)) {
+                $data[]=array('value'=>$competence->name,'id'=>$competence->id);
+            }
+
         }
         if(count($data))
             return $data;
