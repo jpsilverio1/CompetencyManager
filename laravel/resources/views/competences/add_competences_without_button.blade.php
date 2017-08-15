@@ -98,26 +98,13 @@
 
         return code;
     }
-    function competenceInTable(competenceId) {
-        var result = false;
-        $('[name="competence_ids[]"]').each(function(){
-            if($(this).val() == competenceId) {
-                result = true;
-               return;
-            }
-        });
-        return result;
-    }
     function addCompetence(name, competenceId, numberOfLevels) {
         var current_number_rows = getCurrentNumberOfRows("addCompetenceTable");
         if (current_number_rows == 0) {
             toggleTable();
         }
-        if(!competenceInTable(competenceId)) {
-            //add new competenceToTable
-            $("#addCompetenceTable").append(getCompetenceRowCode(name, competenceId, numberOfLevels));
-
-        }
+        //add new competenceToTable
+        $("#addCompetenceTable").append(getCompetenceRowCode(name, competenceId, numberOfLevels));
     }
     function removeCompetence() {
         var current_number_rows = getCurrentNumberOfRows("addCompetenceTable");

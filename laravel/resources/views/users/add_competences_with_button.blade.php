@@ -102,6 +102,13 @@
         var newLabel = getLabelForSliderValue(slider.value);
         sliderLabel.html(newLabel);
     }
+    function getCurrentCompetenceIdsInTable() {
+        var lista = [];
+        $('[name="competence_id[]"]').each(function(){
+            lista.push($(this).val());
+        });
+        return lista;
+    }
     $(document).ready(function () {
         $.ajaxSetup({
             headers: {
@@ -135,7 +142,8 @@
                     url: src_competence,
                     dataType: "json",
                     data: {
-                        term: request.term
+                        term: request.term,
+                        blacklistedIds:  getCurrentCompetenceIdsInTable()
                     },
                     success: function (data) {
                         response(data);
