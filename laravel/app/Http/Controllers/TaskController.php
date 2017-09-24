@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 use App\Http\Requests\CreateTaskFormRequest;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\EditTaskFormRequest;
+use Illuminate\Support\Facades\Redirect;
 use DB;
-use Illuminate\Http\Request;
+use App\Task;
 
 class TaskController extends Controller
 {
@@ -15,8 +16,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $task = new \App\Task; 
-        return view('tasks.create', ['task' => $task]);
+        $allTasks = Task::paginate(10);
+        return view('tasks.index', ['tasks' => $allTasks]);
     }
 
     /**
@@ -26,8 +27,8 @@ class TaskController extends Controller
      */
     public function create()
     {
-        $task = new \App\Task; 
-        return view('tasks.create', ['task' => $task]);
+        $task = new \App\Task;
+        return view('tasks.create');
     }
 
     /**
@@ -36,32 +37,26 @@ class TaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateTaskFormRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-			'title.*' => 'required|unique:tasks,title',
-			'description.*' => 'required',
-		]);
-		
-		if ($validator->fails()) {
-            return redirect('tasks/create')
-                        ->withErrors($validator)
-                        ->withInput();
-        }
-		
-		$titles = $request->get('title');
+		$title = $request->get('title');
 		$description = $request->get('description');
+		$author_id = \Auth::user()->id;
 
-		for ($i=0; $i<sizeOf($titles); $i++) {
-			$task = new \App\Task; 
-			$task->title = $titles[$i];
-			$task->description = $description[$i];
-			$task->save();
-			
-		} 
-		return \Redirect::route('tasks.show', 
-			array($task->id))
-			->with('message', 'A tarefa foi cadastrada.');
+        $task = new \App\Task;
+        $task->title = $title;
+        $task->description = $description;
+        $task->author_id = $author_id;
+        $task->save();
+
+        $competenceIds = $request->get('competence_ids');
+        $competenceProficiencyLevels = $request->get('competency_proficiency_levels');
+        for ($i=0; $i<sizeOf($competenceIds); $i++) {
+            $competenceId = $competenceIds[$i];
+            $competenceProficiencyLevel = $competenceProficiencyLevels[$i];
+            $task->competencies()->attach([$competenceId => ['competency_proficiency_level_id'=>$competenceProficiencyLevel]]);
+        }
+        return Redirect::route('tasks.show',$task->id)->withMessage('A tarefa foi cadastrada com sucesso!');
     }
 
     /**
@@ -70,11 +65,10 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {		
-		$task = DB::table('tasks')->where('id', $id)->first();
-		$task_competences = DB::table('task_competencies')->where('task_id', $id)->join('competencies', 'competencies.id', '=', 'task_competencies.competency_id')->get();
-		return view('tasks.create', ['task' => $task, 'task_competences' => $task_competences]);
+    public function show($id, $message = null)
+    {
+        $task = Task::findOrFail($id);
+		return view('tasks.show', ['task' => $task, 'message' => $message]);
     }
 
     /**
@@ -85,7 +79,8 @@ class TaskController extends Controller
      */
     public function edit($id)
     {
-        //
+        $task = Task::findOrFail($id);
+		return view('tasks.edit', ['task' => $task]);
     }
 
     /**
@@ -95,9 +90,23 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EditTaskFormRequest $request, $id)
     {
-        //
+        $title = $request->get('title');
+		$description = $request->get('description');
+        $task = Task::findOrFail($id);
+
+        $task->title = $title;
+        $task->description = $description;
+        $task->save();
+        $competenceIds = $request->get('competence_ids');
+        $competenceProficiencyLevels = $request->get('competency_proficiency_levels');
+        for ($i=0; $i<sizeOf($competenceIds); $i++) {
+            $competenceId = $competenceIds[$i];
+            $competenceProficiencyLevel = $competenceProficiencyLevels[$i];
+            $task->competencies()->attach([$competenceId => ['competency_proficiency_level_id'=>$competenceProficiencyLevel]]);
+        }
+        return Redirect::route('tasks.show',$task->id)->withMessage('A tarefa foi atualizada com sucesso!');
     }
 
     /**
@@ -108,6 +117,17 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $task = Task::findOrFail($id);
+		$task->competencies()->detach();
+		$task->delete();
+
+        return Redirect::route('tasks.index')->withMessage('A tarefa foi excluída com sucesso!');
+
+	}
+
+	public function deleteCompetencyFromTask($taskId, $competencyId) {
+        $task = Task::findOrFail($taskId);
+        $task->competencies()->detach($competencyId);
+        return Redirect::route('tasks.edit', $taskId);
     }
 }

@@ -1,0 +1,17 @@
+TODO:
+- user search
+- change logic to not allow user to endorse its own competences
+- calculate and show the most endorsed competence level for each competence in the user page
+- Show list of all users with pagination
+- Populate competencies database with linkedin data
+- Populate model tables for the next presentation and clean current database
+
+
+
+
+
+DONE:
+- user endorsements
+- fixed glyphicons
+- fixed logout bug
+- show user profile

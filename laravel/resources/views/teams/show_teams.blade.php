@@ -1,4 +1,4 @@
-<div class="col-md-6">
+w<div class="col-md-6">
     <div class="panel panel-default">
         <div class="panel-heading">Equipes das quais você faz parte</div>
 
@@ -21,7 +21,7 @@
                             </td>
 
                             <td>
-                                <form action="/user-team/{{ $team->id }}" method="POST">
+                                <form action="{{ route('user-team', $team->id) }} " method="POST">
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
 

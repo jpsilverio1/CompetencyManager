@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\CreateTeamFormRequest;
+use App\Http\Requests\EditTeamFormRequest;
+use Illuminate\Support\Facades\Redirect;
 use DB;
+use App\Team;
+
 
 class TeamController extends Controller
 {
@@ -15,8 +18,8 @@ class TeamController extends Controller
      */
     public function index()
     {
-        $team = new \App\Team; 
-        return view('teams.create', ['team' => $team]);
+        $allTeams = Team::paginate(10);
+        return view('teams.index', ['teams' => $allTeams]);
     }
 
     /**
@@ -26,8 +29,7 @@ class TeamController extends Controller
      */
     public function create()
     {
-        $team = new \App\Team; 
-        return view('teams.create', ['team' => $team]);
+        return view('teams.create');
     }
 
     /**
@@ -36,32 +38,20 @@ class TeamController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateTeamFormRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-			'name.*' => 'required|unique:teams,name',
-			'description.*' => 'required',
-		]);
-		
-		if ($validator->fails()) {
-            return redirect('teams/create')
-                        ->withErrors($validator)
-                        ->withInput();
+		$name = $request->get('name');
+        $description = $request->get('description');
+        $team = new \App\Team;
+        $team->name = $name;
+        $team->description = $description;
+        $team->save();
+        $userIds = $request->get('user_ids');
+        for ($i=0; $i<sizeOf($userIds); $i++) {
+            $userId = $userIds[$i];
+            $team->teamMembers()->attach($userId);
         }
-		
-		$names = $request->get('name');
-		$description = $request->get('description');
-
-		for ($i=0; $i<sizeOf($names); $i++) {
-			$team = new \App\Team; 
-			$team->name = $names[$i];
-			$team->description = $description[$i];
-			$team->save();
-			
-		} 
-		return \Redirect::route('teams.show', 
-			array($team->id))
-			->with('message', 'A tarefa foi cadastrada.');
+        return Redirect::route('teams.show',$team->id)->withMessage('A equipe foi cadastrada com sucesso!');
     }
 
     /**
@@ -70,10 +60,10 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, $message = null)
     {
-        $team = DB::table('teams')->where('id', $id)->first();
-		return view('teams.create', ['team' => $team]);
+		$team = Team::where('id', $id)->first();
+		return view('teams.show', ['team' => $team, 'message' => $message]);
     }
 
     /**
@@ -84,7 +74,8 @@ class TeamController extends Controller
      */
     public function edit($id)
     {
-        //
+        $team = Team::where('id', $id)->first();
+		return view('teams.edit', ['team' => $team]);
     }
 
     /**
@@ -94,9 +85,22 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EditTeamFormRequest $request, $id)
     {
-        //
+        $description = $request->get('description');
+        $name = $request->get('name');
+        $userIds = $request->get('user_ids');
+
+        $team = Team::findOrFail($id);
+        $team->name = $name;
+        $team->description = $description;
+        $team->save();
+
+        for ($i=0; $i<sizeOf($userIds); $i++) {
+            $userId = $userIds[$i];
+            $team->teamMembers()->attach($userId);
+        }
+        return Redirect::route('teams.show',$team->id)->withMessage('A equipe foi atualizada com sucesso!');
     }
 
     /**
@@ -107,6 +111,17 @@ class TeamController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $team = Team::findOrFail($id);
+		$team->competencies()->detach();
+		$team->teamMembers()->detach();
+		$team->delete();
+        return Redirect::route('teams.index')->withMessage('A equipe foi excluída com sucesso!');
+
+    }
+
+    public function deleteMemberFromTeam($teamId, $memberId) {
+        $team = Team::findOrFail($teamId);
+        $team->teamMembers()->detach($memberId);
+        return $this->edit($teamId);
     }
 }

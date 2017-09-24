@@ -10,10 +10,14 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/myStyle.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -38,11 +42,42 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp;
+                        &nbsp; <li class="active"><a href="{{ route('home') }}">Home</a></li>
+                        @if (!Auth::guest())
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Visualizar <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('users.show', Auth::user()->id) }}">Seu perfil</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('competences.index') }}">Competências</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('users.index') }}">Usuários</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('tasks.index') }}">Tarefas</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('teams.index') }}">Equipes</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Cadastrar <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    @if (Auth::user()->isManager())
+                                        <li class="divider"></li>
+                                        <li><a href="{{ route('competences.create')}}">Competências</a></li>
+                                    @endif
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('teams.create') }}">Equipe</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('tasks.create') }}">Tarefa</a></li>
+                                </ul>
+                            </li>
+                            @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
+
                         <!-- Authentication Links -->
                         @if (Auth::guest())
                             <li><a href="{{ route('login') }}">Login</a></li>
@@ -69,6 +104,9 @@
                             </li>
                         @endif
                     </ul>
+                    @if (!Auth::guest())
+                        @include('users.search_user')
+                    @endif
                 </div>
             </div>
         </nav>

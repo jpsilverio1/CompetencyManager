@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 class Team extends Model
 {
@@ -16,10 +18,27 @@ class Team extends Model
     ];
 
 
+
     public function competencies()
     {
-        return $this->belongsToMany('App\Competency', 'team_competencies');
+        $members=$this->teamMembers;
+        $competences=new \Illuminate\Database\Eloquent\Collection();
+        foreach($members as $m) {
+            $competences=$competences->merge($m->competencies);
+        }
+        $perPage = 5;
+        $pageName="competences";
+        $page=LengthAwarePaginator::resolveCurrentPage($pageName)?:1;
+        $pagination = new LengthAwarePaginator(
+            $competences->forPage($page, $perPage),
+            $competences->count(),
+            $perPage,
+            $page,
+            ['pageName' => $pageName, 'path' => Paginator::resolveCurrentPath()]
+        );
+        return $pagination;
     }
+
 
     public function teamMembers()
     {

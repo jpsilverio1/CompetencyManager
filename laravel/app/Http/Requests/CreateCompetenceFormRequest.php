@@ -14,7 +14,7 @@ class CreateCompetenceFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return \Auth::user()->isManager();
     }
 
     /**
@@ -25,7 +25,7 @@ class CreateCompetenceFormRequest extends FormRequest
     public function rules()
     {
 		$rules = [];
-				
+
 		foreach($this->request->get('name') as $key => $val)
 		{
 			$rules['name.'.$key] = 'required|min:2|unique:competencies,name';
@@ -47,7 +47,7 @@ class CreateCompetenceFormRequest extends FormRequest
 			$messages['name.'.$key.'.unique'] = 'Uma competência já foi cadastrada com este nome. Por favor utilize outro nome.';
 			$messages['description.'.$key.'.required'] = 'O campo descrição é obrigatório';
 			$messages['description.'.$key.'.min'] = 'O campo descrição está muito curto';
-		} 
-		return $messages; 
+		}
+		return $messages;
 	}
 }

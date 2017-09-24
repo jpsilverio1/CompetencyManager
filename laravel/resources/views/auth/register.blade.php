@@ -38,14 +38,14 @@
                             </div>
                         </div>
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="level" class="col-md-4 control-label">User Level</label>
+                            <label for="role" class="col-md-4 control-label">User role</label>
 
                             <div class="col-md-6">
-                                <input name="level" type="radio" value="employee" checked required> Employee<br>
-                                <input name="level" type="radio" value="manager"> Manager <br>
-                                @if ($errors->has('level'))
+                                <input name="role" type="radio" value="employee" checked required> Employee<br>
+                                <input name="role" type="radio" value="manager"> Manager <br>
+                                @if ($errors->has('role'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('level') }}</strong>
+                                        <strong>{{ $errors->first('role') }}</strong>
                                     </span>
                                 @endif
                             </div>

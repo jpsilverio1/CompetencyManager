@@ -1,121 +1,50 @@
 @extends('layouts.app')
-
 <head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 @section('content')
+    <div class="container">
+        <div class="row">
+            <div class="panel panel-fullScreen">
+                <div class="panel-heading"><h3>Adicionar nova equipe</h3></div>
+                <div class="panel-body">
+                    <form class="form-horizontal" id="addTeamForm"role="form" method="POST" action="{{ route('teams.store') }}">
+                        {{ csrf_field() }}
+                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                            <label for="name" class="col-md-2 control-label">Nome</label>
+                            <div class="col-md-6">
+                                <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" >
 
-<h1>Cadastrar Equipe</h1>
+                                @if ($errors->has('name'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="col-md-2 control-label">Descrição:</label>
+                            <div class="col-md-6">
+                                <textarea class="form-control" rows="2" id="description" name="description">{{old('description')}}</textarea>
+                                @if ($errors->has('description'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('description') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="row col-xs-offset-1f">
+                            @include('users.add_users_without_button')
+                        </div>
 
-
-
-<script>
-
-$(document).ready(function(){
-    taskIndex = 0;
-    $('.addButton').click(function(){
-      teamIndex++;
-            var $template = $('#teamTemplate'),
-                $clone    = $template
-                                .clone()
-                                .removeClass('hide')
-                                .removeAttr('id')
-                                .attr('data-book-index', taskIndex)
-                                .insertBefore($template);
-            // Update the name attributes
-            $clone
-				
-                //.find('[name="name"]').attr('name', 'competency[' + competencyIndex + '].name').end()
-                //.find('[name="description"]').attr('name', 'competency[' + competencyIndex + '].description').end();
-                .find('[name="name"]').attr('name', 'competency[' + teamIndex + '].name').end()
-                .find('[name="description"]').attr('name', 'competency[' + teamIndex + '].description').end();
-        
-    });
-	
-	$('.btn-primary').click(function(){
-            $('#teamTemplate').remove()
-    });
-
-    
-    $('body').on('click','.removeButton',function(){
-      var $row  = $(this).parents('.form-group'),
-                index = $row.attr('data-book-index');
-
-
-
-            // Remove element containing the fields
-            $row.remove();   
-    }); 
-
-        
-});
-
-</script>
-<div id="box">
-{!! Form::open(
-  array(
-    'route' => 'teams.store', 
-    'class' => 'form')
-  ) !!}
-
-@if (count($errors) > 0)
-<div class="alert alert-danger">
-    Houve algum problema ao adicionar a Equipe.<br />
-    <ul>
-        @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-</div>
-@endif
-	<div class="form-group">
-        <label class="col-xs-1 control-label">Equipe</label>
-        <div class="col-xs-4">
-            <input type="text" class="form-control" name="name[]" value = "{{ $team->name or '' }}" placeholder="Nome da Equipe" />
-        </div>
-        <div class="col-xs-4">
-            <input type="text" class="form-control" name="description[]" value = "{{ $team->description or '' }}" placeholder="Descrição da Equipe" />
-        </div>
-		
-		@if (isset($task_competences))
-			@if (count($task_competences) > 0)
-				@foreach ($task_competences as $task_competence_row)
-					<div class="col-xs-4">
-						<input type="text" class="form-control" name="task_competences[]" value = "{{ $task_competence_row->name or '' }}" placeholder="ID da Competência" />
-					</div>
-					<div class="col-xs-4">
-						<input type="text" class="form-control" name="task_competences[]" value = "{{ $task_competence_row->competency_level or '' }}" placeholder="Nível da Competência" />
-					</div>
-				@endforeach
-			@endif
-		@endif
-			
-        <div class="col-xs-1">
-            <button type="button" class="btn btn-default addButton">+</button>
+                        <div class="form-group">
+                            <div class="col-xs-5 col-xs-offset-1">
+                                <button type="submit" class="btn btn-primary">Cadastrar Equipe</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    
-        <!-- The template for adding new field -->
-    <div class="form-group hide" id="teamTemplate">
-        <div class="col-xs-4 col-xs-offset-1">
-            <input type="text" class="form-control" name="name[]" placeholder="Nome da Equipe" />
-        </div>
-        <div class="col-xs-4">
-            <input type="text" class="form-control" name="description[]" placeholder="Descrição da Equipe" />
-        </div>
-      
-        <div class="col-xs-1">
-            <button type="button" class="btn btn-default removeButton">-</button>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-xs-5 col-xs-offset-1">
-            <button type="submit" class="btn btn-primary">Cadastrar Equipe</button>
-        </div>
-    </div>
-
-{!! Form::close() !!}
-</div>
-
 @endsection

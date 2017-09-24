@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 
 class UserController extends Controller
 {
@@ -22,7 +23,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $allUsers = User::paginate(10);
+        return view('users.index', ['users' => $allUsers]);
     }
 
     /**
@@ -43,7 +45,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -54,7 +56,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        return view('users.profile', ['user' => User::findOrFail($id)]);
     }
 
     /**
@@ -65,7 +67,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('users.edit', ['user' => User::findOrFail($id)]);
     }
 
     /**
@@ -77,7 +79,19 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+		$name = $request->get('name');
+		$email = $request->get('email');
+		$level = $request->get('level');
+		$old_password = $request->get('password-old');
+		$new_password = $request->get('password-new');
+		$new_password_confirm = $request->get('password-new-confirm');
+		
+		#Checar senha antiga usando MD5 com senha neste form
+		#Checar senha nova com confirmação de senha nova 
+		#Checar nível
+
+        return view('users.profile', ['id' => $id, 'user' => \Auth::user(), 'message' => 'Seu perfil foi atualizado com sucesso!']);
+		
     }
 
     /**
@@ -91,34 +105,32 @@ class UserController extends Controller
         //
     }
 
-
     public function deleteUserFromTeam($teamId) {
         \Auth::user()->teams()->detach($teamId);
         return redirect('/home');
     }
-    public function deleteCompetencyFromUser($competenceId) {
-        \Auth::user()->competencies()->detach($competenceId);
+    public function deleteCompetenceFromUser($competenceId) {
+        \Auth::user()->competences()->detach($competenceId);
         return redirect('/home');
     }
-
 
     public function addCompetences(Request $request) {
         $user = \Auth::user();
         $names = $request->get('name');
         $competenceIds = $request->get('competence_id');
-        $competenceLevels = $request->get('competence_level');
+        $competenceProficiencyLevels = $request->get('competence_proficiency_level');
+        var_dump($competenceProficiencyLevels);
         for ($i=0; $i<sizeOf($names); $i++) {
             $competenceId = $competenceIds[$i];
-            $competenceLevel = $competenceLevels[$i];
-            $results = $user->competencies()->where('competency_id', '=', $competenceId)->get();
-            echo $results;
+            $competenceLevel = $competenceProficiencyLevels[$i];
+            $results = $user->competences()->where('competence_id', '=', $competenceId)->get();
             if ($results->isEmpty()) {
                 echo "adicionar";
-                $user->competencies()->attach([$competenceId => ['competency_level'=>$competenceLevel]]);
+                $user->competences()->attach([$competenceId => ['competence_proficiency_level_id'=>$competenceLevel]]);
             } else {
                 echo "update";
                 //update competency level
-                $user->competencies()->updateExistingPivot($competenceId, ['competency_level'=>$competenceLevel]);
+                $user->competences()->updateExistingPivot($competenceId, ['competence_proficiency_level_id'=>$competenceLevel]);
             }
         }
         return redirect('/home');
