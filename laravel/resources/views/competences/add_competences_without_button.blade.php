@@ -118,6 +118,13 @@
         var newLabel = getLabelForSliderValue(slider.value);
         sliderLabel.html(newLabel);
     }
+    function getCurrentCompetenceIdsInTable() {
+        var lista = [];
+        $('[name="competence_ids[]"]').each(function(){
+            lista.push($(this).val());
+        });
+        return lista;
+    }
     $(document).ready(function () {
         $.ajaxSetup({
             headers: {
@@ -139,8 +146,6 @@
             return tmp;
         }();
         var numberOfCategories = {{\App\CompetenceProficiencyLevel::count()}}
-        console.log(numberOfCategories);
-        console.log(dictionary);
         document.getElementById("addCompetenceTable").style.display = "none";
         $("#addCompetenceTable").on('click', '.remove_unsaved_competence', function () {
             $(this).parent().parent().remove();
@@ -153,7 +158,8 @@
                     url: src_competence,
                     dataType: "json",
                     data: {
-                        term: request.term
+                        term: request.term,
+                        blacklistedIds:  getCurrentCompetenceIdsInTable()
                     },
                     success: function (data) {
                         response(data);
