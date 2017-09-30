@@ -31,7 +31,8 @@ class User extends Authenticatable
     }
 
     public function hasCompetenceInAcceptableLevel($competenceId, $acceptableCompetenceLevels) {
-        $userHasCompetence = $this->competences()->where("competence_id", $competenceId)->wherePivotIn('competence_proficiency_level_id', $acceptableCompetenceLevels)->get();
+        $competenceAndSubcategoriesIds = Competency::descendantsAndSelf($competenceId)->pluck('id');
+        $userHasCompetence = $this->competences()->whereIn("competence_id", $competenceAndSubcategoriesIds)->wherePivotIn('competence_proficiency_level_id', $acceptableCompetenceLevels)->get();
         return !$userHasCompetence->isEmpty();
     }
 
