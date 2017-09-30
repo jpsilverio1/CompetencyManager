@@ -21,7 +21,7 @@
                             </div>
                         @endif
 					
-                    @include('tasks.show_paginated_tasks')
+                    @include('tasks.show_paginated_tasks', ['noTasksMessage' => 'Não há tarefas para exibição.'])
                 </div>
             </div>
         </div>

@@ -19,5 +19,10 @@ class CompetenceTableSeeder extends Seeder
             $competence->save();
             echo "line $competenceName -  $description<br>";
         }
+
+        if (Competency::isBroken()) {
+            Competency::fixTree();
+            echo "consertar";
+        }
     }
 }
