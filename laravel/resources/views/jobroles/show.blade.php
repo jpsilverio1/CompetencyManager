@@ -4,7 +4,7 @@
         <div class="panel panel-default">
             <div class="panel-heading text-center text-capitalize" >
                 <h2>
-                    {{$jobrole->title}}
+                    {{$jobrole->name}}
                 </h2>
             </div>
             <div class="panel-body">
@@ -28,16 +28,14 @@
                         Usuários aptos a assumir este cargo
                     </div>
                     <div class="panel-body">
-
-					{{-- --}}
-                              olar
+                              Botão exibir usuários
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading" >
                         Competências requeridas para este Cargo
                         @include('competences.show_paginated_competences', ['competences' => $jobrole->competencies()->paginate(5, ['*'],'competences'),
-                        'showCompetenceLevel' => True,
+                        'showCompetenceLevel' => False,
                         'showDeleteButton' => False,
                         'useCompetency' => True,
                         'noCompetencesMessage' => 'Não há competências para exibição.'])
@@ -46,13 +44,13 @@
 
                     <div>
                         <div class="col-md-2">
-                            <td><a href='{{ route('tasks.edit', $task->id) }}'/><button type="submit" class="btn btn-primary">Editar Tarefa</button></td>
+                            <td><a href='{{ route('jobroles.edit', $jobrole->id) }}'/><button type="submit" class="btn btn-primary">Editar</button></td>
                         </div>
                         <div>
-                            <form class="col-xs-offset-1" id="deleteTaskForm" role="form" method="POST" action="{{ route('tasks.destroy', $task->id ) }}">
+                            <form class="col-xs-offset-1" id="deleteJobRoleForm" role="form" method="POST" action="{{ route('jobroles.destroy', $jobrole->id ) }}">
                                 {{ csrf_field() }}
                                 <input type="hidden" name="_method" value="DELETE" />
-                                <td><button class="btn btn-danger">Excluir Tarefa</button></td>
+                                <td><button class="btn btn-danger">Excluir</button></td>
                             </form>
                         </div>
                     </div>

@@ -20,6 +20,6 @@ class JobRole extends Model
 	
 	public function competencies()
     {
-        return $this->belongsToMany('App\Competency', 'jobroles_competencies');
+        return $this->belongsToMany('App\Competency', 'jobroles_competencies', 'jobrole_id', 'competency_id');
     }
 }

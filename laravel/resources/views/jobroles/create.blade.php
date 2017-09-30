@@ -6,18 +6,18 @@
     <div class="container">
         <div class="row">
             <div class="panel panel-fullScreen">
-                <div class="panel-heading"><h3>Adicionar nova tarefa</h3></div>
+                <div class="panel-heading"><h3>Adicionar novo Cargo</h3></div>
                 <div class="panel-body">
-                    <form class="form-horizontal" id="addTaskForm"role="form" method="POST" action="{{ route('tasks.store') }}">
+                    <form class="form-horizontal" id="addJobRoleForm"role="form" method="POST" action="{{ route('jobroles.store') }}">
                         {{ csrf_field() }}
-                        <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="name" class="col-md-2 control-label">Nome</label>
                             <div class="col-md-6">
-                                <input id="title" type="text" class="form-control" name="title" value="{{ old('title') }}" >
+                                <input id="title" type="text" class="form-control" name="name" value="{{ old('name') }}" >
 
-                                @if ($errors->has('title'))
+                                @if ($errors->has('name'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('title') }}</strong>
+                                        <strong>{{ $errors->first('name') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -44,7 +44,7 @@
 
                         <div class="form-group">
                             <div class="col-xs-5 col-xs-offset-1">
-                                <button type="submit" class="btn btn-primary">Cadastrar Tarefa</button>
+                                <button type="submit" class="btn btn-primary">Cadastrar Cargo</button>
                             </div>
                         </div>
                     </form>

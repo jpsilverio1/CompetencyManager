@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Redirect;
+
 use App\Category;
-use App\Task;
 
 use App\JobRole;
 
@@ -18,7 +19,8 @@ class JobRoleController extends Controller
      */
     public function index()
     {
-        //
+        $allJobRoles = JobRole::paginate(10);
+        return view('jobroles.index', ['jobroles' => $allJobRoles]);
     }
 
     /**
@@ -28,7 +30,8 @@ class JobRoleController extends Controller
      */
     public function create()
     {
-        //
+        $task = new \App\JobRole;
+        return view('jobroles.create');
     }
 
     /**
@@ -39,7 +42,29 @@ class JobRoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $name = $request->get('name');
+		$description = $request->get('description');
+
+        $jobrole = new \App\JobRole;
+        $jobrole->name = $name;
+        $jobrole->description = $description;
+        $jobrole->save();
+
+        $competenceIds = $request->get('competence_ids');
+        $competenceProficiencyLevels = $request->get('competency_proficiency_levels');
+        for ($i=0; $i<sizeOf($competenceIds); $i++) {
+            $competenceId = $competenceIds[$i];
+            $competenceProficiencyLevel = $competenceProficiencyLevels[$i];
+            $results = $jobrole->competencies()->where('competency_id', '=', $competenceId)->get();
+            if ($results->isEmpty()) {
+                //add competency
+                $jobrole->competencies()->attach([$competenceId => ['competence_proficiency_level_id'=>$competenceProficiencyLevel]]);
+            } else {
+                //update competency level
+                $jobrole->competencies()->updateExistingPivot($competenceId, ['competence_proficiency_level_id'=>$competenceProficiencyLevel]);
+            }
+        }
+        return Redirect::route('jobroles.show',$jobrole->id)->withMessage('O cargo foi cadastrado com sucesso!');
     }
 
     /**
@@ -62,7 +87,8 @@ class JobRoleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $jobrole = JobRole::findOrFail($id);
+		return view('jobroles.edit', ['jobrole' => $jobrole]);
     }
 
     /**
