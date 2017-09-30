@@ -26,6 +26,11 @@ class Competency extends Model
     public function teamsThatHaveIt() {
         return $this->belongsToMany('App\Team', 'team_competencies');
     }
+	
+	public function jobRolesThatHaveIt()
+    {
+        return $this->belongsToMany('App\JobRole', 'jobroles_competencies');
+    }
 
 
     
