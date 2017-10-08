@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('content')
 
-    <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <div class="container">
         <div class="col-md-6">
             <div class="panel panel-default">

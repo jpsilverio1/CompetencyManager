@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Redirect;
 use DB;
 use App\LearningAid;
 
+
 class LearningAidController extends Controller
 {
     /**
@@ -53,7 +54,7 @@ class LearningAidController extends Controller
         $name = $request->get('name');
         $description = $request->get('description');
         //$author_id = \Auth::user()->id;
-
+        echo "ola mundo feliz - $name $description";
         $learningaid = new \App\LearningAid;
         $learningaid->name = $name;
         $learningaid->description = $description;
@@ -68,10 +69,10 @@ class LearningAidController extends Controller
             $results = $learningaid->competencies()->where('competency_id', '=', $competenceId)->get();
             if ($results->isEmpty()) {
                 //add competency
-                $learningaid->competencies()->attach([$competenceId => ['comp_prof_level_id'=>$competenceProficiencyLevel]]);
+                $learningaid->competencies()->attach([$competenceId => ['competence_proficiency_level_id'=>$competenceProficiencyLevel]]);
             } else {
                 //update competency level
-                $learningaid->competencies()->updateExistingPivot($competenceId, ['comp_prof_level_id'=>$competenceProficiencyLevel]);
+                $learningaid->competencies()->updateExistingPivot($competenceId, ['competence_proficiency_level_id'=>$competenceProficiencyLevel]);
             }
         }
         return Redirect::route('learningaids.show',$learningaid->id)->withMessage('O treinamento foi cadastrado com sucesso!');
@@ -125,10 +126,10 @@ class LearningAidController extends Controller
             $results = $learningaid->competencies()->where('competency_id', '=', $competenceId)->get();
             if ($results->isEmpty()) {
                 //add competency
-                $learningaid->competencies()->attach([$competenceId => ['comp_prof_level_id'=>$competenceProficiencyLevel]]);
+                $learningaid->competencies()->attach([$competenceId => ['competence_proficiency_level_id'=>$competenceProficiencyLevel]]);
             } else {
                 //update competency level
-                $learningaid->competencies()->updateExistingPivot($competenceId, ['comp_prof_level_id'=>$competenceProficiencyLevel]);
+                $learningaid->competencies()->updateExistingPivot($competenceId, ['competence_proficiency_level_id'=>$competenceProficiencyLevel]);
             }
         }
         return Redirect::route('learningaids.show',$learningaid->id)->withMessage('O treinamento foi atualizado com sucesso!');
