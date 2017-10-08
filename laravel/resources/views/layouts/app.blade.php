@@ -57,6 +57,8 @@
                                     <li><a href="{{ route('tasks.index') }}">Tarefas</a></li>
                                     <li class="divider"></li>
                                     <li><a href="{{ route('teams.index') }}">Equipes</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('learningaids.index') }}">Treinamentos</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">
@@ -70,6 +72,8 @@
                                     <li><a href="{{ route('teams.create') }}">Equipe</a></li>
                                     <li class="divider"></li>
                                     <li><a href="{{ route('tasks.create') }}">Tarefa</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('learningaids.create') }}">Treinamentos</a></li>
                                 </ul>
                             </li>
                             @endif

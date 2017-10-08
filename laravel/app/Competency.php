@@ -3,10 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Kalnoy\Nestedset\NodeTrait;
 
 class Competency extends Model
 {
-	protected $table = 'competencies';
+    use NodeTrait;
+    protected $table = 'competencies';
       /* @var array
      */
     protected $fillable = [

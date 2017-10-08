@@ -27,6 +27,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('teams', 'TeamController');
     Route::resource('competences', 'CompetenceController');
     Route::resource('users','UserController');
+    Route::resource('learningaids','LearningAidController');
+
 
     /* pivot tables deletion routes */
     Route::delete('/user-team/{teamId}', array('as'=>'user-team','uses'=>'UserController@deleteUserFromTeam'));
