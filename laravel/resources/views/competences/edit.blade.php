@@ -11,7 +11,6 @@
                         <form class="form-horizontal" id="editCompetencesForm" role="form" method="POST" action="{{ route('competences.update', ['id' => $competence->id] ) }}">
                             {{ csrf_field() }}
                             @if (count($errors) > 0)
-                                {{var_dump($errors)}}
                                 <div class="alert alert-danger">
                                     Houve algum problema ao editar a competência.<br />
                                 </div>
@@ -50,7 +49,7 @@
 
                             <div class="form-group">
                                 <div class="col-xs-5 col-xs-offset-1">
-                                    <button type="submit" class="btn btn-primary">Salvar Competência</button>	
+                                    <button type="submit" class="btn btn-primary">Salvar Competência</button>
                                 </div>
                             </div>
                         </form>

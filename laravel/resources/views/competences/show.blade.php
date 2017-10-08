@@ -31,11 +31,18 @@
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading" >
+                        Treinamentos que necessitam desta competência
+                        @include('learningaids.show_paginated_learningaids', ['learningAids' => $competence->learningAidsThatRequireIt()->paginate(10, ['*'],'learningaids'), 'noLearningAidsMessage' => 'Não há treinamentos para exibição.'])
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" >
                         Equipes que possuem esta competência
                         @include('teams.show_paginated_teams', ['teams' => $competence->teamsThatHaveIt()->paginate(10, ['*'],'teams')])
                     </div>
                 </div>
                     <div>
+                        @if (Auth::user()->isManager())
                         <div class="col-md-2">
                             <a href='{{ route('competences.edit', $competence->id) }}'/><button type="submit" class="btn btn-primary">Editar Competência</button>
                         </div>
@@ -46,6 +53,7 @@
                                 <td><button type="" class="btn btn-danger">Excluir Competência</button></td>
                             </form>
                         </div>
+                        @endif
 
 
                     </div>

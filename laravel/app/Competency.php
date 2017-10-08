@@ -25,8 +25,8 @@ class Competency extends Model
             ->withPivot('competency_proficiency_level_id');
     }
 
-    public function learningaidsThatRequireIt() {
-        return $this->belongsToMany('App\LearningAid', 'learningaids_competencies')
+    public function learningAidsThatRequireIt() {
+        return $this->belongsToMany('App\LearningAid', 'learningaids_competencies', 'competency_id', 'learningaid_id')
             ->withPivot('competence_proficiency_level_id');
     }
 

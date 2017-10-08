@@ -93,7 +93,8 @@ class CompetenceController extends Controller
 		DB::table("user_endorsements")->where('competence_id', '=',$competence->id)->delete();
 		$competence->skilledUsers()->detach();
 		$competence->tasksThatRequireIt()->detach();
-		$competence->teamsThatHaveIt()->detach(); 
+		$competence->teamsThatHaveIt()->detach();
+        $competence->learningAidsThatRequireIt()->detach();
 		$competence->delete();
 
         return Redirect::route('competences.index')->withMessage('A competência foi excluída com sucesso!');

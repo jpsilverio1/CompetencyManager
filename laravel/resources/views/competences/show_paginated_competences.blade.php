@@ -21,7 +21,7 @@
                 @if ($showCompetenceLevel)
                     <td class="table-text text-capitalize">
                         @if($useCompetency)
-                            {{\App\CompetenceProficiencyLevel::findOrFail($competence->pivot->competence_proficiency_level_id)->name}}
+                            {{\App\CompetenceProficiencyLevel::findOrFail($competence->pivot->competency_proficiency_level_id)->name}}
                         @else
                             {{\App\CompetenceProficiencyLevel::findOrFail($competence->pivot->competence_proficiency_level_id)->name}}
                         @endif

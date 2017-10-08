@@ -20,7 +20,7 @@ class LearningAid extends Model
 
     public function competencies()
     {
-        return $this->belongsToMany('App\Competency', 'learningaids_competencies', 'learningaids_id', 'competency_id')
+        return $this->belongsToMany('App\Competency', 'learningaids_competencies', 'learningaid_id', 'competency_id')
             ->withPivot('competence_proficiency_level_id');
     }
     /*public function author()
@@ -75,16 +75,16 @@ class LearningAid extends Model
         $allCompetenceLevels = CompetenceProficiencyLevel::all()->pluck('id')->toArray();
         $myUserSet = [];
         $allLearningAidCompetencesIdsAndLevels = [];
-        $learningaidCompetences = $this->competencies;
-        foreach($learningaidCompetences as $learningaidCompetence) {
-            $learningaidRequiredCompetenceLevel = $learningaidCompetence->pivot->competence_proficiency_level_id;
+        $learningAidCompetences = $this->competencies;
+        foreach($learningAidCompetences as $learningAidCompetence) {
+            $learningAidRequiredCompetenceLevel = $learningAidCompetence->pivot->competence_proficiency_level_id;
             $acceptableCompetenceLevels = $allCompetenceLevels;
-            if (in_array($learningaidRequiredCompetenceLevel, $allCompetenceLevels)) {
-                $start = array_search($learningaidRequiredCompetenceLevel, $allCompetenceLevels);
+            if (in_array($learningAidRequiredCompetenceLevel, $allCompetenceLevels)) {
+                $start = array_search($learningAidRequiredCompetenceLevel, $allCompetenceLevels);
                 $acceptableCompetenceLevels = array_slice($allCompetenceLevels, $start);
             }
-            $allLearningAidCompetencesIdsAndLevels[$learningaidCompetence->id] = $acceptableCompetenceLevels;
-            $usersThatHaveTheCompetenceInAnAcceptableLevel = $learningaidCompetence->skilledUsers()->wherePivotIn('competence_proficiency_level_id', $acceptableCompetenceLevels)->get();
+            $allLearningAidCompetencesIdsAndLevels[$learningAidCompetence->id] = $acceptableCompetenceLevels;
+            $usersThatHaveTheCompetenceInAnAcceptableLevel = $learningAidCompetence->skilledUsers()->wherePivotIn('competence_proficiency_level_id', $acceptableCompetenceLevels)->get();
             if ($usersThatHaveTheCompetenceInAnAcceptableLevel->isEmpty()) {
                 //there is no user that has the competency in an acceptable level
                 return [];
@@ -147,33 +147,3 @@ class LearningAid extends Model
 
     }
 }
-
-/*
-namespace App;
-
-use Illuminate\Database\Eloquent\Model;
-
-class LearningAid extends Model
-{
-    //
-    protected $table = 'learningaids';
-
-    protected $fillable = [
-        'name', 'description',
-    ];
-
-    public function unskilledUsers() {
-        return $this->belongsToMany('App\User', 'learningaids_user', 'learningaids_id', 'user_id');
-    }
-
-    public function competencies()
-    {
-        return $this->belongsToMany('App\Competency', 'learningaids_competencies');
-    }
-
-    public function users()
-    {
-        return $this->belongsToMany('App\User', 'learningaids_user');
-    }
-}
-*/

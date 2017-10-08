@@ -73,7 +73,10 @@
                                     <li class="divider"></li>
                                     <li><a href="{{ route('tasks.create') }}">Tarefa</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="{{ route('learningaids.create') }}">Treinamentos</a></li>
+                                    @if (Auth::user()->isManager())
+                                        <li class="divider"></li>
+                                        <li><a href="{{ route('learningaids.create')}}">Treinamentos</a></li>
+                                    @endif
                                 </ul>
                             </li>
                             @endif
