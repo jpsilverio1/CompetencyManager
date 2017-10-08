@@ -27,12 +27,15 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('teams', 'TeamController');
     Route::resource('competences', 'CompetenceController');
     Route::resource('users','UserController');
+    Route::resource('learningaids','LearningAidController');
+
 
     /* pivot tables deletion routes */
     Route::delete('/user-team/{teamId}', array('as'=>'user-team','uses'=>'UserController@deleteUserFromTeam'));
     Route::delete('/user-competence/{competenceId}', 'UserController@deleteCompetenceFromUser');
     Route::delete('/task-competency/{taskId}/{competencyId}', 'TaskController@deleteCompetencyFromTask');
     Route::delete('/team-member/{teamId}/{memberId}', 'TeamController@deleteMemberFromTeam');
+    Route::delete('/learningaid-competency/{learningAidId}/{competencyId}','LearningAidController@deleteCompetencyFromLearningAid');
 
     Route::post('/user-competences', 'UserController@addCompetences');
     Route::post('/user-endorsements', 'EndorsementController@addEndorsement');

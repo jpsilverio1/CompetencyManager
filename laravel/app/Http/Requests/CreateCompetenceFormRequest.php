@@ -28,7 +28,7 @@ class CreateCompetenceFormRequest extends FormRequest
 
 		foreach($this->request->get('name') as $key => $val)
 		{
-			$rules['name.'.$key] = 'required|min:2|unique:competencies,name';
+			$rules['name.'.$key] = 'required|min:1|unique:competencies,name';
 		}
 		foreach($this->request->get('description') as $key => $val)
 		{

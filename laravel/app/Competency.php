@@ -3,10 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Kalnoy\Nestedset\NodeTrait;
 
 class Competency extends Model
 {
-	protected $table = 'competencies';
+    use NodeTrait;
+    protected $table = 'competencies';
       /* @var array
      */
     protected $fillable = [
@@ -21,6 +23,11 @@ class Competency extends Model
     public function tasksThatRequireIt() {
         return $this->belongsToMany('App\Task', 'task_competencies')
             ->withPivot('competency_proficiency_level_id');
+    }
+
+    public function learningAidsThatRequireIt() {
+        return $this->belongsToMany('App\LearningAid', 'learningaids_competencies', 'competency_id', 'learningaid_id')
+            ->withPivot('competence_proficiency_level_id');
     }
 
     public function teamsThatHaveIt() {
