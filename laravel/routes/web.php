@@ -24,7 +24,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 /* User has to be authenticated to acess all of the routes listed below*/
 Route::group(['middleware' => 'auth'], function() {
     Route::resource('tasks', 'TaskController');
-    Route::resource('teams', 'TeamController');
+    //Route::resource('teams', 'TeamController');
     Route::resource('competences', 'CompetenceController');
     Route::resource('users','UserController');
     Route::resource('learningaids','LearningAidController');
@@ -52,6 +52,10 @@ Route::group(['middleware' => 'auth'], function() {
     /* autocomplete-related routes */
     Route::get('search-competence',array('as'=>'search-competence','uses'=>'SearchController@autocompleteCompetence'));
     Route::get('search-user',array('as'=>'search-user','uses'=>'SearchController@autocompleteUser'));
+
+    Route::get('testao', function () {
+        return view('tasks.teste', ['task' => App\Task::findOrFail(2)]);
+    });
 });
 
 

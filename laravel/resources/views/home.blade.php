@@ -2,7 +2,6 @@
 @section('content')
     <div class="container">
         <div class="row">
-            @include('teams.show_teams')
             @include('tasks.show_tasks')
         </div>
         <div class="row">

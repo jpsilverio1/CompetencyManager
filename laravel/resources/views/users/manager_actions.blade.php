@@ -11,9 +11,6 @@
                 <a href="{{ route('competences.create')}}" class="btn btn-primary">Cadastrar Competências</a>
             </div>
 
-            <div class="control-group">
-                <a href="{{ route('teams.create')}}" class="btn btn-primary">Cadastrar Equipe</a>
-            </div>
         </div>
     </div>
 </div>

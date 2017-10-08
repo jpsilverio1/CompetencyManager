@@ -21,10 +21,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $teams = \Auth::user()->teams;
         $competences = \Auth::user()->competencies;
         return view('home', [
-            'teams' => $teams, 'competences' => $competences
+             'competences' => $competences
         ]);
     }
 

@@ -56,7 +56,6 @@
                                     <li class="divider"></li>
                                     <li><a href="{{ route('tasks.index') }}">Tarefas</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="{{ route('teams.index') }}">Equipes</a></li>
                                     <li class="divider"></li>
                                     <li><a href="{{ route('learningaids.index') }}">Treinamentos</a></li>
                                 </ul>
@@ -69,7 +68,6 @@
                                         <li><a href="{{ route('competences.create')}}">Competências</a></li>
                                     @endif
                                     <li class="divider"></li>
-                                    <li><a href="{{ route('teams.create') }}">Equipe</a></li>
                                     <li class="divider"></li>
                                     <li><a href="{{ route('tasks.create') }}">Tarefa</a></li>
                                     @if (Auth::user()->isManager())
