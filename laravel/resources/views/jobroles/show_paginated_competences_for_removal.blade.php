@@ -6,7 +6,7 @@
             @include('competences.show_paginated_competences', ['competences' => $jobrole->competencies()->paginate(5, ['*'],'competences'),
             'showCompetenceLevel' => True,
             'showDeleteButton' => True,
-            'useCompetency' => True,
+            'useCompetency' => False,
             'noCompetencesMessage' => 'Você ainda não cadastrou competências.',
              'path_to_removal' => '/jobrole-competency/'.$jobrole->id.'/'])
 
