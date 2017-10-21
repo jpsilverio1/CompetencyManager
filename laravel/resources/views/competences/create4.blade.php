@@ -58,6 +58,9 @@
                                                     <td class="form-group col-md-5 col-md-offset-2{{ $errors->has('description.0') ? ' has-error' : '' }}">
                                                         <div>
                                                             <input type="text" class="form-control" name="description[]" placeholder="Descrição da competência" value="{{ old("description.0") }}">
+                                                            <input type="number" class="form-control" name="competence_ui_id[]" value="1">
+                                                            <input type="number" class="form-control" name="parent_ui_id[]" min="-1" value="-1">
+                                                            <input type="hidden" class="form-control" name="isNewCompetence[]" value="true">
                                                             @if ($errors->has('description.0'))
                                                                 <span class="help-block">
                                         <strong>{{ $errors->first('description.0') }}</strong>
@@ -130,6 +133,7 @@
 
     });
     $(document).ready(function(){
+        var currentId = 2;
         var counter = 2;
         var wrapper = $("#accordion");
         $("#addRootCompetenceButton").on("click", function(e){
@@ -144,7 +148,7 @@
                     '<div class="panel-heading" role="tab" id="heading'+ counter +'">' +
                     '<h4 class="panel-title">' +
                     '<a class="" id="panel-lebel'+ counter +'"  role="button" data-toggle="collapse" data-parent="#accordion"  href="#collapse'+ counter +'" ' +
-                    'aria-expanded="'+ariaExpanded+'" aria-controls="collapse'+ counter +'"> Competencia' +
+                    'aria-expanded="'+ariaExpanded+'" aria-controls="collapse'+ counter +'"> Competencia '+counter +
                     '</a>' +
                     '<div class="actions_div" style="position: relative; top: -26px;">' +
                     '<a href="#" accesskey="'+ counter +'" class="remove_ctg_panel exit-btn pull-right">' +
@@ -153,14 +157,14 @@
                     '</a>' +
                     '<a href="#" accesskey="'+ counter +'"  class="pull-right" id="addChildCompetence">' +
                     '<span class="glyphicon glyphicon-plus">' +
-                    '</span>Adicionar sub competência' +
+                    '</span>Adicionar subcompetência' +
                     '</a>' +
                     '</div>' +
                     '</h4>' +
                     '</div>' +
                     '<div id="collapse'+ counter +'" class="panel-collapse collapse '+expandedClass+'"role="tabpanel" aria-labelledby="heading'+ counter +'">'+
                     '<div class="panel-body">' +
-                    '<table class="table table-striped task-table" id="addCompetencesTable">' +
+                    '<table class="table table-striped task-table" class="addCompetencesTable">' +
                     '<tbody>' +
                     '<tr>' +
                     '<td class="form-group col-md-5">' +
@@ -171,6 +175,9 @@
                     '<td class="form-group col-md-5 col-md-offset-2">' +
                     '<div>' +
                     '<input type="text" class="form-control" name="description[]" placeholder="Descrição da competência">' +
+                    '<input type="number" class="form-control" name="competence_ui_id[]" value="'+counter+'">' +
+                    '<input type="number" class="form-control" name="parent_ui_id[]" min="-1" value="-1">' +
+                    '<input type="hidden" class="form-control" name="isNewCompetence[]" value="true">' +
                     '</div>' +
                     '</td>' +
                     '</tr>' +
@@ -181,12 +188,104 @@
                     '</div>' +
                     '</div>');
                 counter++;
+                currentId++;
             } else {
                 alert("Não é possível criar mais de 10 competências por vez");
             }
 
         });
+        $(wrapper).on("click","#addChildCompetence", function(e){
+            e.preventDefault();
+            var parentId = $(this).attr('accesskey');
 
+        });
+        var x = 1;
+        $(wrapper).on("click","#addChildCompetence", function(e){
+            e.preventDefault();
+            var parentId = $(this).attr('accesskey');
+            var parentPanel = '#panel'+ parentId;
+            var ariaExpanded = false;
+            var expandedClass = '';
+            var collapsedClass = 'collapsed';
+            var catgName = "Subcompetência - "+counter;
+            $(wrapper).find(parentPanel).append('<div class="col-sm-12" style="margin-bottom: 0;">' +
+                '<div class="panel panel-default" id="panel'+counter+'">' +
+                    '<div class="panel-heading" role="tab" id="heading'+counter+'">' +
+                        '<h4 class="panel-title">' +
+                        '<a class="'+collapsedClass+'" id="panel-lebel'+ counter +'" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse'+ counter+'" ' +
+                    'aria-expanded="'+ariaExpanded+'" aria-controls="collapse'+ counter+'"> '+catgName+' </a>' +
+                        '<div class="actions_div" style="position: relative; top: -26px;">' +
+                        '<a href="#" accesskey="'+counter +'" class="remove_ctg_panel exit-btn pull-right"><span class="glyphicon glyphicon-remove"></span></a>' +
+                        '<a href="#" accesskey="'+ counter +'" class="pull-right" id="addChildCompetence"> <span class="glyphicon glyphicon-plus"></span> Adicionar subcompetência</a>' +
+                        '</h4>' +
+                    '</div>' +
+                    '<div id="collapse'+ counter+'" class="panel-collapse collapse '+expandedClass+'"role="tabpanel" aria-labelledby="heading'+counter+'">'+
+                        '<div class="panel-body">' +
+                            '<div id="TextBoxDiv'+ counter +'"></div>' +
+                            '<div class="childCategoryOptionButtons">' +
+                                '<div class="col-sm-2 ">' +
+                                    '<a class="btn btn-xs btn-primary" accesskey="'+ counter +'" data-parentid="'+parentId+'" id="addNewSubCompetence" ><span class="glyphicon glyphicon-plus"></span> Adicionar nova subcompetência</a>' +
+                                '</div>' +
+                                '<div class="col-sm-offset-1 col-md-2">' +
+                                    '<a class="btn btn-xs btn-primary" accesskey="'+ counter +'" id="addSubCompetenceFromDatabase" ><span class="glyphicon glyphicon-plus"></span> Adicionar subcompetência já cadastrada</a>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+            );
+            x++;
+            counter++;
+
+
+        });
+        var y = 1;
+        $(wrapper).on("click","#addNewSubCompetence", function(e){
+            e.preventDefault();
+
+            var accesskey = $(this).attr('accesskey');
+            var parentId = $(this).attr('data-parentid');
+            console.log("add new competence"+accesskey+"parent= "+parentId);
+            y++;
+            $(this).closest('.childCategoryOptionButtons').remove();
+            $('#panel'+accesskey).find('#TextBoxDiv'+accesskey).append(
+                '<table class="table table-striped task-table" class="addCompetencesTable">' +
+                '<tbody>' +
+                '<tr>' +
+                '<td class="form-group col-md-5">' +
+                '<div class="col-md-offset-1">' +
+                '<input type="text" class="form-control" name="name[]" placeholder="Nome da competência"' +
+                '</div>' +
+                '</td>' +
+                '<td class="form-group col-md-5 col-md-offset-2">' +
+                '<div>' +
+                '<input type="text" class="form-control" name="description[]" placeholder="Descrição da competência">' +
+                '<input type="number" class="form-control" name="competence_ui_id[]" value="'+accesskey+'">' +
+                '<input type="number" class="form-control" name="parent_ui_id[]" min="-1" value="'+parentId+'">' +
+                '<input type="hidden" class="form-control" name="isNewCompetence[]" value="true">' +
+                '</div>' +
+                '</td>' +
+                '</tr>' +
+                '</tbody>' +
+                '</table>'
+            );
+
+
+        });
+        $(wrapper).on("click","#addSubCompetenceFromDatabase", function(e){
+            e.preventDefault();
+            console.log("add from database");
+            var accesskey = $(this).attr('accesskey');
+            y++;
+
+            $('#panel'+accesskey).find('#TextBoxDiv'+accesskey).append('<div class="col-md-12 form-group"><input type="text" name="ctgtext[]" class="form-control" style="width: 40%;float: left;"/><a href="#" class="remove_field exit-btn"><span class="glyphicon glyphicon-remove"></a></div>');
+
+        });
+        $(wrapper).on("click",".remove_field", function(e){
+            e.preventDefault();
+            $(this).parent('div').remove();y--;
+        });
         $(wrapper).on("click",".remove_ctg_panel", function(e){
             e.preventDefault();
             var accesskey = $(this).attr('accesskey');
