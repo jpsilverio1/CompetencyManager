@@ -18,7 +18,7 @@
                                     <td class="form-group  col-md-5{{ $errors->has('name') ? ' has-error' : '' }}">
                                         <label for="name" class="col-md-1 control-label">Cargo</label>
                                         <div class=" col-md-offset-4">
-                                            <input type="text" class="form-control" name="title" placeholder="Nome do Cargo"  value="{{ old('name', $jobrole->name) }}">
+                                            <input type="text" class="form-control" name="name" placeholder="Nome do Cargo"  value="{{ old('name', $jobrole->name) }}">
                                             @if ($errors->has('name'))
                                                 <span class="help-block">
 													<strong>{{ $errors->first('name') }}</strong>
