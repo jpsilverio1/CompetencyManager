@@ -17,17 +17,26 @@
                    Descrição
                </h4>
                 <p>{{$competence->description}}</p>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" >
+                            Árvore
+                        </div>
+                        <div class="panel-heading container-fluid" >
+
+                            @include('competences.show_competence_subtree')
+                        </div>
+                    </div>
                 <div class="panel panel-default">
                     <div class="panel-heading" >
                             Usuários que possuem a competência
-                        @include('users.show_paginated_users', ['users' => $competence->skilledUsers()->paginate(10, ['*'],'users')])
                     </div>
+                    @include('users.show_paginated_users', ['users' => $competence->skilledUsers()->paginate(10, ['*'],'users')])
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading" >
                         Tarefas que necessitam desta competência
-                        @include('tasks.show_paginated_tasks', ['tasks' => $competence->tasksThatRequireIt()->paginate(10, ['*'],'tasks'), 'noTasksMessage' => 'Não há tarefas para exibição.'])
                     </div>
+                    @include('tasks.show_paginated_tasks', ['tasks' => $competence->tasksThatRequireIt()->paginate(10, ['*'],'tasks'), 'noTasksMessage' => 'Não há tarefas para exibição.'])
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading" >
@@ -37,13 +46,13 @@
                 </div>
                     <div>
                         <div class="col-md-2">
-                            <a href='{{ route('competences.edit', $competence->id) }}'/><button type="submit" class="btn btn-primary">Editar Competência</button>
+                            <a href='{{ route('competences.edit', $competence->id) }}'/><button type="submit" class="btn btn-primary">Editar</button>
                         </div>
                         <div>
                             <form  id="deleteCompetencesForm" role="form" method="POST" action="{{ route('competences.destroy', $competence->id ) }}">
                                 {{ csrf_field() }}
                                 <input type="hidden" name="_method" value="DELETE" />
-                                <td><button type="" class="btn btn-danger">Excluir Competência</button></td>
+                                <td><button type="" class="btn btn-danger">Excluir</button></td>
                             </form>
                         </div>
 
