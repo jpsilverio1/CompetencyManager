@@ -30,7 +30,26 @@
                     <div class="panel-body">
                               Botão exibir usuários
                     </div>
-                </div>
+                </div> <div class="panel panel-default">
+                        <div class="panel-heading" >
+                            Usuários que cumprem as exigências deste Cargo
+                        </div>
+                        <div class="panel-body">
+
+                            <?php $suitableAssigneesForTask = $jobrole->suitableAssigneesSets(); ?>
+                            @if (count($suitableAssigneesForTask) > 0)
+                                <ul>
+                                    @foreach($suitableAssigneesForTask as $user)
+                                        <ul>
+                                            <li><a href="{{ route('users.show', $user->id) }}">{{ $user->name }}</a></li>
+                                        </ul>
+                                    @endforeach
+                                </ul>
+                            @else
+                                Não há usuários aptos a realizar esta tarefa
+                            @endif
+                        </div>
+                    </div>
                 <div class="panel panel-default">
                     <div class="panel-heading" >
                         Competências requeridas para este Cargo
