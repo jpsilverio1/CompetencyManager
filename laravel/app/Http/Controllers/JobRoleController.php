@@ -109,7 +109,28 @@ class JobRoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-    
+		$name = $request->get('name');
+		$description = $request->get('description');
+        $jobrole = JobRole::findOrFail($id);
+
+        $jobrole->name = $name;
+        $jobrole->description = $description;
+        $jobrole->save();
+        $competenceIds = $request->get('competence_ids');
+        $competenceProficiencyLevels = $request->get('competency_proficiency_levels');
+        for ($i=0; $i<sizeOf($competenceIds); $i++) {
+            $competenceId = $competenceIds[$i];
+            $competenceProficiencyLevel = $competenceProficiencyLevels[$i];
+            $results = $jobrole->competencies()->where('competency_id', '=', $competenceId)->get();
+            if ($results->isEmpty()) {
+                //add competency
+                $jobrole->competencies()->attach([$competenceId => ['competence_proficiency_level_id'=>$competenceProficiencyLevel]]);
+            } else {
+                //update competency level
+                $jobrole->competencies()->updateExistingPivot($competenceId, ['competence_proficiency_level_id'=>$competenceProficiencyLevel]);
+            }
+        }
+        return Redirect::route('jobroles.show',$jobrole->id)->withMessage('O cargo foi atualizado com sucesso!');
     }
 
     /**
@@ -120,6 +141,10 @@ class JobRoleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $jobrole = JobRole::findOrFail($id);
+		$jobrole->competencies()->detach();
+		$jobrole->delete();
+
+        return Redirect::route('jobroles.index')->withMessage('O cargo foi excluído com sucesso!');
     }
 }
