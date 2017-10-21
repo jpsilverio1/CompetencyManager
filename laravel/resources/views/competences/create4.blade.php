@@ -96,26 +96,7 @@
 <script>
 
     $(document).ready(function(){
-        var competencyIndex = 0;
-        $('.addButton').click(function(){
-            if (competencyIndex <9) {
-                competencyIndex++;
-                console.log(competencyIndex);
-                var $template = $('#competenceTemplate'),
-                    $clone    = $template
-                        .clone()
-                        .removeClass('hide')
-                        .removeAttr('id')
-                        .insertBefore($template);
-                $clone.find('[name="name"]').attr('name', 'competency[' + competencyIndex + '].name').end()
-                    .find('[name="description"]').attr('name', 'competency[' + competencyIndex + '].description').end();
-            }
-            else {
-                alert("Não é possível criar mais de 10 competências por vez");
-            }
 
-
-        });
 
         $('.btn-primary').click(function(){
             $('#competenceTemplate').remove();
@@ -136,6 +117,20 @@
         var currentId = 2;
         var counter = 2;
         var wrapper = $("#accordion");
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        src_competence = "{{ route('search-competence') }}";
+        $("#search_competence").on('autocomplete', function(e) {
+            console.log("ola mundo feliz333");
+        });
+
+
+
         $("#addRootCompetenceButton").on("click", function(e){
             e.preventDefault();
             var catgName = 'Competência - '+counter;
@@ -227,7 +222,7 @@
                                     '<a class="btn btn-xs btn-primary" accesskey="'+ counter +'" data-parentid="'+parentId+'" id="addNewSubCompetence" ><span class="glyphicon glyphicon-plus"></span> Adicionar nova subcompetência</a>' +
                                 '</div>' +
                                 '<div class="col-sm-offset-1 col-md-2">' +
-                                    '<a class="btn btn-xs btn-primary" accesskey="'+ counter +'" id="addSubCompetenceFromDatabase" ><span class="glyphicon glyphicon-plus"></span> Adicionar subcompetência já cadastrada</a>' +
+                                    '<a class="btn btn-xs btn-primary" accesskey="'+ counter +'" data-parentid="'+parentId+'" id="addSubCompetenceFromDatabase" ><span class="glyphicon glyphicon-plus"></span> Adicionar subcompetência já cadastrada</a>' +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
@@ -277,11 +272,50 @@
             e.preventDefault();
             console.log("add from database");
             var accesskey = $(this).attr('accesskey');
+            var parentId = $(this).attr('data-parentid');
+            console.log("add new competence"+accesskey+"parent= "+parentId);
             y++;
+            $(this).closest('.childCategoryOptionButtons').remove();
+            $('#panel'+accesskey).find('#TextBoxDiv'+accesskey).append(
+            '<div class="row">' +
+                '<div class="col-xs-6 col-md-6">' +
+                '<div class="input-group stylish-input-group input-append">'+
+                '<input type="text" name="search_competence" class="form-control"'+
+            'placeholder="Buscar competência" id="search_competence">'+
+                '<span class="input-group-addon">' +
+                '<span class="glyphicon glyphicon-search"></span>' +
+            '</span>' +
+            '</div>' +
+            '</div>' +
+            '</div>'
+            );
+            $("#accordion #search_competence").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
 
-            $('#panel'+accesskey).find('#TextBoxDiv'+accesskey).append('<div class="col-md-12 form-group"><input type="text" name="ctgtext[]" class="form-control" style="width: 40%;float: left;"/><a href="#" class="remove_field exit-btn"><span class="glyphicon glyphicon-remove"></a></div>');
+                        url: src_competence,
+                        dataType: "json",
+                        data: {
+                            term: request.term,
+                        },
+                        success: function (data) {
+                            response(data);
+
+                        }
+                    });
+                },
+                minLength: 2,
+                select: function (e, ui) {
+                    addCompetence(ui.item.value, ui.item.id, numberOfCategories);
+                    $(this).val('');
+                    return false;
+                }
+
+            });
+
 
         });
+
         $(wrapper).on("click",".remove_field", function(e){
             e.preventDefault();
             $(this).parent('div').remove();y--;
