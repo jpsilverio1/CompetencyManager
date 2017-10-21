@@ -16,7 +16,16 @@ class JobRoleController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
+     *
+     *
      */
+
+    public function deleteCompetencyFromJobRole($jobRoleId, $competencyId) {
+        $jobrole = JobRole::findOrFail($jobRoleId);
+        $jobrole->competencies()->detach($competencyId);
+        return Redirect::route('jobroles.edit', $jobRoleId);
+    }
+    
     public function index()
     {
         $allJobRoles = JobRole::paginate(10);
