@@ -19,6 +19,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myStyle.css') }}" rel="stylesheet">
     <link href="{{ asset('css/competence-subtree.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/create-competence.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
