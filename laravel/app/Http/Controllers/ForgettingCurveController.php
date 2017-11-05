@@ -16,11 +16,8 @@ use Illuminate\Http\Request;
 class ForgettingCurveController
 {
     public function forgettingLevel(Request $request) {
-        /*
-        $endorsedUserId = $request->get('endorsed_user_id');
-        $endorser = \Auth::user();
-        $endorser->addEndorsement($endorsedUserId, $competenceId, $competenceLevel);
-        */
-        return /*redirect("users/$endorsedUserId")*/ 1;
+        $competenceId = $request->get('competence_id');
+        $userId= $request->get('user_id');
+        return 1;
     }
 }
