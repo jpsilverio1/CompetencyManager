@@ -21,9 +21,14 @@ class Task extends Model
         return $this->belongsToMany('App\Competency', 'task_competencies')
         ->withPivot('competency_proficiency_level_id');
     }
+
     public function author()
     {
         return $this->belongsTo('App\User');
+    }
+
+    public function teams() {
+        return $this->belongsToMany('App\Team', 'task_teams');
     }
 
     private function powerSet($in,$minLength = 1) {
