@@ -49,6 +49,7 @@
                 <thead>
                 <th>Competência</th>
                 <th>Nível</th>
+                <th>Lembrança</th>
                 <th>&nbsp;Número de endossos</th> <!-- number of endorsements -->
                 <th>&nbsp;</th> <!--endorsement status -->
                 @if ($showEndorsementSection)
@@ -73,7 +74,12 @@
                             <td class="table-text">
                                 <div> {{\App\CompetenceProficiencyLevel::findOrFail($competence->pivot->competence_proficiency_level_id)->name}}</div>
                             </td>
+                            <td>
+                                <div>
 
+                                   90%
+                                </div>
+                            </td>
                             <td>
                                 <div class="btn btn-info btn-circle">{{$numberOfEndorsementsForCompetence}}</div>
                                 @if ($numberOfEndorsementsForCompetence >0)
