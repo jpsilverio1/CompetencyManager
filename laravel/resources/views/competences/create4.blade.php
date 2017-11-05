@@ -164,7 +164,7 @@
                     '<tr>' +
                     '<td class="form-group col-md-5">' +
                     '<div class="col-md-offset-1">' +
-                    '<input type="text" class="form-control" name="name[]" placeholder="Nome da competência"' +
+                    '<input type="text" class="form-control" name="name[]" placeholder="Nome da competência">' +
                     '</div>' +
                     '</td>' +
                     '<td class="form-group col-md-5 col-md-offset-2">' +
@@ -250,7 +250,7 @@
                 '<tr>' +
                 '<td class="form-group col-md-5">' +
                 '<div class="col-md-offset-1">' +
-                '<input type="text" class="form-control" name="name[]" placeholder="Nome da competência"' +
+                '<input type="text" class="form-control" name="name[]" placeholder="Nome da competência">' +
                 '</div>' +
                 '</td>' +
                 '<td class="form-group col-md-5 col-md-offset-2">' +
@@ -261,6 +261,12 @@
                 '<input type="hidden" class="form-control" name="isNewCompetence[]" value="true">' +
                 '</div>' +
                 '</td>' +
+                '<td>' +
+                '<a href="#" accesskey="'+ accesskey +'" class="remove_sub_competence_individual_fields exit-btn pull-right">' +
+                '<span class="glyphicon glyphicon-remove btn-danger">' +
+                '</span>' +
+                '</a>' +
+                '</td>' +
                 '</tr>' +
                 '</tbody>' +
                 '</table>'
@@ -268,16 +274,16 @@
 
 
         });
+
         $(wrapper).on("click","#addSubCompetenceFromDatabase", function(e){
             e.preventDefault();
-            console.log("add from database");
             var accesskey = $(this).attr('accesskey');
             var parentId = $(this).attr('data-parentid');
             console.log("add new competence"+accesskey+"parent= "+parentId);
             y++;
             $(this).closest('.childCategoryOptionButtons').remove();
             $('#panel'+accesskey).find('#TextBoxDiv'+accesskey).append(
-            '<div class="row">' +
+            '<div class="row search-competence-div">' +
                 '<div class="col-xs-6 col-md-6">' +
                 '<div class="input-group stylish-input-group input-append">'+
                 '<input type="text" name="search_competence" class="form-control"'+
@@ -306,7 +312,36 @@
                 },
                 minLength: 2,
                 select: function (e, ui) {
-                    addCompetence(ui.item.value, ui.item.id, numberOfCategories);
+                    $(this).closest('.search-competence-div').remove();
+                    console.log(ui.item.value+" - "+ui.item.id);
+                    $('#panel'+accesskey).find('#TextBoxDiv'+accesskey).append(
+                        '<table class="table table-striped task-table" class="addCompetencesTable">' +
+                        '<tbody>' +
+                        '<tr>' +
+                        '<td class="form-group col-md-5">' +
+                        '<div class="col-md-offset-1">' +
+                        '<input type="text" value="'+ui.item.value+'" class="form-control" name="name[]" disabled="true"">' +
+                        '</div>' +
+                        '</td>' +
+                        '<td class="form-group col-md-5 col-md-offset-2">' +
+                        '<div>' +
+                        '<input type="text" value="'+ui.item.description+'" class="form-control" name="description[]" disabled="true"">' +
+                        '<input type="hidden" class="form-control" name="competence_ui_id[]" value="'+accesskey+'">' +
+                        '<input type="hidden" class="form-control" name="competence_db_id[]" value="'+ui.item.id+'">' +
+                        '<input type="hidden" class="form-control" name="parent_ui_id[]" min="-1" value="'+parentId+'">' +
+                        '<input type="hidden" class="form-control" name="isNewCompetence[]" value="false">' +
+                        '</div>' +
+                        '</td>' +
+                         '<td>' +
+                        '<a href="#" accesskey="'+ accesskey +'" class="remove_sub_competence_individual_fields exit-btn pull-right">' +
+                        '<span class="glyphicon glyphicon-remove btn-danger">' +
+                        '</span>' +
+                        '</a>' +
+                        '</td>' +
+                        '</tr>' +
+                        '</tbody>' +
+                        '</table>'
+                    );
                     $(this).val('');
                     return false;
                 }
@@ -315,10 +350,29 @@
 
 
         });
-
         $(wrapper).on("click",".remove_field", function(e){
             e.preventDefault();
             $(this).parent('div').remove();y--;
+        });
+        $(wrapper).on("click",".remove_sub_competence_individual_fields", function(e){
+            e.preventDefault();
+            console.log("cliquei");
+            var accesskey = $(this).attr('accesskey');
+            var parentId = $(this).attr('data-parentid');
+            $(this).closest('table').remove();
+            console.log("accessKey "+accesskey);
+            //$('#panel'+accesskey).find('#TextBoxDiv'+accesskey).append("belexaaaa");
+            $('#panel'+accesskey).find('#TextBoxDiv'+accesskey).append(
+            '<div class="childCategoryOptionButtons">' +
+            '<div class="col-sm-2 ">' +
+            '<a class="btn btn-xs btn-primary" accesskey="'+ accesskey +'" data-parentid="'+parentId+'" id="addNewSubCompetence" ><span class="glyphicon glyphicon-plus"></span> Adicionar nova subcompetência</a>' +
+            '</div>' +
+            '<div class="col-sm-offset-1 col-md-2">' +
+            '<a class="btn btn-xs btn-primary" accesskey="'+ accesskey +'" data-parentid="'+parentId+'" id="addSubCompetenceFromDatabase" ><span class="glyphicon glyphicon-plus"></span> Adicionar subcompetência já cadastrada</a>' +
+            '</div>' +
+            '</div>'
+            );
+            //$(this).parent('div').remove();y--;
         });
         $(wrapper).on("click",".remove_ctg_panel", function(e){
             e.preventDefault();
