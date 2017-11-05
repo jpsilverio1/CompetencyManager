@@ -44,4 +44,8 @@ class Team extends Model
     {
         return $this->belongsToMany('App\User', 'team_members');
     }
+
+    public function members() {
+        return $this->belongsToMany('App\User', 'task_team_members');
+    }
 }
