@@ -28,7 +28,7 @@ class AddCompetencyProficiencyLevelColumnToLearningaidsCompetencyTable extends M
     public function down()
     {
         //
-        Schema::table('tasks', function($table) {
+        Schema::table('learningaids_competencies', function($table) {
             $table->dropForeign(['comp_prof_level_id']);
             $table->dropColumn('comp_prof_level_id');
         });

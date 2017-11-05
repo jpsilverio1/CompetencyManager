@@ -24,6 +24,12 @@ class RenameTeamsAndTeamMembersToGroupsAndGroupMembers extends Migration
      */
     public function down()
     {
+        Schema::rename('groups','teams');
+        Schema::rename('group_members','team_members');
+        Schema::table('team_members', function (Blueprint $table) {
+            $table->renameColumn('group_id', 'team_id');
+
+        });
         Schema::create('team_competencies', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('competency_id')->unsigned();
@@ -32,11 +38,5 @@ class RenameTeamsAndTeamMembersToGroupsAndGroupMembers extends Migration
             $table->foreign('team_id')->references('id')->on('teams');
             //$table->primary(['competency_id', 'team_id']);
         });
-        Schema::table('team_members', function (Blueprint $table) {
-            $table->renameColumn('group_id', 'team_id');
-
-        });
-        Schema::rename('group_members','team_members');
-        Schema::rename('groups','teams');
     }
 }
