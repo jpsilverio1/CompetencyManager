@@ -21,9 +21,12 @@ class User extends Authenticatable
     public function competences()
     {
         return $this->belongsToMany('App\Competency', 'user_competences', 'user_id', 'competence_id')
-            ->withPivot('competence_proficiency_level_id');
+            ->withPivot('competence_proficiency_level_id')->withTimestamps();
     }
 
+    public function competenceUpdatedDateTime($competenceId) {
+        return Competency::findOrFail($competenceId)->updated_at;
+    }
 
     public function hasCompetence($competenceId) {
         $userHasCompetence = $this->competences()->where("competence_id", $competenceId)->get();
@@ -136,8 +139,68 @@ class User extends Authenticatable
 
     public function teams()
     {
-        return $this->belongsToMany('App\Team', 'team_members');
+        return $this->belongsToMany('App\Team', 'task_team_members');
     }
+
+    public function tasks() {
+        //return $this->teams()->tasks();
+        //return $this->belongsToMany('App\Team', 'task_team_members')
+            //->withPivot('competency_proficiency_level_id');
+    }
+
+
+    public function competenceRememberingLevel($competenceId){
+        $rememberingLevel = 0;
+        $lastUpdatedCompetenceDateTime = competenceUpdatedDateTime($competenceId);
+        $lastTask = lastTaskThisUserJoinedUsingACertainCompetence($competenceId);
+
+        $currentDateTime = 0;
+        $latestDateTime = 0;
+
+        foreach ($tasksUsingThisCompetence as $task) {
+            $endOfTask = $task->ended_at;
+        }
+    }
+
+    public function tasksThisUserJoinedUsingACertainCompetence($competenceId) {
+        $tasksThisUserJoined = [];
+        $competence = Competency::findOrFail($competenceId);
+        $teams = $this->teams();
+        foreach ($teams as $team) {
+            $tasks = $team->tasks();
+            foreach ($tasks as $task) {
+                $competencies = $task->competencies()->where("competence_id", $competenceId)->get();
+                if (!$competencies->isEmpty()) {
+                    $tasksThisUserJoined[] = $task;
+                }
+            }
+        }
+        return $tasksThisUserJoined;
+    }
+
+    public function lastTaskThisUserJoinedUsingACertainCompetence($competenceId) {
+        $lastFinishedTasks = tasksThisUserJoinedUsingACertainCompetence($competenceId);
+        $lastFinishedTask = $lastFinishedTasks->latest("updated_at")->first();
+        return $lastFinishedTask;
+    }
+
+    /* public function tasksThisUserJoinedUsingACertainCompetence_OLD($competenceId) {
+        $tasksThisUserJoined = [];
+        $competence = Competency::findOrFail($competenceId);
+        $tasks = $this->teams()->flatMap(function ($teams) {
+            return $this->tasks();
+        });
+        foreach ($teams as $team) {
+            $tasks = $team->tasks();
+            foreach ($tasks as $task) {
+                $competencies = $task->competencies()->where("competence_id", $competenceId)->get();
+                if (!$competencies->isEmpty()) {
+                    $tasksThisUserJoined[] = $task;
+                }
+            }
+        }
+        return $tasksThisUserJoined;
+    } */
 
     /**
      * The attributes that should be hidden for arrays.
