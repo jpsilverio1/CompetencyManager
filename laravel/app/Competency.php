@@ -17,7 +17,7 @@ class Competency extends Model
 
     public function skilledUsers() {
         return $this->belongsToMany('App\User', 'user_competences', 'competence_id', 'user_id')
-            ->withPivot('competence_proficiency_level_id');
+            ->withPivot('competence_proficiency_level_id')->withTimestamps();
     }
 
     public function tasksThatRequireIt() {
