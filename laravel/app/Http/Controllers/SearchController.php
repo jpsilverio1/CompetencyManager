@@ -50,7 +50,7 @@ class SearchController extends Controller
 
         $data=array();
         foreach ($competencies as $competence) {
-            $data[]=array('value'=>$competence->name,'id'=>$competence->id);
+            $data[]=array('value'=>$competence->name,'id'=>$competence->id, 'description' => $competence->description);
         }
         if(count($data))
             return $data;
