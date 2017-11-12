@@ -8,7 +8,7 @@
             <div class="panel panel-fullScreen">
                 <div class="panel-heading">Criar novas competências</div>
                 <div class="panel-header with-border">
-
+                    {{var_dump(session()->getOldInput())}}
                 </div>
                 <!-- /.panel-header -->
                 <!-- form start -->
@@ -58,14 +58,15 @@
                                                     <td class="form-group col-md-5 col-md-offset-2{{ $errors->has('description.0') ? ' has-error' : '' }}">
                                                         <div>
                                                             <input type="text" class="form-control" name="description[]" placeholder="Descrição da competência" value="{{ old("description.0") }}">
-                                                            <input type="hidden" class="form-control" name="competence_ui_id[]" value="1">
-                                                            <input type="hidden" class="form-control" name="parent_ui_id[]" min="-1" value="-1">
-                                                            <input type="hidden" class="form-control" name="isNewCompetence[]" value="true">
                                                             @if ($errors->has('description.0'))
                                                                 <span class="help-block">
                                         <strong>{{ $errors->first('description.0') }}</strong>
                                     </span>
                                                             @endif
+                                                            <input type="hidden" class="form-control" name="competence_ui_id[]" value="{{ old("competence_ui_id.0", 1) }}">
+                                                            <input type="hidden" class="form-control" name="parent_ui_id[]" min="-1" value="{{ old("parent_ui_id.0", -1) }}">
+                                                            <input type="hidden" class="form-control" name="isNewCompetence[]" value="{{ old("isNewCompetence.0", 'true') }}">
+
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -76,6 +77,34 @@
                                 </div>
                             </div>
                             <!-- final -->
+                            @php ($nameIdx = 1)
+                            @php ($dbIdIdx = 0)
+                            @for ($i=1; $i<sizeOf(old('competence_ui_id')); $i++)
+                                @if (old("isNewCompetence.$i") === "true")
+                                    @php ($parentId = old("parent_ui_id.$i"))
+                                    @php ($competenceUiId = old("competence_ui_id.$i"))
+                                    @php ($competenceName = old("name.$nameIdx"))
+                                    @php ($competenceDescription = old("description.$nameIdx"))
+                                    @php ($descriptionError = $errors->has("description.$nameIdx") ? $errors->first("description.$nameIdx") : '')
+                                    @php ($nameError = $errors->has("name.$nameIdx") ? $errors->first("name.$nameIdx") : '')
+                                    @if ($parentId == -1)
+                                        <script type="text/javascript">
+                                            console.log("nova root"+{{$parentId}});
+                                            createNewRootCompetence({{$competenceUiId}}, true, 'in', '', '{{$competenceName}}', '{{$competenceDescription}}', '{{$nameError}}', '{{$descriptionError}}');
+                                        </script>
+                                    @else
+                                        <script type="text/javascript">
+                                            console.log("nova sub"+{{$parentId}});
+                                            addNewSubCompetence(true, {{$competenceUiId}}, {{$parentId}}, '{{$competenceName}}', '{{$competenceDescription}}', '{{$nameError}}', '{{$descriptionError}}');
+                                        </script>
+                                    @endif
+                                    @php ($nameIdx++)
+                                @else
+                                    <script type="text/javascript">
+                                        console.log("database");
+                                    </script>
+                                @endif
+                            @endfor
                         </div>
 
                         <div class="col-md-12 text-center" style="margin-top:15px;">
@@ -93,10 +122,180 @@
         </div>
     </div>
 @endsection
-<script>
+<script type="text/javascript">
+    function createNewRootCompetence(uiCompetenceId, ariaExpanded, expandedClass, collapsedClass, competenceName, competenceDescription, nameError, descriptionError) {
+        var wrapper = $("#accordion");
+        console.log("input "+uiCompetenceId+" "+competenceName);
+        var competenceDescStr = '>';
+        if (competenceDescription != null) {
+            var competenceDescStr = 'value="'+competenceDescription+'">';
+        }
+        var competenceNameStr = '>';
+        if (competenceName != null) {
+            var competenceNameStr = 'value="'+competenceName+'">';
+        }
+        var nameErrorStr = '';
+        var descriptionErrorStr = '';
+        var nameErrorStatus = '';
+        var descriptionErrorStatus = '';
+        if (nameError != null && nameError != '') {
+            nameErrorStatus = ' has-error'
+            nameErrorStr = '<span class="help-block"> ' +
+                ' <strong>'+nameError+'</strong>  </span>';
 
+        }
+        if (descriptionError != null && descriptionError != '') {
+            descriptionErrorStatus = ' has-error'
+            descriptionErrorStr = '<span class="help-block"> ' +
+                ' <strong>'+descriptionError+'</strong>  </span>';
+
+        }
+        $(wrapper).append('<div class="col-sm-12" style="margin-bottom: 0;">' +
+            '<div class="panel panel-default"  id="panel'+ uiCompetenceId +'">' +
+            '<div class="panel-heading" role="tab" id="heading'+ uiCompetenceId +'">' +
+            '<h4 class="panel-title">' +
+            '<a class="" id="panel-lebel'+ uiCompetenceId +'"  role="button" data-toggle="collapse" data-parent="#accordion"  href="#collapse'+ uiCompetenceId +'" ' +
+            'aria-expanded="'+ariaExpanded+'" aria-controls="collapse'+ uiCompetenceId +'"> Competencia '+uiCompetenceId +
+            '</a>' +
+            '<div class="actions_div" style="position: relative; top: -26px;">' +
+            '<a href="#" accesskey="'+ uiCompetenceId +'" class="remove_ctg_panel exit-btn pull-right">' +
+            '<span class="glyphicon glyphicon-remove">' +
+            '</span>' +
+            '</a>' +
+            '<a href="#" accesskey="'+ uiCompetenceId +'"  class="pull-right" id="addChildCompetence">' +
+            '<span class="glyphicon glyphicon-plus">' +
+            '</span>Adicionar subcompetência' +
+            '</a>' +
+            '</div>' +
+            '</h4>' +
+            '</div>' +
+            '<div id="collapse'+ uiCompetenceId +'" class="panel-collapse collapse '+expandedClass+'"role="tabpanel" aria-labelledby="heading'+ uiCompetenceId +'">'+
+            '<div class="panel-body">' +
+            '<table class="table table-striped task-table" class="addCompetencesTable">' +
+            '<tbody>' +
+            '<tr>' +
+            '<td class="form-group col-md-5'+nameErrorStatus+'">' +
+            '<div class="col-md-offset-1">' +
+            '<input type="text" class="form-control" name="name[]" placeholder="Nome da competência"'+competenceNameStr +
+                nameErrorStr +
+            '</div>' +
+            '</td>' +
+            '<td class="form-group col-md-5 col-md-offset-2 '+descriptionErrorStatus+'">' +
+            '<div>' +
+            '<input type="text" class="form-control" name="description[]" placeholder="Descrição da competência"'+competenceDescStr +
+                descriptionErrorStr +
+            '<input type="hidden" class="form-control" name="competence_ui_id[]" value="'+uiCompetenceId+'">' +
+            '<input type="hidden" class="form-control" name="parent_ui_id[]" min="-1" value="-1">' +
+            '<input type="hidden" class="form-control" name="isNewCompetence[]" value="true">' +
+            '</div>' +
+            '</td>' +
+            '</tr>' +
+            '</tbody>' +
+            '</table>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>');
+    }
+    function addNewSubCompetence(addNewCompetencePanel, uiCompetenceId, parentId, competenceName, competenceDescription, nameError, descriptionError) {
+        var wrapper = $("#accordion");
+        if (addNewCompetencePanel) {
+            console.log("criar painel");
+            createParentPanel(uiCompetenceId, parentId, wrapper);
+        } else {
+            console.log("nao criar painel");
+        }
+        var competenceDescStr = '>';
+        if (competenceDescription != null) {
+            var competenceDescStr = ' value="'+competenceDescription+'">';
+        }
+        var competenceNameStr = '>';
+        if (competenceName != null) {
+            var competenceNameStr = ' value="'+competenceName+'">';
+        }
+        var nameErrorStr = '';
+        var descriptionErrorStr = '';
+        var nameErrorStatus = '';
+        var descriptionErrorStatus = '';
+        if (nameError != null && nameError != '') {
+            nameErrorStatus = ' has-error'
+            nameErrorStr = '<span class="help-block"> ' +
+                ' <strong>'+nameError+'</strong>  </span>';
+
+        }
+        if (descriptionError != null && descriptionError != '') {
+            descriptionErrorStatus = ' has-error'
+            descriptionErrorStr = '<span class="help-block"> ' +
+                ' <strong>'+descriptionError+'</strong>  </span>';
+
+        }
+        $('#panel'+uiCompetenceId).find('#TextBoxDiv'+uiCompetenceId).append(
+            '<table class="table table-striped task-table" class="addCompetencesTable">' +
+            '<tbody>' +
+            '<tr>' +
+            '<td class="form-group col-md-5 '+nameErrorStatus+'">' +
+            '<div class="col-md-offset-1">' +
+            '<input type="text" class="form-control" name="name[]" placeholder="Nome da competência"'+competenceNameStr +
+            nameErrorStr +
+            '</div>' +
+            '</td>' +
+            '<td class="form-group col-md-5 col-md-offset-2 '+descriptionErrorStatus+'">' +
+            '<div>' +
+            '<input type="text" class="form-control" name="description[]" placeholder="Descrição da competência"'+competenceDescStr +
+            descriptionErrorStr +
+            '<input type="hidden" class="form-control" name="competence_ui_id[]" value="'+uiCompetenceId+'">' +
+            '<input type="hidden" class="form-control" name="parent_ui_id[]" min="-1" value="'+parentId+'">' +
+            '<input type="hidden" class="form-control" name="isNewCompetence[]" value="true">' +
+            '</div>' +
+            '</td>' +
+            '<td>' +
+            '<a href="#" accesskey="'+ uiCompetenceId +'" data-parentid="'+parentId+'" class="remove_sub_competence_individual_fields exit-btn pull-right">' +
+            '<span class="glyphicon glyphicon-remove btn-danger">' +
+            '</span>' +
+            '</a>' +
+            '</td>' +
+            '</tr>' +
+            '</tbody>' +
+            '</table>'
+        );
+    }
+    function createParentPanel(uiCompetenceId, parentId, wrapper) {
+        var parentPanel = '#panel'+ parentId;
+        var ariaExpanded = true;
+        var expandedClass = 'in';
+        var collapsedClass = 'collapsed';
+        var catgName = "Subcompetência - "+uiCompetenceId;
+        $(wrapper).find(parentPanel).append('<div class="col-sm-12" style="margin-bottom: 0;">' +
+            '<div class="panel panel-default" id="panel'+uiCompetenceId+'">' +
+            '<div class="panel-heading" role="tab" id="heading'+uiCompetenceId+'">' +
+            '<h4 class="panel-title">' +
+            '<a  id="panel-lebel'+ uiCompetenceId +'" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse'+ uiCompetenceId+'" ' +
+            'aria-expanded="'+ariaExpanded+'" aria-controls="collapse'+ uiCompetenceId+'"> '+catgName+' </a>' +
+            '<div class="actions_div" style="position: relative; top: -26px;">' +
+            '<a href="#" accesskey="'+uiCompetenceId +'" class="remove_ctg_panel exit-btn pull-right"><span class="glyphicon glyphicon-remove"></span></a>' +
+            '<a href="#" accesskey="'+ uiCompetenceId +'" class="pull-right" id="addChildCompetence"> <span class="glyphicon glyphicon-plus"></span> Adicionar subcompetência</a>' +
+            '</h4>' +
+            '</div>' +
+            '<div id="collapse'+ uiCompetenceId+'" class="panel-collapse collapse '+expandedClass+'"role="tabpanel" aria-labelledby="heading'+uiCompetenceId+'">'+
+            '<div class="panel-body">' +
+            '<div id="TextBoxDiv'+ uiCompetenceId +'"></div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>'
+        );
+    }
+    function addNewSubCompetenceFromDatabase(addNewCompetencePanel, uiCompetenceId, parentId, competenceName, competenceDescription) {
+        var wrapper = $("#accordion");
+        var wrapper = $("#accordion");
+        if (addNewCompetencePanel) {
+            console.log("criar painel");
+            createParentPanel(uiCompetenceId, parentId, wrapper);
+        } else {
+            console.log("nao criar painel");
+        }
+    }
     $(document).ready(function(){
-
 
         $('.btn-primary').click(function(){
             $('#competenceTemplate').remove();
@@ -114,7 +313,6 @@
 
     });
     $(document).ready(function(){
-        var currentId = 2;
         var counter = 2;
         var wrapper = $("#accordion");
 
@@ -138,76 +336,28 @@
                 var ariaExpanded = true;
                 var expandedClass = 'in';
                 var collapsedClass = '';
-                $(wrapper).append('<div class="col-sm-12" style="margin-bottom: 0;">' +
-                    '<div class="panel panel-default"  id="panel'+ counter +'">' +
-                    '<div class="panel-heading" role="tab" id="heading'+ counter +'">' +
-                    '<h4 class="panel-title">' +
-                    '<a class="" id="panel-lebel'+ counter +'"  role="button" data-toggle="collapse" data-parent="#accordion"  href="#collapse'+ counter +'" ' +
-                    'aria-expanded="'+ariaExpanded+'" aria-controls="collapse'+ counter +'"> Competencia '+counter +
-                    '</a>' +
-                    '<div class="actions_div" style="position: relative; top: -26px;">' +
-                    '<a href="#" accesskey="'+ counter +'" class="remove_ctg_panel exit-btn pull-right">' +
-                    '<span class="glyphicon glyphicon-remove">' +
-                    '</span>' +
-                    '</a>' +
-                    '<a href="#" accesskey="'+ counter +'"  class="pull-right" id="addChildCompetence">' +
-                    '<span class="glyphicon glyphicon-plus">' +
-                    '</span>Adicionar subcompetência' +
-                    '</a>' +
-                    '</div>' +
-                    '</h4>' +
-                    '</div>' +
-                    '<div id="collapse'+ counter +'" class="panel-collapse collapse '+expandedClass+'"role="tabpanel" aria-labelledby="heading'+ counter +'">'+
-                    '<div class="panel-body">' +
-                    '<table class="table table-striped task-table" class="addCompetencesTable">' +
-                    '<tbody>' +
-                    '<tr>' +
-                    '<td class="form-group col-md-5">' +
-                    '<div class="col-md-offset-1">' +
-                    '<input type="text" class="form-control" name="name[]" placeholder="Nome da competência">' +
-                    '</div>' +
-                    '</td>' +
-                    '<td class="form-group col-md-5 col-md-offset-2">' +
-                    '<div>' +
-                    '<input type="text" class="form-control" name="description[]" placeholder="Descrição da competência">' +
-                    '<input type="hidden" class="form-control" name="competence_ui_id[]" value="'+counter+'">' +
-                    '<input type="hidden" class="form-control" name="parent_ui_id[]" min="-1" value="-1">' +
-                    '<input type="hidden" class="form-control" name="isNewCompetence[]" value="true">' +
-                    '</div>' +
-                    '</td>' +
-                    '</tr>' +
-                    '</tbody>' +
-                    '</table>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>');
+                createNewRootCompetence(counter,ariaExpanded, expandedClass, collapsedClass);
                 counter++;
-                currentId++;
             } else {
                 alert("Não é possível criar mais de 10 competências por vez");
             }
 
         });
-        $(wrapper).on("click","#addChildCompetence", function(e){
-            e.preventDefault();
-            var parentId = $(this).attr('accesskey');
 
-        });
         var x = 1;
         $(wrapper).on("click","#addChildCompetence", function(e){
             e.preventDefault();
             var parentId = $(this).attr('accesskey');
             var parentPanel = '#panel'+ parentId;
-            var ariaExpanded = false;
-            var expandedClass = '';
+            var ariaExpanded = true;
+            var expandedClass = 'in';
             var collapsedClass = 'collapsed';
             var catgName = "Subcompetência - "+counter;
             $(wrapper).find(parentPanel).append('<div class="col-sm-12" style="margin-bottom: 0;">' +
                 '<div class="panel panel-default" id="panel'+counter+'">' +
                     '<div class="panel-heading" role="tab" id="heading'+counter+'">' +
                         '<h4 class="panel-title">' +
-                        '<a class="'+collapsedClass+'" id="panel-lebel'+ counter +'" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse'+ counter+'" ' +
+                        '<a  id="panel-lebel'+ counter +'" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse'+ counter+'" ' +
                     'aria-expanded="'+ariaExpanded+'" aria-controls="collapse'+ counter+'"> '+catgName+' </a>' +
                         '<div class="actions_div" style="position: relative; top: -26px;">' +
                         '<a href="#" accesskey="'+counter +'" class="remove_ctg_panel exit-btn pull-right"><span class="glyphicon glyphicon-remove"></span></a>' +
@@ -235,6 +385,7 @@
 
 
         });
+
         var y = 1;
         $(wrapper).on("click","#addNewSubCompetence", function(e){
             e.preventDefault();
@@ -243,33 +394,8 @@
             console.log("add new competence"+accesskey+"parent= "+parentId);
             y++;
             $(this).closest('.childCategoryOptionButtons').remove();
-            $('#panel'+accesskey).find('#TextBoxDiv'+accesskey).append(
-                '<table class="table table-striped task-table" class="addCompetencesTable">' +
-                '<tbody>' +
-                '<tr>' +
-                '<td class="form-group col-md-5">' +
-                '<div class="col-md-offset-1">' +
-                '<input type="text" class="form-control" name="name[]" placeholder="Nome da competência">' +
-                '</div>' +
-                '</td>' +
-                '<td class="form-group col-md-5 col-md-offset-2">' +
-                '<div>' +
-                '<input type="text" class="form-control" name="description[]" placeholder="Descrição da competência">' +
-                '<input type="hidden" class="form-control" name="competence_ui_id[]" value="'+accesskey+'">' +
-                '<input type="hidden" class="form-control" name="parent_ui_id[]" min="-1" value="'+parentId+'">' +
-                '<input type="hidden" class="form-control" name="isNewCompetence[]" value="true">' +
-                '</div>' +
-                '</td>' +
-                '<td>' +
-                '<a href="#" accesskey="'+ accesskey +'" data-parentid="'+parentId+'" class="remove_sub_competence_individual_fields exit-btn pull-right">' +
-                '<span class="glyphicon glyphicon-remove btn-danger">' +
-                '</span>' +
-                '</a>' +
-                '</td>' +
-                '</tr>' +
-                '</tbody>' +
-                '</table>'
-            );
+            addNewSubCompetence(false, accesskey, parentId);
+
         });
         $(wrapper).on("click","#addSubCompetenceFromDatabase", function(e){
             e.preventDefault();
@@ -278,21 +404,23 @@
             y++;
             $(this).closest('.childCategoryOptionButtons').remove();
             $('#panel'+accesskey).find('#TextBoxDiv'+accesskey).append(
-            '<div class="row search-competence-div">' +
-                '<div class="col-xs-6 col-md-6">' +
-                '<div class="input-group stylish-input-group input-append">'+
-                '<input type="text" name="search_competence" class="form-control"'+
-            'placeholder="Buscar competência" id="search_competence">'+
-                '<span class="input-group-addon">' +
-                '<span class="glyphicon glyphicon-search"></span>' +
-            '</span>' +
-            '</div>' +
-            '<a href="#" accesskey="'+ accesskey +'" data-parentid="'+parentId+'" class="remove_sub_competence_search_box exit-btn pull-right">' +
-            '<span class="glyphicon glyphicon-remove btn-danger">' +
-            '</span>' +
-            '</a>' +
-            '</div>' +
-            '</div>'
+                '<div class="row  col-md-12 col-xs-12 search-competence-div">' +
+                    '<div class="row col-xs-6 col-md-6">' +
+                        '<div class="input-group stylish-input-group input-append ">'+
+                            '<input type="text" name="search_competence" class="form-control"'+
+                                    'placeholder="Buscar competência" id="search_competence">'+
+                            '<span class="input-group-addon">' +
+                                '<span class="glyphicon glyphicon-search"></span>' +
+                            '</span>' +
+                        '</div>' +
+
+                    '</div>'+
+
+                        '<a href="#" accesskey="'+ accesskey +'" data-parentid="'+parentId+'" class="remove_sub_competence_search_box exit-btn pull-right">' +
+                            '<span class="glyphicon glyphicon-remove btn-danger">' +
+                            '</span>' +
+                        '</a>' +
+                '</div>'
             );
             $("#accordion #search_competence").autocomplete({
                 source: function (request, response) {
