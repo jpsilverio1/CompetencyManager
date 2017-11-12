@@ -80,9 +80,9 @@
                             @php ($nameIdx = 1)
                             @php ($dbIdIdx = 0)
                             @for ($i=1; $i<sizeOf(old('competence_ui_id')); $i++)
+                                @php ($parentId = old("parent_ui_id.$i"))
+                                @php ($competenceUiId = old("competence_ui_id.$i"))
                                 @if (old("isNewCompetence.$i") === "true")
-                                    @php ($parentId = old("parent_ui_id.$i"))
-                                    @php ($competenceUiId = old("competence_ui_id.$i"))
                                     @php ($competenceName = old("name.$nameIdx"))
                                     @php ($competenceDescription = old("description.$nameIdx"))
                                     @php ($descriptionError = $errors->has("description.$nameIdx") ? $errors->first("description.$nameIdx") : '')
@@ -102,7 +102,10 @@
                                 @else
                                     <script type="text/javascript">
                                         console.log("database");
+                                        @php ($competenceUiId =  old("competence_db_id.$dbIdIdx"))
+                                        tryThisThing({{$competenceUiId}}, {{$competenceUiId}}, {{$parentId}});
                                     </script>
+                                    @php ($dbIdIdx++)
                                 @endif
                             @endfor
                         </div>
@@ -123,6 +126,31 @@
     </div>
 @endsection
 <script type="text/javascript">
+    function tryThisThing(competenceId, uiCompetenceId, parentId) {
+        console.log("tentando");
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        src_competence_url = "{{ route('search-competence-db') }}";
+        $.ajax({
+            type: 'POST',
+            url: src_competence_url,
+            data: {
+                term: competenceId,
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log("olha essa data"+data.name+ " "+data.description);
+                addNewSubCompetenceFromDatabase(true, uiCompetenceId, parentId, competenceId, data.name, data.description);
+
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+    }
     function createNewRootCompetence(uiCompetenceId, ariaExpanded, expandedClass, collapsedClass, competenceName, competenceDescription, nameError, descriptionError) {
         var wrapper = $("#accordion");
         console.log("input "+uiCompetenceId+" "+competenceName);
@@ -285,8 +313,7 @@
             '</div>'
         );
     }
-    function addNewSubCompetenceFromDatabase(addNewCompetencePanel, uiCompetenceId, parentId, competenceName, competenceDescription) {
-        var wrapper = $("#accordion");
+    function addNewSubCompetenceFromDatabase(addNewCompetencePanel, uiCompetenceId, parentId, dbId, competenceName, competenceDescription) {
         var wrapper = $("#accordion");
         if (addNewCompetencePanel) {
             console.log("criar painel");
@@ -294,6 +321,34 @@
         } else {
             console.log("nao criar painel");
         }
+        $('#panel'+uiCompetenceId).find('#TextBoxDiv'+uiCompetenceId).append(
+            '<table class="table table-striped task-table" class="addCompetencesTable">' +
+            '<tbody>' +
+            '<tr>' +
+            '<td class="form-group col-md-5">' +
+            '<div class="col-md-offset-1">' +
+            '<input type="text" value="'+competenceName+'" class="form-control" name="name[]" disabled="true"">' +
+            '</div>' +
+            '</td>' +
+            '<td class="form-group col-md-5 col-md-offset-2">' +
+            '<div>' +
+            '<input type="text" value="'+competenceDescription+'" class="form-control" name="description[]" disabled="true"">' +
+            '<input type="hidden" class="form-control" name="competence_ui_id[]" value="'+uiCompetenceId+'">' +
+            '<input type="hidden" class="form-control" name="competence_db_id[]" value="'+dbId+'">' +
+            '<input type="hidden" class="form-control" name="parent_ui_id[]" min="-1" value="'+parentId+'">' +
+            '<input type="hidden" class="form-control" name="isNewCompetence[]" value="false">' +
+            '</div>' +
+            '</td>' +
+            '<td>' +
+            '<a href="#" accesskey="'+ uiCompetenceId +'" data-parentid="'+parentId+'" class="remove_sub_competence_individual_fields exit-btn pull-right">' +
+            '<span class="glyphicon glyphicon-remove btn-danger">' +
+            '</span>' +
+            '</a>' +
+            '</td>' +
+            '</tr>' +
+            '</tbody>' +
+            '</table>'
+        );
     }
     $(document).ready(function(){
 
@@ -441,34 +496,7 @@
                 select: function (e, ui) {
                     $(this).closest('.search-competence-div').remove();
                     console.log(ui.item.value+" - "+ui.item.id);
-                    $('#panel'+accesskey).find('#TextBoxDiv'+accesskey).append(
-                        '<table class="table table-striped task-table" class="addCompetencesTable">' +
-                        '<tbody>' +
-                        '<tr>' +
-                        '<td class="form-group col-md-5">' +
-                        '<div class="col-md-offset-1">' +
-                        '<input type="text" value="'+ui.item.value+'" class="form-control" name="name[]" disabled="true"">' +
-                        '</div>' +
-                        '</td>' +
-                        '<td class="form-group col-md-5 col-md-offset-2">' +
-                        '<div>' +
-                        '<input type="text" value="'+ui.item.description+'" class="form-control" name="description[]" disabled="true"">' +
-                        '<input type="hidden" class="form-control" name="competence_ui_id[]" value="'+accesskey+'">' +
-                        '<input type="hidden" class="form-control" name="competence_db_id[]" value="'+ui.item.id+'">' +
-                        '<input type="hidden" class="form-control" name="parent_ui_id[]" min="-1" value="'+parentId+'">' +
-                        '<input type="hidden" class="form-control" name="isNewCompetence[]" value="false">' +
-                        '</div>' +
-                        '</td>' +
-                         '<td>' +
-                        '<a href="#" accesskey="'+ accesskey +'" data-parentid="'+parentId+'" class="remove_sub_competence_individual_fields exit-btn pull-right">' +
-                        '<span class="glyphicon glyphicon-remove btn-danger">' +
-                        '</span>' +
-                        '</a>' +
-                        '</td>' +
-                        '</tr>' +
-                        '</tbody>' +
-                        '</table>'
-                    );
+                    addNewSubCompetenceFromDatabase(false, accesskey, parentId, ui.item.id, ui.item.value, ui.item.description);
                     $(this).val('');
                     return false;
                 }
