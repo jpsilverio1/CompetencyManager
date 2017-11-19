@@ -20,6 +20,13 @@ class Task extends Model
         return $this->belongsToMany('App\Competency', 'task_competencies')
             ->withPivot('competency_proficiency_level_id');
     }
+	
+	// TODO -> Atualizar método com a nova modelagem do BD (Task x User)
+	public function members()
+	{
+		return \App\User::orderBy('id', 'desc')->first();
+		//return $this->belongsToMany('App\User', 'tasks_users');
+	}
 
     public function author()
     {
@@ -75,6 +82,7 @@ class Task extends Model
 
     public function suitableAssigneesSets()
     {
+		return [];
         $allCompetenceLevels = CompetenceProficiencyLevel::all()->pluck('id')->toArray();
         $myUserSet = [];
         $allTaskCompetencesIdsAndLevels = [];
@@ -151,10 +159,12 @@ class Task extends Model
 
     }
 	
+	// TODO: adicionar mais um status: finalizado-pendente, quando ainda faltam pessoas para preencher o form
+	// e "finalizado", que realmente simboliza o finalizado
 	public function taskStatus() {
 		$start_date_original = $this->getOriginal('start_date');
 		$end_date_original = $this->getOriginal('end_date');
-		$date_null = '0000-00-00 00:00:00';
+		$date_null = null;
 		if ($start_date_original == $date_null) {
 			return "created";
 		} elseif ($start_date_original != $date_null and $end_date_original == $date_null ) {
