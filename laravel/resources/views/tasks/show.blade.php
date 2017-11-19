@@ -74,13 +74,25 @@
                             </form>
                         </div>
 						<div class="col-md-2">
-							<?php $taskStatus = $task->taskStatus(); ?>
-							@if ($taskStatus == "created")
-								Tarefa Criada (não-inicializada)
-							@elseif ($taskStatus == "initialized")
-								Tarefa Inicializada
-							@elseif ($taskStatus == "finished")
-								Tarefa Finalizada
+							<?php $taskStatus = $task->taskStatus(); $userCanInitializeTask = \Auth::user()->canInitializeOrFinishTask($task->id); ?>
+							@if ($userCanInitializeTask)
+								Usuário pode inicializar
+								@if ($taskStatus == "created")
+									<td><a href="{{ '/task-initialize/'.$task->id.'/' }}"/><button type="submit" class="btn btn-primary">Inicializar Tarefa</button></td>
+								@elseif ($taskStatus == "initialized")
+									<td><a href="{{ '/task-finish/'.$task->id.'/' }}"/><button type="submit" class="btn btn-primary">Finalizar Tarefa</button></td>
+								@elseif ($taskStatus == "finished")
+									<td><a href=''/><button type="submit" class="btn btn-primary" disabled>Tarefa Finalizada</button></td>
+								@endif
+							@else
+								Usuário não pode :(
+								@if ($taskStatus == "created")
+									<td><a href=""/><button type="submit" class="btn btn-primary" disabled alt="Você não tem autorização para inicializar esta tarefa pois não faz parte desta equipe">Tarefa Não-Inicializada</button></td>
+								@elseif ($taskStatus == "initialized")
+									<td><a href=""/><button type="submit" class="btn btn-primary" disabled alt="Você não tem autorização para finalizar esta tarefa pois não faz parte desta equipe">Tarefa em Andamento</button></td>
+								@elseif ($taskStatus == "finished")
+									<td><a href=''/><button type="submit" class="btn btn-primary" disabled alt="oi">Tarefa Finalizada</button></td>
+								@endif
 							@endif
                         </div>
                     </div>

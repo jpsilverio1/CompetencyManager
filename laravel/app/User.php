@@ -139,6 +139,32 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Team', 'team_members');
     }
+	
+	/* Hector -> Métodos abaixo são temporários: não sabemos se vamos manter teams ou não.
+	public function hasTeam()
+	{
+		return !$this->teams()->isEmpty(); // verifica se o usuário está em algum time
+	}
+	
+	public function isOnTeam($teamId) {
+		$userIsOnTeam = $this->teams()->where("team_id", $teamId)->get();
+		return !$userIsOnTeam->isEmpty();
+	} */
+	
+	// Usuário tem autorização pra inicializar ou finalizar tarefa se ele está na tarefa ou se ele é Gerente
+	public function canInitializeOrFinishTask($taskId) {
+		$task = Task::findOrFail($taskId);
+		$thisUserIsInTask = $task->members()->where("id", $this->id)->get();
+		return !$thisUserIsInTask->isEmpty() || $this->isManager(); 
+		
+		/* Código antigo com coisas do Teams
+		$teamOfTask = $task->team()->id;
+		if ($this->isOnTeam($teamOfTask))
+			return true;
+		else {
+			return false;
+		} */
+	}
 
     /**
      * The attributes that should be hidden for arrays.
