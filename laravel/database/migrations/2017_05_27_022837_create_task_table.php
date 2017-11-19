@@ -29,6 +29,7 @@ class CreateTaskTable extends Migration
     public function down()
     {
         Schema::dropIfExists('task_competencies');
+        Schema::dropIfExists('task_teams');
         Schema::dropIfExists('tasks');
     }
 }
