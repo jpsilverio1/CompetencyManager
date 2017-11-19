@@ -15,23 +15,24 @@ class Task extends Model
         'title', 'description',
     ];
 
-
     public function competencies()
     {
         return $this->belongsToMany('App\Competency', 'task_competencies')
-        ->withPivot('competency_proficiency_level_id');
+            ->withPivot('competency_proficiency_level_id');
     }
+
     public function author()
     {
         return $this->belongsTo('App\User');
     }
 
-    private function powerSet($in,$minLength = 1) {
+    private function powerSet($in, $minLength = 1)
+    {
         $count = count($in);
-        $members = pow(2,$count);
+        $members = pow(2, $count);
         $return = array();
         for ($i = 0; $i < $members; $i++) {
-            $b = sprintf("%0".$count."b",$i);
+            $b = sprintf("%0" . $count . "b", $i);
             $out = array();
             for ($j = 0; $j < $count; $j++) {
                 if ($b{$j} == '1') $out[] = $in[$j];
@@ -42,7 +43,9 @@ class Task extends Model
         }
         return $return;
     }
-    function isSubsetAcceptable($userSubset, $allTaskCompetencesIds) {
+
+    function isSubsetAcceptable($userSubset, $allTaskCompetencesIds)
+    {
         foreach ($allTaskCompetencesIds as $competenceId => $competenceAcceptableLevels) {
             $foundUser = False;
             foreach ($userSubset as $user) {
@@ -59,7 +62,8 @@ class Task extends Model
 
     }
 
-    function getSuitableAssigneesFromSubset($allSubsetsOfMyUserSet, $allTaskCompetencesIds) {
+    function getSuitableAssigneesFromSubset($allSubsetsOfMyUserSet, $allTaskCompetencesIds)
+    {
         $suitableUserSubsets = [];
         foreach ($allSubsetsOfMyUserSet as $userSubset) {
             if ($this::isSubsetAcceptable($userSubset, $allTaskCompetencesIds)) {
@@ -68,13 +72,14 @@ class Task extends Model
         }
         return $suitableUserSubsets;
     }
+
     public function suitableAssigneesSets()
     {
         $allCompetenceLevels = CompetenceProficiencyLevel::all()->pluck('id')->toArray();
         $myUserSet = [];
         $allTaskCompetencesIdsAndLevels = [];
         $taskCompetences = $this->competencies;
-        foreach($taskCompetences as $taskCompetence) {
+        foreach ($taskCompetences as $taskCompetence) {
             $taskRequiredCompetenceLevel = $taskCompetence->pivot->competency_proficiency_level_id;
             $acceptableCompetenceLevels = $allCompetenceLevels;
             if (in_array($taskRequiredCompetenceLevel, $allCompetenceLevels)) {
@@ -82,42 +87,43 @@ class Task extends Model
                 $acceptableCompetenceLevels = array_slice($allCompetenceLevels, $start);
             }
             $allTaskCompetencesIdsAndLevels[$taskCompetence->id] = $acceptableCompetenceLevels;
-            $usersThatHaveTheCompetenceInAnAcceptableLevel = $taskCompetence->skilledUsers()->wherePivotIn('competence_proficiency_level_id', $acceptableCompetenceLevels)->get();
+            $usersThatHaveTheCompetenceInAnAcceptableLevel = $taskCompetence->
+                    skilledUsersConsideringSubCategoriesAndCompetenceLevels($acceptableCompetenceLevels);
             if ($usersThatHaveTheCompetenceInAnAcceptableLevel->isEmpty()) {
                 //there is no user that has the competency in an acceptable level
                 return [];
             } else {
-                foreach($usersThatHaveTheCompetenceInAnAcceptableLevel as $user) {
+                foreach ($usersThatHaveTheCompetenceInAnAcceptableLevel as $user) {
                     if (!array_key_exists($user->id, $myUserSet)) {
                         $myUserSet[$user->id] = $user;
                     }
                 }
             }
         }
-
         if (count($allTaskCompetencesIdsAndLevels) == 0) {
             return [];
         }
         $newArray = [];
-        foreach($myUserSet as $user) {
+        foreach ($myUserSet as $user) {
             $newArray[] = $user;
         }
         //no final myUserSet vai ter todos os usuarios que tem alguma competencia da task num nivel aceitavel.
         // gerar todos os subsets desse set e ver se os usuarios tem todas as competencias
 
-        $allSubsetsOfMyUserSet = $this::powerSet($newArray,1);
-        $suitableAssigneesIdsSet = $this::getSuitableAssigneesFromSubset($allSubsetsOfMyUserSet,$allTaskCompetencesIdsAndLevels);
+        $allSubsetsOfMyUserSet = $this::powerSet($newArray, 1);
+        $suitableAssigneesIdsSet = $this::getSuitableAssigneesFromSubset($allSubsetsOfMyUserSet, $allTaskCompetencesIdsAndLevels);
         return $this::filterSets($suitableAssigneesIdsSet);
     }
 
-    public function filterSets($suitableAssigneesIdsSet) {
+    public function filterSets($suitableAssigneesIdsSet)
+    {
         $result = $suitableAssigneesIdsSet;
         $flags = [];
-        foreach($suitableAssigneesIdsSet as $oi) {
+        foreach ($suitableAssigneesIdsSet as $oi) {
             $flags[] = True;
         }
-        for ($i=0; $i<sizeOf($suitableAssigneesIdsSet); $i++) {
-            for ($j=$i+1; $j<sizeOf($suitableAssigneesIdsSet); $j++) {
+        for ($i = 0; $i < sizeOf($suitableAssigneesIdsSet); $i++) {
+            for ($j = $i + 1; $j < sizeOf($suitableAssigneesIdsSet); $j++) {
                 if ($flags[$j] && sizeOf($suitableAssigneesIdsSet[$i]) < sizeOf($suitableAssigneesIdsSet[$j])) {
                     $oi = $diff = array_udiff($suitableAssigneesIdsSet[$i], $suitableAssigneesIdsSet[$j],
                         function ($obj_a, $obj_b) {
@@ -125,7 +131,7 @@ class Task extends Model
                         }
                     );
                     if (!$oi) {
-                       // echo "$i is included in $j <br>";
+                        // echo "$i is included in $j <br>";
                         $flags[$j] = False;
                     }
                 }
@@ -135,8 +141,8 @@ class Task extends Model
             //nada a excluir
             return $suitableAssigneesIdsSet;
         }
-        $result =[];
-        for ($i=0; $i<sizeOf($suitableAssigneesIdsSet); $i++) {
+        $result = [];
+        for ($i = 0; $i < sizeOf($suitableAssigneesIdsSet); $i++) {
             if ($flags[$i]) {
                 $result[] = $suitableAssigneesIdsSet[$i];
             }

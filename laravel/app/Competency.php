@@ -14,7 +14,20 @@ class Competency extends Model
     protected $fillable = [
         'name', 'description',
     ];
+    public function skilledUsersConsideringSubCategoriesAndCompetenceLevels($acceptableCompetenceLevels) {
+        $multiplied = Competency::descendantsAndSelf($this->id)->map(function ($item, $key) use ($acceptableCompetenceLevels){
+            return $item->skilledUsersConsideringCompetenceLevels($acceptableCompetenceLevels);
+        })->filter(function ($value, $key) {
+            return $value->isNotEmpty();
+        });
+        return $multiplied->flatten();
 
+    }
+    public function skilledUsersConsideringCompetenceLevels($acceptableCompetenceLevels) {
+        return $this->belongsToMany('App\User', 'user_competences', 'competence_id', 'user_id')
+            ->withPivot('competence_proficiency_level_id')
+            ->wherePivotIn('competence_proficiency_level_id', $acceptableCompetenceLevels)->get();
+    }
     public function skilledUsers() {
         return $this->belongsToMany('App\User', 'user_competences', 'competence_id', 'user_id')
             ->withPivot('competence_proficiency_level_id');

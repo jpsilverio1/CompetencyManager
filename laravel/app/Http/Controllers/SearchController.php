@@ -50,12 +50,17 @@ class SearchController extends Controller
 
         $data=array();
         foreach ($competencies as $competence) {
-            $data[]=array('value'=>$competence->name,'id'=>$competence->id);
+            $data[]=array('value'=>$competence->name,'id'=>$competence->id, 'description' => $competence->description);
         }
         if(count($data))
             return $data;
         else
             return ['value'=>'No Result Found','id'=>''];
+    }
+    public function searchCompetence(Request $request) {
+        $competenceId = $request->get('term','');
+        $competence = Competency::findOrFail($competenceId);
+        return ['name'=>$competence->name,'description'=>$competence->description];
     }
 
 
