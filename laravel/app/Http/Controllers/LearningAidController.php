@@ -68,10 +68,10 @@ class LearningAidController extends Controller
             $results = $learningAid->competencies()->where('competency_id', '=', $competenceId)->get();
             if ($results->isEmpty()) {
                 //add competency
-                $learningAid->competencies()->attach([$competenceId => ['competence_proficiency_level_id'=>$competenceProficiencyLevel]]);
+                $learningAid->competencies()->attach([$competenceId => ['competency_proficiency_level_id'=>$competenceProficiencyLevel]]);
             } else {
                 //update competency level
-                $learningAid->competencies()->updateExistingPivot($competenceId, ['competence_proficiency_level_id'=>$competenceProficiencyLevel]);
+                $learningAid->competencies()->updateExistingPivot($competenceId, ['competency_proficiency_level_id'=>$competenceProficiencyLevel]);
             }
         }
         return Redirect::route('learningaids.show',$learningAid->id)->withMessage('O treinamento foi cadastrado com sucesso!');
@@ -125,10 +125,10 @@ class LearningAidController extends Controller
             $results = $learningAid->competencies()->where('competency_id', '=', $competenceId)->get();
             if ($results->isEmpty()) {
                 //add competency
-                $learningAid->competencies()->attach([$competenceId => ['competence_proficiency_level_id'=>$competenceProficiencyLevel]]);
+                $learningAid->competencies()->attach([$competenceId => ['competency_proficiency_level_id'=>$competenceProficiencyLevel]]);
             } else {
                 //update competency level
-                $learningAid->competencies()->updateExistingPivot($competenceId, ['competence_proficiency_level_id'=>$competenceProficiencyLevel]);
+                $learningAid->competencies()->updateExistingPivot($competenceId, ['competency_proficiency_level_id'=>$competenceProficiencyLevel]);
             }
         }
         return Redirect::route('learningaids.show',$learningAid->id)->withMessage('O treinamento foi atualizado com sucesso!');

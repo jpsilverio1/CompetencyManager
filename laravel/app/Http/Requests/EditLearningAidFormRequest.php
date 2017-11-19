@@ -24,7 +24,7 @@ class EditLearningAidFormRequest extends FormRequest
     public function rules()
     {
         $rules = [];
-        $rules['name'] = 'required|min:2|max:255|unique:learningaids,name,'.$this->get('id');
+        $rules['name'] = 'required|min:2|max:255|unique:learning_aids,name,'.$this->get('id');
         $rules['description'] = 'required|min:2';
         return $rules;
     }

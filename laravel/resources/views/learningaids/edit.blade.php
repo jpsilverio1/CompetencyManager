@@ -17,7 +17,7 @@
                                 <input type="hidden" name="_method" value="put" />
                                 <input type="hidden" name="id" value="{{ $learningAid->id }}" />
                                 <td class="form-group  col-md-5{{ $errors->has('name') ? ' has-error' : '' }}">
-                                    <label for="name" class="col-md-1 control-label">Tarefa</label>
+                                    <label for="name" class="col-md-1 control-label">Treinamento</label>
                                     <div class=" col-md-offset-4">
                                         <input type="text" class="form-control" name="name" placeholder="Título da tarefa"  value="{{ old('name', $learningAid->name) }}">
                                         @if ($errors->has('name'))

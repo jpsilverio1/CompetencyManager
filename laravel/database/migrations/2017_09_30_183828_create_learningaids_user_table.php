@@ -14,12 +14,13 @@ class CreateLearningaidsUserTable extends Migration
     public function up()
     {
         //
-        Schema::create('learningaids_user', function (Blueprint $table) {
+        Schema::create('learning_aids_user', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('learningaids_id')->unsigned();
+            $table->integer('learning_aid_id')->unsigned();
             $table->integer('user_id')->unsigned();
-            $table->foreign('learningaids_id')->references('id')->on('learningaids');
+            $table->foreign('learning_aid_id')->references('id')->on('learning_aids');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->timestamp('completed_on');
             //$table->primary(['competency_id', 'user_id']);
         });
     }
@@ -32,6 +33,6 @@ class CreateLearningaidsUserTable extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('learningaids_user');
+        Schema::dropIfExists('learning_aids_user');
     }
 }

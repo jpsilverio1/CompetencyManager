@@ -11,7 +11,7 @@ class LearningAid extends Model
      *
      * @var array
      */
-    protected $table = "learningaids";
+    protected $table = "learning_aids";
 
     protected $fillable = [
         'name', 'description',
@@ -20,8 +20,8 @@ class LearningAid extends Model
 
     public function competencies()
     {
-        return $this->belongsToMany('App\Competency', 'learningaids_competencies', 'learningaid_id', 'competency_id')
-            ->withPivot('competence_proficiency_level_id');
+        return $this->belongsToMany('App\Competency', 'learning_aids_competencies', 'learning_aid_id', 'competency_id')
+            ->withPivot('competency_proficiency_level_id');
     }
     /*public function author()
     {

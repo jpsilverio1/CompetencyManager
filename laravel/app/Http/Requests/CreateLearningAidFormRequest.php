@@ -25,7 +25,7 @@ class CreateLearningAidFormRequest extends FormRequest
     public function rules()
     {
         $rules = [];
-        $rules['name'] = 'required|unique:learningaids|min:2|max:255';
+        $rules['name'] = 'required|unique:learning_aids|min:2|max:255';
         $rules['description'] = 'required|min:2';
         $rules['competence_ids'] = 'required';
         return $rules;

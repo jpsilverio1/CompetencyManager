@@ -31,7 +31,7 @@
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading" >
-                        Treinamentos que necessitam desta competência
+                        Treinamentos que ensinam esta competência
                         @include('learningaids.show_paginated_learningaids', ['learningAids' => $competence->learningAidsThatRequireIt()->paginate(10, ['*'],'learningaids'), 'noLearningAidsMessage' => 'Não há treinamentos para exibição.'])
                     </div>
                 </div>

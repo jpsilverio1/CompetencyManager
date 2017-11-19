@@ -14,7 +14,7 @@ class CreateLearningaidsTable extends Migration
     public function up()
     {
         //
-        Schema::create('learningaids', function (Blueprint $table) {
+        Schema::create('learning_aids', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->text('description');
@@ -30,8 +30,8 @@ class CreateLearningaidsTable extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('learningaids_competencies');
-        Schema::dropIfExists('learningaids_user');
-        Schema::dropIfExists('learningaids');
+        Schema::dropIfExists('learning_aids_competencies');
+        Schema::dropIfExists('learning_aids_user');
+        Schema::dropIfExists('learning_aids');
     }
 }

@@ -51,11 +51,11 @@
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading" >
-                        Competências requeridas pelo treinamento
+                        Competências abrangidas pelo treinamento
                         @include('competences.show_paginated_competences', ['competences' => $learningAid->competencies()->paginate(5, ['*'],'competences'),
                         'showCompetenceLevel' => True,
                         'showDeleteButton' => False,
-                        'useCompetency' => False,
+                        'useCompetency' => True,
                         'noCompetencesMessage' => 'Não há competências para exibição.'])
                     </div>
                 </div>

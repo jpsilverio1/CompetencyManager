@@ -14,12 +14,15 @@ class CreateLearningaidsCompetenciesTable extends Migration
     public function up()
     {
         //
-        Schema::create('learningaids_competencies', function (Blueprint $table) {
+        Schema::create('learning_aids_competencies', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('competency_id')->unsigned();
-            $table->integer('learningaids_id')->unsigned();
+            $table->integer('learning_aid_id')->unsigned();
+            $table->integer('competency_proficiency_level_id')->unsigned()->default(1);
             $table->foreign('competency_id')->references('id')->on('competencies');
-            $table->foreign('learningaids_id')->references('id')->on('learningaids');
+            $table->foreign('learning_aid_id')->references('id')->on('learning_aids');
+            $table->foreign('competency_proficiency_level_id', 'learning_aid_comps_comp_prof_lvl_id_foreign')->references('id')->on('competence_proficiency_level');
+
             //$table->primary(['competency_id', 'user_id']);
         });
     }
@@ -32,6 +35,6 @@ class CreateLearningaidsCompetenciesTable extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('learningaids_competencies');
+        Schema::dropIfExists('learning_aids_competencies');
     }
 }

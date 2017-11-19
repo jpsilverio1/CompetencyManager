@@ -22,7 +22,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
                             <label for="description" class="col-md-2 control-label">Descrição:</label>
                             <div class="col-md-6">
                                 <textarea class="form-control" rows="2" id="description" name="description">{{old('description')}}</textarea>
