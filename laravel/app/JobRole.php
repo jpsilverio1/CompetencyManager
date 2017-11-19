@@ -71,12 +71,11 @@ class JobRole extends Model
 
     // Esse é o método chamado na view
     // Objetivo: recomendar USERS para JOBROLES baseado em COMPETENCIES
-    // (antes aqui era recomendar users para tasks baseado em competencies)
     public function suitableAssigneesSets()
     {
         $allCompetenceLevels = CompetenceProficiencyLevel::all()->pluck('id')->toArray();
         $myUserSet = [];
-        $myUserSetCount = []; // Variável para contar o número de competências (para o ranking)
+        $myUserSetCount = array(); // Variável para contar o número de competências (para o ranking)
 
         $jobRoleCompetences = $this->competencies;
 
@@ -107,10 +106,19 @@ class JobRole extends Model
             }
         }
 		
-		
-
         // Ordenar array de acordo com $myUserSetCount
-        return $myUserSet;
+		arsort ($myUserSetCount);
+		$newArray = [];
+		
+		foreach ($myUserSetCount as $key => $userCompetencesCount) {
+			if (!array_key_exists($key, $newArray)) {
+				$newArray[$key] = $myUserSet[$key];
+			} else {
+				$newArray[$key] = $myUserSet[$key];
+			}
+		}
+
+        return $newArray;
     }
 
     public function filterSets($suitableAssigneesIdsSet)
