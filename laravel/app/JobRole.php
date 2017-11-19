@@ -76,7 +76,7 @@ class JobRole extends Model
     {
         $allCompetenceLevels = CompetenceProficiencyLevel::all()->pluck('id')->toArray();
         $myUserSet = [];
-        $allJobRoleCompetencesIdsAndLevels = [];
+        $myUserSetCount = []; // Variável para contar o número de competências (para o ranking)
 
         $jobRoleCompetences = $this->competencies;
 
@@ -87,27 +87,30 @@ class JobRole extends Model
                 $start = array_search($jobRoleRequiredCompetenceLevel, $allCompetenceLevels);
                 $acceptableCompetenceLevels = array_slice($allCompetenceLevels, $start);
             }
-            $allJobRoleCompetencesIdsAndLevels[$jobRoleCompetence->id] = $acceptableCompetenceLevels;
             $usersThatHaveTheCompetenceInAnAcceptableLevel = $jobRoleCompetence->
             skilledUsersConsideringSubCategoriesAndCompetenceLevels($acceptableCompetenceLevels);
+
             if ($usersThatHaveTheCompetenceInAnAcceptableLevel->isEmpty()) {
                 //there is no user that has the competency in an acceptable level
                 return [];
             } else {
-                $myUserSetCount = [];
                 foreach ($usersThatHaveTheCompetenceInAnAcceptableLevel as $user) {
                     if (!array_key_exists($user->id, $myUserSet)) {
                         $myUserSet[$user->id] = $user;
+                    }
+                    if (!array_key_exists($user->id, $myUserSetCount)) {
+                        $myUserSetCount[$user->id] = 1;
+                    } else {
                         $myUserSetCount[$user->id] += 1;
                     }
                 }
             }
         }
-        if (count($allJobRoleCompetencesIdsAndLevels) == 0) {
-            return [];
-        }
+		
+		
 
-        return [];
+        // Ordenar array de acordo com $myUserSetCount
+        return $myUserSet;
     }
 
     public function filterSets($suitableAssigneesIdsSet)

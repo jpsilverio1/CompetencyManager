@@ -36,18 +36,16 @@
                         </div>
                         <div class="panel-body">
 
-                            <?php $suitableAssigneesForTask = $jobrole->suitableAssigneesSets(); ?>
-                            @if (count($suitableAssigneesForTask) > 0)
-                                <ul>
-                                    @foreach($suitableAssigneesForTask as $user)
-                                        <ul>
-                                            <li><a href="{{ route('users.show', $user->id) }}">{{ $user->name }}</a></li>
-                                        </ul>
-                                    @endforeach
-                                </ul>
-                            @else
-                                Não há usuários aptos a realizar esta tarefa
-                            @endif
+                            <?php $suitableAssigneesForJobRole = $jobrole->suitableAssigneesSets(); ?>
+                                @if (count($suitableAssigneesForJobRole) > 0)
+                                    <ul>
+										@foreach($suitableAssigneesForJobRole as $user)
+											<li><a href="{{ route('users.show', $user->id) }}">{{ $user->name }}</a></li>
+										@endforeach
+                                    </ul>
+								@else
+									Não há usuários aptos para este cargo.
+								@endif
                         </div>
                     </div>
                 <div class="panel panel-default">
