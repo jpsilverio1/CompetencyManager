@@ -32,24 +32,23 @@
                         Usuários aptos a realizar a tarefa
                     </div>
                     <div class="panel-body">
+							<?php $suitableAssigneesForTask = $task->suitableAssigneesSets(); ?>
+							@if (count($suitableAssigneesForTask) > 0)
+								<ul>
+								@foreach($suitableAssigneesForTask as $users)
+									<li> Grupo
+										<ul>
+											@foreach($users as $user)
+												<li><a href="{{ route('users.show', $user->id) }}">{{ $user->name }}</a></li>
+											@endforeach
 
-                            <?php $suitableAssigneesForTask = $task->suitableAssigneesSets(); ?>
-                                @if (count($suitableAssigneesForTask) > 0)
-                                    <ul>
-                                    @foreach($suitableAssigneesForTask as $users)
-                                        <li> Grupo
-                                            <ul>
-                                                @foreach($users as $user)
-                                                    <li><a href="{{ route('users.show', $user->id) }}">{{ $user->name }}</a></li>
-                                                @endforeach
-
-                                            </ul>
-                                        </li>
-                                    @endforeach
-                                    </ul>
-                                    @else
-                                        Não há usuários aptos a realizar esta tarefa
-                                    @endif
+										</ul>
+									</li>
+								@endforeach
+								</ul>
+							@else
+								Não há usuários aptos a realizar esta tarefa
+							@endif
                     </div>
                 </div>
                 <div class="panel panel-default">
@@ -64,7 +63,7 @@
                 </div>
 
                     <div>
-                        <div class="col-md-2">
+						<div class="col-md-2">
                             <td><a href='{{ route('tasks.edit', $task->id) }}'/><button type="submit" class="btn btn-primary">Editar Tarefa</button></td>
                         </div>
                         <div>
@@ -73,6 +72,16 @@
                                 <input type="hidden" name="_method" value="DELETE" />
                                 <td><button class="btn btn-danger">Excluir Tarefa</button></td>
                             </form>
+                        </div>
+						<div class="col-md-2">
+							<?php $taskStatus = $task->taskStatus(); ?>
+							@if ($taskStatus == "created")
+								Tarefa Criada (não-inicializada)
+							@elseif ($taskStatus == "initialized")
+								Tarefa Inicializada
+							@elseif ($taskStatus == "finished")
+								Tarefa Finalizada
+							@endif
                         </div>
                     </div>
 				

@@ -150,4 +150,17 @@ class Task extends Model
         return $result;
 
     }
+	
+	public function taskStatus() {
+		$start_date_original = $this->getOriginal('start_date');
+		$end_date_original = $this->getOriginal('end_date');
+		$date_null = '0000-00-00 00:00:00';
+		if ($start_date_original == $date_null) {
+			return "created";
+		} elseif ($start_date_original != $date_null and $end_date_original == $date_null ) {
+			return "initialized";
+		} elseif ($start_date_original != $date_null and $end_date_original != $date_null ) {
+			return "finished";
+		}
+	}
 }
