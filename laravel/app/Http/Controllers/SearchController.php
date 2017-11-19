@@ -57,6 +57,11 @@ class SearchController extends Controller
         else
             return ['value'=>'No Result Found','id'=>''];
     }
+    public function searchCompetence(Request $request) {
+        $competenceId = $request->get('term','');
+        $competence = Competency::findOrFail($competenceId);
+        return ['name'=>$competence->name,'description'=>$competence->description];
+    }
 
 
 }

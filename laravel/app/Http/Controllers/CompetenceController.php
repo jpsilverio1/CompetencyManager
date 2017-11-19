@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Redirect;
 use DB;
 
 use App\Category;
+use Illuminate\Http\Request;
 use App\Competency;
 
 class CompetenceController extends Controller
@@ -28,14 +29,13 @@ class CompetenceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-	 
+
 	public function index()
 	{
         $allCompetences = Competency::paginate(10);
         return view('competences.index', ['competences' => $allCompetences, 'message' => '']);
 	}
-	 
-	 
+	
 	public function create()
 	{
         if (\Auth::user()->isManager()) {
@@ -44,39 +44,74 @@ class CompetenceController extends Controller
             return redirect('/home');
         }
 	}
-	
-	public function show($id) 
+
+	public function show($id)
 	{
         $competence = Competency::findOrFail($id);
 		return view('competences.show', ['competence' => $competence]);
 	}
-	
-	public function edit($id) 
+
+	public function edit($id)
 	{
         $competence = Competency::findOrFail($id);
 		return view('competences.edit', ['competence' => $competence]);
 	}
-	
+
 	public function store(CreateCompetenceFormRequest $request)
 	{
         $names = $request->get('name');
         $description = $request->get('description');
-
-        for ($i=0; $i<sizeOf($names); $i++) {
-            $competence = new \App\Competency;
-            $competence->name = $names[$i];
-            $competence->description = $description[$i];
-            $competence->save();
+        $parentIds = $request->get('parent_ui_id');
+        $competenceUIIds = $request->get('competence_ui_id');
+        $isNewCompetence = $request->get('isNewCompetence');
+        $dbIds = $request->get('competence_db_id');
+        $nameIdx = 0;
+        $dbIdIdx =0;
+        $parentIdDbIdMap =[];
+        for ($i=0; $i<sizeOf($isNewCompetence); $i++) {
+            if ($isNewCompetence[$i] === "true") {
+                //add to database
+                $uiId = $competenceUIIds[$i];
+                $competence = new \App\Competency;
+                $competence->name = $names[$nameIdx];
+                $competence->description = $description[$nameIdx];
+                $parentUiId = $parentIds[$i];
+                $nameIdx+=1;
+                if ($parentUiId > 0) {
+                    $parentDBId = $parentIdDbIdMap[$parentUiId];
+                    $competence->parent_id = $parentDBId;
+                }
+                $competence->save();
+                $dbId = $competence->id;
+                //add to map
+                $parentIdDbIdMap[$uiId] = $dbId;
+            } else {
+                //add to map of ids
+                $dbId = $dbIds[$dbIdIdx];
+                $uiId = $competenceUIIds[$i];
+                $parentIdDbIdMap[$uiId] = $dbId;
+                $dbIdIdx+=1;
+                $competence = Competency::findOrFail($dbId);
+                $parentUiId = $parentIds[$i];
+                echo "<br>";
+                if ($parentUiId > 0) {
+                    $parentDBId = $parentIdDbIdMap[$parentUiId];
+                    $competence->parent_id = $parentDBId;
+                    $competence->save();
+                } else {
+                    $competence->makeRoot()->save();
+                }
+            }
         }
         $allCompetences = Competency::paginate(10);
         return view('competences.index', ['competences' => $allCompetences, 'message' => 'As competências foram cadastradas com sucesso!']);
-	}	
-	
+	}
+
 	public function update(CreateCompetenceFormRequest $request, $id)
 	{
         $names = $request->get('name');
         $description = $request->get('description');
-		
+
         for ($i=0; $i<sizeOf($names); $i++) {
 			Competency::findOrFail($id)->update(['name' => $names[$i], 'description' => $description[$i]]);
         }
@@ -84,7 +119,7 @@ class CompetenceController extends Controller
         return view('competences.show', ['id' => $id, 'competence' => $competence, 'message' => 'A competência foi atualizada com sucesso!']);
 	}
 
-	
+
 	public function destroy($id)
 	{
 		$competence = Competency::findOrFail($id);
@@ -95,11 +130,21 @@ class CompetenceController extends Controller
 		DB::table("user_endorsements")->where('competence_id', '=',$competence->id)->delete();
 		$competence->skilledUsers()->detach();
 		$competence->tasksThatRequireIt()->detach();
-		$competence->teamsThatHaveIt()->detach(); 
+		$competence->teamsThatHaveIt()->detach();
+        $children = $competence->children;
+        $parentNode = $competence->parent;
+        echo " parent = $parentNode";
+        foreach($children as $result) {
+            $result->parent()->associate($parentNode)->save();
+        }
 		$competence->delete();
+        if (Competency::isBroken()) {
+            Competency::fixTree();
+            echo "consertar";
+        }
 
         return Redirect::route('competences.index')->withMessage('A competência foi excluída com sucesso!');
 
 	}
-	
+
 }

@@ -36,7 +36,7 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::post('/user-competences', 'UserController@addCompetences');
     Route::post('/user-endorsements', 'EndorsementController@addEndorsement');
-
+    Route::post('search-competence-db',array('as'=>'search-competence-db','uses'=>'SearchController@searchCompetence'));
     Route::get('competence-proficiency-level',function(){
         $competenceProficiencyLevels = CompetenceProficiencyLevel::all();
         $lista = [];
@@ -49,6 +49,7 @@ Route::group(['middleware' => 'auth'], function() {
     /* autocomplete-related routes */
     Route::get('search-competence',array('as'=>'search-competence','uses'=>'SearchController@autocompleteCompetence'));
     Route::get('search-user',array('as'=>'search-user','uses'=>'SearchController@autocompleteUser'));
+
 });
 
 
