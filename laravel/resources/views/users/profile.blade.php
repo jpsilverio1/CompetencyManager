@@ -26,14 +26,11 @@
             </div>
         </div>
 
-        <div class="panel panel-default">
+        {{--<div class="panel panel-default">
             <div class="panel-heading" >
                 Equipes das quais o usuário faz parte
                 @include('teams.show_paginated_teams', ['teams' => $user->teams()->paginate(10, ['*'],'teams')])
             </div>
-        </div>
-
-
-
+        </div>--}}
     </div>
 @endsection
