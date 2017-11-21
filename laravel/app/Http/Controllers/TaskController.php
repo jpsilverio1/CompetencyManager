@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateTaskFormRequest;
 use App\Http\Requests\EditTaskFormRequest;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Http\Request;
 use DB;
 use App\Task;
 
@@ -88,6 +89,21 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
 		return view('tasks.edit', ['task' => $task]);
+    }
+
+    public function storeTaskTeam(Request $request) {
+        $taskId = $request->get('task_id');
+        $teamMembersIds = $request->get('team_member_id');
+        $task = Task::findOrFail($taskId);
+        foreach ($teamMembersIds as $teamMemberId) {
+            $results = $task->teamMembers()->where('task_team_member_id', '=', $teamMemberId)->get();
+            if ($results->isEmpty()) {
+                $task->teamMembers()->attach($teamMemberId);
+            }
+        }
+        return Redirect::route('tasks.show',$task->id)->withMessage('A equipe foi cadastrada com sucesso!');
+
+
     }
 
     /**

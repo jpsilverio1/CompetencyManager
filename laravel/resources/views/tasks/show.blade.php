@@ -26,6 +26,18 @@
                     Autor
                 </h4>
                 <p> {{$task->author->name}}</p>
+                 <h4>
+                     Equipe
+                 </h4>
+                  @php ($teamMembers = $task->teamMembers)
+                  @if (count($teamMembers) > 0)
+                        @foreach($teamMembers as $teamMember)
+                            <a href="{{ route('users.show', $teamMember->id) }}">{{ $teamMember->name }}</a>,
+                        @endforeach
+                  @else
+                      Nenhuma equipe foi designada para este time até o momento.
+
+                  @endif
 
                 <div class="panel panel-default">
                     <div class="panel-heading" >

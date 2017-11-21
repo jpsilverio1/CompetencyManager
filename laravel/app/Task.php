@@ -21,6 +21,10 @@ class Task extends Model
             ->withPivot('competency_proficiency_level_id');
     }
 
+    public function teamMembers() {
+        return $this->belongsToMany('App\User', 'task_teams', 'task_id', 'task_team_member_id');
+    }
+
     public function author()
     {
         return $this->belongsTo('App\User');
@@ -74,12 +78,18 @@ class Task extends Model
     }
     public function allCandidates() {
         $total = [];
+        $candidateContribution = [];
         foreach($this->competencies as $taskCompetence) {
             foreach($taskCompetence->skilledUsers as $skilledUser) {
-                $total[] = $skilledUser;
+                $total[$skilledUser->id] = $skilledUser;
+                if (array_key_exists($skilledUser->id, $candidateContribution)) {
+                    $candidateContribution[$skilledUser->id][] = $taskCompetence->id;
+                } else {
+                    $candidateContribution[$skilledUser->id] = [$taskCompetence->id];
+                }
             }
         }
-        return $total;
+        return ["candidates" => $total, "csndidatesContribution" => $candidateContribution];
     }
     public function suitableAssigneesSets()
     {
