@@ -33,8 +33,7 @@
                         <form action="{{$path_to_removal}}{{ $competence->id }}" method="POST">
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
-
-                            <button>x</button>
+                            <button class="btn btn-link "><span class="glyphicon glyphicon-remove text-muted"></span></button>
                         </form>
                     </td>
                 @endif
