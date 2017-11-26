@@ -89,7 +89,7 @@ class Task extends Model
                 }
             }
         }
-        return ["candidates" => $total, "csndidatesContribution" => $candidateContribution];
+        return ["candidates" => $total, "candidatesContribution" => $candidateContribution];
     }
     public function suitableAssigneesSets()
     {
