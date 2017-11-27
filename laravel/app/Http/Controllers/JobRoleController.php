@@ -10,6 +10,9 @@ use App\Category;
 
 use App\JobRole;
 
+use App\Http\Requests\CreateJobRoleFormRequest;
+use App\Http\Requests\EditJobRoleFormRequest;
+
 class JobRoleController extends Controller
 {
     /**
@@ -49,7 +52,7 @@ class JobRoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateJobRoleFormRequest $request)
     {
         $name = $request->get('name');
 		$description = $request->get('description');
@@ -107,7 +110,7 @@ class JobRoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EditJobRoleFormRequest $request, $id)
     {
 		$name = $request->get('name');
 		$description = $request->get('description');
