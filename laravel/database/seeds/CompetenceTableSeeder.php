@@ -14,14 +14,12 @@ class CompetenceTableSeeder extends Seeder
         foreach(file('./resources/assets/seeds/all_linkedIn_skills.txt') as $competenceName) {
             $description = "Descrição da competência: $competenceName";
             $competence = new \App\Competency;
-            $competence->name = $competenceName;
-            $competence->description = $description;
+            $competence->name = trim($competenceName);
+            $competence->description = trim($description);
             $competence->save();
-            echo "line $competenceName -  $description<br>";
         }
-
-        if (Competency::isBroken()) {
-            Competency::fixTree();
+        if (\App\Competency::isBroken()) {
+            \App\CompetencyCompetency::fixTree();
             echo "consertar";
         }
     }
