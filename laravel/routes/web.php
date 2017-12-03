@@ -23,6 +23,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 /* User has to be authenticated to acess all of the routes listed below*/
 Route::group(['middleware' => 'auth'], function() {
+	
+	Route::get('tasks/show_form/{taskId}', 'TaskController@showForm');
+	
     Route::resource('tasks', 'TaskController');
     Route::resource('teams', 'TeamController');
     Route::resource('competences', 'CompetenceController');
@@ -41,6 +44,9 @@ Route::group(['middleware' => 'auth'], function() {
 	
 	Route::get('/task-initialize/{taskId}', 'TaskController@initializeTask');
 	Route::get('/task-finish/{taskId}', 'TaskController@finishTask');
+	
+	Route::post('/task-answer-form', 'AnswerController@addAnswer');
+	
 
     Route::get('competence-proficiency-level',function(){
         $competenceProficiencyLevels = CompetenceProficiencyLevel::all();
