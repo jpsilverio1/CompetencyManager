@@ -159,4 +159,10 @@ class TaskController extends Controller
 		$task->save();
 		return Redirect::route('tasks.show',$taskId);
 	}
+	
+	public function showForm($taskId)
+    {
+        $task = Task::findOrFail($taskId);
+		return view('tasks.show_form', ['task' => $task]);
+    }
 }
