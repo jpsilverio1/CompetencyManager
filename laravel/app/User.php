@@ -154,13 +154,11 @@ class User extends Authenticatable
 	// Usuário tem autorização pra inicializar ou finalizar tarefa se ele está na tarefa ou se ele é Gerente
 	public function canInitializeOrFinishTask($taskId) {
 		$task = Task::findOrFail($taskId);
-		$thisUserIsInTask = $task->members()->where("id", $this->id)->get();
+		$thisUserIsInTask = $task->members();
 		return !$thisUserIsInTask->isEmpty() || $this->isManager(); 
 	}
 	
 	public function answeredQuestions($taskId) {
-		//$task = Task::findOrFail($taskId);
-		//$answers = $task->answers()->where("judge_user_id", $this->id)->get();
 		$answers = \DB::table('answers')->where([ ['judge_user_id', '=', $this->id], ['task_id', '=', $taskId] ])->get();
 		return !$answers->isEmpty();
 	}

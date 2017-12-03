@@ -31,7 +31,6 @@ class Task extends Model
 	public function answers()
 	{
 		return DB::table('answers')->where("task_id", $this->id)->get();
-		//return $this->belongsToMany('App\User', 'tasks_users');
 	}
 	
 	public function usersWhoAnsweredQuestions()
@@ -170,9 +169,7 @@ class Task extends Model
         return $result;
 
     }
-	
-	// TODO: adicionar mais um status: finalizado-pendente, quando ainda faltam pessoas para preencher o form
-	// e "finalizado", que realmente simboliza o finalizado
+
 	public function taskStatus() {
 		$start_date_original = $this->getOriginal('start_date');
 		$end_date_original = $this->getOriginal('end_date');

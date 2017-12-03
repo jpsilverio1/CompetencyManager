@@ -24,27 +24,23 @@ class AnswerFormRequest extends FormRequest
     public function rules()
     {
         $rules = [];
-		return $rules;
-		foreach($this->request->get('personal_competence_level_id') as $key => $val)
-		{
-			$rules['personal_competence_level_id.'.$key] = 'required';
-			foreach ($val as $key_i => $val_i) {
-				$rules['personal_competence_level_id.$key.$key_i'] = 'required';
+		for ($indiceUsuario = 0; $indiceUsuario < count($this->request->get('evaluated_user_id')); $indiceUsuario++) {
+			for ($indiceQuestao = 0; $indiceQuestao < count($this->request->get('personal_competence_id')); $indiceQuestao++) {
+				$rules['personal_competence_level_id'.strval($indiceUsuario).strval($indiceQuestao)] = 'required';
 			}
 		}
+		return $rules;
         
     }
 	
 	public function messages() 
 	{
         $messages = [];
-		return $messages;
-		foreach($this->request->get('personal_competence_level_id') as $key => $val)
-		{
-			foreach ($val as $key_i => $val_i) {
-				$messages['personal_competence_level_id.'.$key.'.'.$key_i.'.'.'required'] = 'É obrigatório responder a esta pergunta';
+		for ($indiceUsuario = 0; $indiceUsuario < count($this->request->get('evaluated_user_id')); $indiceUsuario++) {
+			for ($indiceQuestao = 0; $indiceQuestao < count($this->request->get('personal_competence_id')); $indiceQuestao++) {
+				$messages['personal_competence_level_id'.strval($indiceUsuario).strval($indiceQuestao).'.required'] = 'É obrigatório responder a esta pergunta';
 			}
 		}
-		
+		return $messages;
 	}
 }

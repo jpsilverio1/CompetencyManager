@@ -23,15 +23,15 @@
 						  {{Session::get('message')}}<br />
 					   </div>
 					@endif
-					<?php $userInThisTask = $task->members(); $questions = \App\Question::all(); $personalCompetenciesIds = \App\PersonalCompetence::get('id'); $personalCompetencies = \App\PersonalCompetence::all(); $answerLevels= \App\PersonalCompetenceProficiencyLevel::all(); ?>
-					@for ($x = 0; $x < count($userInThisTask); $x++)
-						<?php $user = $userInThisTask[$x]; ?>
+					<?php $userInThisTask = $task->members(); $questions = \App\Question::all(); $personalCompetencies = \App\PersonalCompetence::all(); $answerLevels= \App\PersonalCompetenceProficiencyLevel::all(); ?>
+					@for ($indiceUsuario = 0; $indiceUsuario < count($userInThisTask); $indiceUsuario++)
+						<?php $user = $userInThisTask[$indiceUsuario]; ?>
 						<center><h4>Avaliação do Usuário: <b>{{ $user->name }}</b></h4></center>
-						@for ($i = 0; $i < count($questions); $i++)
-							<?php $personal_competence_level_id[$x][$i] = null; ?>
+						@for ($indiceQuestao = 0; $indiceQuestao < count($questions); $indiceQuestao++)
+							<?php $personal_competence_level_id[$indiceUsuario][$indiceQuestao] = null; ?>
 							<div class="panel panel-default">
 								<div class="panel-heading" >
-									{!! $questions[$i]->description !!}
+									{!! $questions[$indiceQuestao]->description !!}
 									
 								</div>
 								<div class="panel-body">
@@ -40,13 +40,12 @@
 											<strong>{{ $errors->first('title') }}</strong>
 										</span>
 									@endif
-									<input type="hidden" name="personal_competence_level_id[{{$x}}][{{$i}}]" value="{{ old('$personal_competence_level_id[$x][$i]') ? old('$personal_competence_level_id[$x][$i]') : Null }}" >
-									<input id="$personal_competence_level_id[{{$x}}][{{$i}}]" type="radio" name="personal_competence_level_id[{{$x}}][{{$i}}]" value="{{$answerLevels[0]->id}}" {{ old('$personal_competence_level_id[$x][$i]')== $answerLevels[0]->id ? 'checked' : '' }} > {{ $answerLevels[0]->name }} <br/>
-									<input id="$personal_competence_level_id[{{$x}}][{{$i}}]" type="radio" name="personal_competence_level_id[{{$x}}][{{$i}}]" value="{{$answerLevels[1]->id}}" {{ old('$personal_competence_level_id[$x][$i]')== $answerLevels[1]->id ? 'checked' : '' }} > {{ $answerLevels[1]->name }} <br/>
-									<input id="$personal_competence_level_id[{{$x}}][{{$i}}]" type="radio" name="personal_competence_level_id[{{$x}}][{{$i}}]" value="{{$answerLevels[2]->id}}" {{ old('$personal_competence_level_id[$x][$i]')== $answerLevels[2]->id ? 'checked' : '' }} > {{ $answerLevels[2]->name }} <br/>
-									<input id="$personal_competence_level_id[{{$x}}][{{$i}}]" type="radio" name="personal_competence_level_id[{{$x}}][{{$i}}]" value="{{$answerLevels[3]->id}}" {{ old('$personal_competence_level_id[$x][$i]')== $answerLevels[3]->id ? 'checked' : '' }} > {{ $answerLevels[3]->name }} <br/>
-									<input id="$personal_competence_level_id[{{$x}}][{{$i}}]" type="radio" name="personal_competence_level_id[{{$x}}][{{$i}}]" value="{{$answerLevels[4]->id}}" {{ old('$personal_competence_level_id[$x][$i]')== $answerLevels[4]->id ? 'checked' : '' }} > {{ $answerLevels[4]->name }} <br/>
 									
+									<input id="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" type="radio" name="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" value="{{$answerLevels[0]->id}}" {{ old('$personal_competence_level_id$indiceUsuario$indiceQuestao')== $answerLevels[0]->id ? 'checked' : '' }} > {{ $answerLevels[0]->name }} <br/>
+									<input id="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" type="radio" name="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" value="{{$answerLevels[1]->id}}" {{ old('$personal_competence_level_id$indiceUsuario$indiceQuestao')== $answerLevels[1]->id ? 'checked' : '' }} > {{ $answerLevels[1]->name }} <br/>
+									<input id="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" type="radio" name="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" value="{{$answerLevels[2]->id}}" {{ old('$personal_competence_level_id$indiceUsuario$indiceQuestao')== $answerLevels[2]->id ? 'checked' : '' }} > {{ $answerLevels[2]->name }} <br/>
+									<input id="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" type="radio" name="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" value="{{$answerLevels[3]->id}}" {{ old('$personal_competence_level_id$indiceUsuario$indiceQuestao')== $answerLevels[3]->id ? 'checked' : '' }} > {{ $answerLevels[3]->name }} <br/>
+									<input id="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" type="radio" name="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" value="{{$answerLevels[4]->id}}" {{ old('$personal_competence_level_id$indiceUsuario$indiceQuestao')== $answerLevels[4]->id ? 'checked' : '' }} > {{ $answerLevels[4]->name }} <br/>
 									
 								</div>
 							</div>
@@ -55,13 +54,17 @@
 						<br/>
 					@endfor
 					
+					<?php $personalCompetenciesIds = \App\PersonalCompetence::all(['id'])->toArray(); ?>
+					@for ($k = 0; $k < count($personalCompetenciesIds); $k++)
+						<?php $personalComp = $personalCompetenciesIds[$k]; ?>
+						<input id="personal_competence_id{{$personalComp['id']}}" type="hidden" class="form-control" name="personal_competence_id[]" value="{{$personalComp['id']}}" >
+					@endfor
+					
 					<div class="otherElements">
-						<input id="personal_competence_id" type="hidden" class="form-control" name="personal_competence_id" value="{{$personalCompetenciesIds}}" >
+						
 						<input id="judge_user_id" type="hidden" class="form-control" name="judge_user_id" value="{{ \Auth::user()->id }}" >
 						<input id="task_id" type="hidden" class="form-control" name="task_id" value="{{ $task->id }}" >
 					</div>
-					
-					<?php print_r($personal_competence_level_id); ?>
 					
 					<td><button type="submit" class="btn btn-primary">Enviar Respostas</button></td>
 					

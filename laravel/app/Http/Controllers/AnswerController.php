@@ -19,40 +19,30 @@ class AnswerController extends Controller
 		$answer->save();
 		*/
 		
-		$answersAllUsers = $request->get('personal_competence_level_id');
-		$personalCompetencesId = $request->get('personal_competence_id'); // isso tbm é uma matriz da mesma forma acima
-		
-		print_r($request->get('personal_competence_level_id'));
-		
-		foreach($request->get('personal_competence_level_id') as $key => $val)
-		{
-			foreach ($val as $key_i => $val_i) {
-				echo("personal_competence_level_id.'.$key.'.'.$key_i");
-				//$rules['personal_competence_level_id.'.$key.'.'.$key_i] = 'required';
-			}
-		}
-        
-		
-		
-		
+		//$answersAllUsers = $request->get('personal_competence_level_id');
+		$personalCompetencesId = $request->get('personal_competence_id'); 
 		$judge_user_id = $request->get('judge_user_id');
 		$evaluated_users_id = $request->get('evaluated_user_id');
 		$task_id = $request->get('task_id');
 		
-		for ($i = 0; $i < count($answersAllUsers); $i++) {
-			$answersOneUser = $answersAllUsers[$i];
+		$countAnswers = count($personalCompetencesId) * count($evaluated_users_id);
+		
+		$evaluated_user_id = $evaluated_users_id[0];
+		for ($i = 0; $i < $countAnswers; $i++) {
+			if ($i == 0) {
+				$j = 0;
+			}
+			else if (($i % count($personalCompetencesId)) == 0) {
+				$j++;
+				$evaluated_user_id = $evaluated_users_id[$j];
+			}
 			
-			$evaluated_user_id = $evaluated_users_id[$i];
-			
-			for ($j = 0; $j < count($answersOneUser); $j++) {
-				$personal_competence_id = $personalCompetencesId[$j];
-				$personal_competence_level_id = $answersOneUser[$j];
-				
-				$values = array('personal_competence_id' => $personal_competence_id, 'personal_competence_level_id' => $personal_competence_level_id, 'judge_user_id' => $judge_user_id, 'evaluated_user_id' => $evaluated_user_id, 'task_id' => $task_id);
-				\DB::table('answers')->insert($values);
-				return redirect("tasks/$task_id");
-			}	
+			$personal_competence_id = $personalCompetencesId[$i % count($personalCompetencesId)];
+			$personal_competence_level_id = $request->get('personal_competence_level_id'.strval($j).strval($i % count($personalCompetencesId)));
+			$values = array('personal_competence_id' => $personal_competence_id, 'personal_competence_level_id' => $personal_competence_level_id, 'judge_user_id' => $judge_user_id, 'evaluated_user_id' => $evaluated_user_id, 'task_id' => $task_id);
+			\DB::table('answers')->insert($values);
 		}
+		return redirect("tasks/$task_id");
 		
     }
 }
