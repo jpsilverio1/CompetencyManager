@@ -7,21 +7,27 @@
     <!-- Latest Sortable -->
     <script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>
 
-
     <!-- Simple List -->
     <div style="text-align:center;" class="row">
-        <div class="layer title col-md-3 col-md-offset-1">List A
+        <div class="layer title col-md-3 col-md-offset-1">Candidatos
         </div>
-        <div class="layer title col-md-3 col-md-offset-1">List B
+        <div class="layer title col-md-3 col-md-offset-1">Membros da equipe
         </div>
-        <div class="layer title col-md-2 col-md-offset-1">List C
+        <div class="layer title col-md-2 col-md-offset-1">Competências
         </div>
 
         <ul id="teamCandidates" class="list-group col-md-3 col-md-offset-1" style="background-color: white; min-height: 40px;max-width: 50%; padding:0;">
-            @php ($taskCandidatesInfo = $task->allCandidates())
+            @php ($taskCandidatesInfo = $task->getFinalRankAndExplanations())
             @if (count($taskCandidatesInfo["candidates"]) > 0)
-                @foreach ($taskCandidatesInfo["candidates"] as $key => $candidate)
-                    <li class="list-group-item" accesskey="{{$candidate->id}}">{{$candidate->name}} -> {{count($taskCandidatesInfo["candidatesContribution"][$key])}}</li>
+                @foreach ($taskCandidatesInfo["candidates"] as  $candidate)
+                    <li class="list-group-item" accesskey="{{$candidate->id}}">
+                        {{$candidate->name}} -> {{$taskCandidatesInfo["ranking"][$candidate->id]}}
+                        <span class="glyphicon glyphicon-info-sign" data-toggle = "tooltip" data-placement = "top" title="
+                            @foreach ($taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"]["competence"] as $competence)
+                        {{$competence->name}}  <br></span>
+                            @endforeach
+                                "></span>
+                    </li>
                 @endforeach
             @endif
         </ul>
@@ -67,24 +73,22 @@
         //getting the id's of the candidates inside the candidate team list and creating input fields with them
         listItems.each(function(candidate) {
             var id = $(this).attr('accessKey');
-            $.each(candidateContributions[id], function (i, elem) {
-                fulfilledCompetencies.push(String(elem));
+            $.each(candidateContributions[id]["competenceInfo"]["competence"], function (i, elem) {
+                fulfilledCompetencies.push(String(elem.id));
             });
         });
         updateCompetenciesFullfilment();
     }, onAdd: function (/**Event*/evt) {
+        //id do usuario
         var id = $( evt.item).attr('accessKey');
-        $.each(candidateContributions[id], function (i, elem) {
-            fulfilledCompetencies.push(String(elem));
+        $.each(candidateContributions[id]["competenceInfo"]["competence"], function (i, elem) {
+            fulfilledCompetencies.push(String(elem.id));
         });
         updateCompetenciesFullfilment();
     } } );
     function updateCompetenciesFullfilment() {
         $('.competence_status').each(function(i, obj) {
             var competenceId = $(this).attr('accesskey');
-            console.log(fulfilledCompetencies);
-            console.log(competenceId);
-            console.log("current array "+fulfilledCompetencies);
             if(jQuery.inArray(competenceId, fulfilledCompetencies) !== -1) {
                 $(this).removeClass( "unfulfilled-competency" ).addClass( "fulfilled-competency" );
             } else {

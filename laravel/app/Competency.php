@@ -47,6 +47,30 @@ class Competency extends Model
         return $this->belongsToMany('App\Team', 'team_competencies');
     }
 
+    public function isCompetenceLevelAcceptable($userCompetence) {
+        $acceptableLevels = $this->getAcceptableLevelsFromTaskCompetence();
+        $oi = $this->pivot->competency_proficiency_level_id;
+        $compId = $userCompetence->name;
+        $tudo = $userCompetence->pivot->competence_proficiency_level_id;
+        if (in_array($userCompetence->pivot->competence_proficiency_level_id, $acceptableLevels)) {
+            echo "aceitavel: comp: $compId - level: $tudo - required: $oi <br>";
+        }
+        else {
+            echo "inaceitavel: comp: $compId - level: $tudo - required: $oi <br>";
+        }
+        return in_array($userCompetence->pivot->competence_proficiency_level_id, $acceptableLevels);
+    }
+    public function getAcceptableLevelsFromTaskCompetence() {
+        $allCompetenceLevels = CompetenceProficiencyLevel::all()->pluck('id')->toArray();
+        $taskRequiredCompetenceLevel = $this->pivot->competency_proficiency_level_id;
+        $acceptableCompetenceLevels = $allCompetenceLevels;
+        if (in_array($taskRequiredCompetenceLevel, $allCompetenceLevels)) {
+            $start = array_search($taskRequiredCompetenceLevel, $allCompetenceLevels);
+            $acceptableCompetenceLevels = array_slice($allCompetenceLevels, $start);
+        }
+        return $acceptableCompetenceLevels;
+    }
+
 
     
 }

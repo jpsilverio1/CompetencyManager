@@ -1,7 +1,9 @@
 
 
 $(document).ready(function(){
-
+    $('[data-toggle="tooltip"]').tooltip({
+        html:"true"
+    });
     $("#createTeamForm").submit( function(eventObj) {
         var listItems = $("#candidateTeam li");
         //getting the id's of the candidates inside the candidate team list and creating input fields with them
