@@ -1,0 +1,5 @@
+Apresenta muitos Comportamentos Negativos 
+Apresenta poucos Comportamentos Negativos
+Não apresenta Comportamentos Negativos nem Positivos
+Apresenta alguns Comportamentos Positivos
+Apresenta muitos Comportamentos Positivos
