@@ -156,14 +156,29 @@ class User extends Authenticatable
 		$task = Task::findOrFail($taskId);
 		$thisUserIsInTask = $task->members()->where("id", $this->id)->get();
 		return !$thisUserIsInTask->isEmpty() || $this->isManager(); 
+	}
+	
+	public function answeredQuestions($taskId) {
+		//$task = Task::findOrFail($taskId);
+		//$answers = $task->answers()->where("judge_user_id", $this->id)->get();
+		$answers = \DB::table('answers')->where([ ['judge_user_id', '=', $this->id], ['task_id', '=', $taskId] ])->get();
+		return !$answers->isEmpty();
+	}
+	
+	public function personalCompetences() {
+		$evaluatedAnswers = \DB::table('answers')->where("evaluated_user_id", $this->id)->get();
+		$personalCompetences = []; // array with personal Competences grades
+		foreach ($evaluatedAnswers as $answer) {
+			$personalCompetencesEvaluated = PersonalCompetence::findOrFail($answer["personal_competence_id"]);
+			foreach($personalCompetencesEvaluated as $personalCompetenceEvaluated) {
+				$personalCompetenceLevel = PersonalCompetenceLevel::findOrFail($answer["personal_competence_proficiency_level_id"]);
+				$value = 0;
+				// do some calculus with $value
+			}			
+			array_push($personalCompetences, $value);
+		}
 		
-		/* Código antigo com coisas do Teams
-		$teamOfTask = $task->team()->id;
-		if ($this->isOnTeam($teamOfTask))
-			return true;
-		else {
-			return false;
-		} */
+		return $personalCompetences;
 	}
 
     /**

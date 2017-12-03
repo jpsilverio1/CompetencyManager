@@ -21,11 +21,23 @@ class Task extends Model
             ->withPivot('competency_proficiency_level_id');
     }
 	
-	// TODO -> Atualizar método com a nova modelagem do BD (Task x User)
+	// TODO -> Retirar este método e permitir apenas o novo método na nova modelagem (Task x Users, sem Teams, como era antes) quando for fazer o merge
 	public function members()
 	{
-		return \App\User::orderBy('id', 'desc')->first();
+		return \App\User::all();
 		//return $this->belongsToMany('App\User', 'tasks_users');
+	}
+	
+	public function answers()
+	{
+		return DB::table('answers')->where("task_id", $this->id)->get();
+		//return $this->belongsToMany('App\User', 'tasks_users');
+	}
+	
+	public function usersWhoAnsweredQuestions()
+	{
+		$judges_id = DB::table('answers')->select('judge_user_id')->where([ ['judge_user_id', '<>', null], ['task_id', '=', $this->id] ])->get();
+		return $judges_id;
 	}
 
     public function author()
@@ -173,4 +185,5 @@ class Task extends Model
 			return "finished";
 		}
 	}
+	
 }
