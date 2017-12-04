@@ -47,12 +47,16 @@
 										</span>
                                     @endif
 									
+									
+									
 									<input id="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" type="radio" name="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" value="{{$answerLevels[0]->id}}" {{ old('personal_competence_level_id'.$indiceUsuario.$indiceQuestao)== $answerLevels[0]->id ? 'checked' : '' }} > {{ $answerLevels[0]->name }} <br/>
 									<input id="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" type="radio" name="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" value="{{$answerLevels[1]->id}}" {{ old('personal_competence_level_id'.$indiceUsuario.$indiceQuestao)== $answerLevels[1]->id ? 'checked' : '' }} > {{ $answerLevels[1]->name }} <br/>
 									<input id="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" type="radio" name="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" value="{{$answerLevels[2]->id}}" {{ old('personal_competence_level_id'.$indiceUsuario.$indiceQuestao)== $answerLevels[2]->id ? 'checked' : '' }} > {{ $answerLevels[2]->name }} <br/>
 									<input id="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" type="radio" name="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" value="{{$answerLevels[3]->id}}" {{ old('personal_competence_level_id'.$indiceUsuario.$indiceQuestao)== $answerLevels[3]->id ? 'checked' : '' }} > {{ $answerLevels[3]->name }} <br/>
 									<input id="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" type="radio" name="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" value="{{$answerLevels[4]->id}}" {{ old('personal_competence_level_id'.$indiceUsuario.$indiceQuestao)== $answerLevels[4]->id ? 'checked' : '' }} > {{ $answerLevels[4]->name }} <br/>
 									
+									<small><a href="#" data-toggle="myToolTip" data-placement="top"  data-trigger="click" data-html="true"  title="{{ $personalCompetencies[$indiceQuestao]['description'] }}">O que significa esta competência?</a></small> <br/>
+				
 								</div>
 							</div>
 						@endfor
@@ -75,7 +79,9 @@
 					<td><button type="submit" class="btn btn-primary">Enviar Respostas</button></td>
 					
 				</form>	
-				<td><a href='/tasks/{{ $task->id }} '/><button class="btn btn-primary">Voltar</button></td>				
+				<td><a href='/tasks/{{ $task->id }} '/><button class="btn btn-primary">Voltar</button></td>	
+
+							
             </div>
         </div>
     </div>
