@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\AnswerFormRequest;
 
+use Illuminate\Support\Facades\Redirect;
+
 class AnswerController extends Controller
 {
     public function addAnswer(AnswerFormRequest $request) {
@@ -42,7 +44,7 @@ class AnswerController extends Controller
 			$values = array('personal_competence_id' => $personal_competence_id, 'personal_competence_level_id' => $personal_competence_level_id, 'judge_user_id' => $judge_user_id, 'evaluated_user_id' => $evaluated_user_id, 'task_id' => $task_id);
 			\DB::table('answers')->insert($values);
 		}
-		return redirect("tasks/$task_id");
+		return Redirect::route('tasks.show',$task_id)->withMessage('O formulário foi recebido com sucesso!');
 		
     }
 }
