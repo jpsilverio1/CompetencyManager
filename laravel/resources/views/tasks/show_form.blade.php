@@ -23,6 +23,11 @@
 						  {{Session::get('message')}}<br />
 					   </div>
 					@endif
+					@if (count($errors) > 0)
+						<div class="alert alert-danger">
+							O preenchimento é obrigatório para todas as perguntas.<br />
+						</div>
+					@endif
 					<?php $userInThisTask = $task->members(); $questions = \App\Question::all(); $personalCompetencies = \App\PersonalCompetence::all(); $answerLevels= \App\PersonalCompetenceProficiencyLevel::all(); ?>
 					@for ($indiceUsuario = 0; $indiceUsuario < count($userInThisTask); $indiceUsuario++)
 						<?php $user = $userInThisTask[$indiceUsuario]; ?>
@@ -35,11 +40,12 @@
 									
 								</div>
 								<div class="panel-body">
-									@if ($errors->has('title'))
-										<span class="help-block">
-											<strong>{{ $errors->first('title') }}</strong>
+									
+									@if ($errors->has('personal_competence_level_id'.$indiceUsuario.$indiceQuestao))
+										<span class="help-block alert alert-danger">
+											<strong>{{ $errors->first('personal_competence_level_id'.$indiceUsuario.$indiceQuestao) }}</strong>
 										</span>
-									@endif
+                                    @endif
 									
 									<input id="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" type="radio" name="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" value="{{$answerLevels[0]->id}}" {{ old('personal_competence_level_id'.$indiceUsuario.$indiceQuestao)== $answerLevels[0]->id ? 'checked' : '' }} > {{ $answerLevels[0]->name }} <br/>
 									<input id="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" type="radio" name="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" value="{{$answerLevels[1]->id}}" {{ old('personal_competence_level_id'.$indiceUsuario.$indiceQuestao)== $answerLevels[1]->id ? 'checked' : '' }} > {{ $answerLevels[1]->name }} <br/>
