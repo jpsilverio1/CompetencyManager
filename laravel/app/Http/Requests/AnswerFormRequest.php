@@ -29,6 +29,7 @@ class AnswerFormRequest extends FormRequest
 				$rules['personal_competence_level_id'.strval($indiceUsuario).strval($indiceQuestao)] = 'required';
 			}
 		}
+		$rules['selectedCompetences'] = 'required';
 		return $rules;
         
     }
@@ -41,6 +42,7 @@ class AnswerFormRequest extends FormRequest
 				$messages['personal_competence_level_id'.strval($indiceUsuario).strval($indiceQuestao).'.required'] = 'É obrigatório responder a esta pergunta';
 			}
 		}
+		$messages['selectedCompetences.required'] = 'Você deve selecionar pelo menos uma competência.';
 		return $messages;
 	}
 }

@@ -47,8 +47,6 @@
 										</span>
                                     @endif
 									
-									
-									
 									<input id="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" type="radio" name="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" value="{{$answerLevels[0]->id}}" {{ old('personal_competence_level_id'.$indiceUsuario.$indiceQuestao)== $answerLevels[0]->id ? 'checked' : '' }} > {{ $answerLevels[0]->name }} <br/>
 									<input id="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" type="radio" name="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" value="{{$answerLevels[1]->id}}" {{ old('personal_competence_level_id'.$indiceUsuario.$indiceQuestao)== $answerLevels[1]->id ? 'checked' : '' }} > {{ $answerLevels[1]->name }} <br/>
 									<input id="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" type="radio" name="personal_competence_level_id{{$indiceUsuario}}{{$indiceQuestao}}" value="{{$answerLevels[2]->id}}" {{ old('personal_competence_level_id'.$indiceUsuario.$indiceQuestao)== $answerLevels[2]->id ? 'checked' : '' }} > {{ $answerLevels[2]->name }} <br/>
@@ -74,6 +72,29 @@
 						
 						<input id="judge_user_id" type="hidden" class="form-control" name="judge_user_id" value="{{ \Auth::user()->id }}" >
 						<input id="task_id" type="hidden" class="form-control" name="task_id" value="{{ $task->id }}" >
+					</div>
+					
+					<center><h4><b>Competências Técnicas Utilizadas</b></h4></center>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading" >
+							Por último, selecione dentre todas as competências técnicas desta tarefa, as competências com as quais você trabalhou direta e ativamente durante a realização da tarefa.
+						</div>
+						<div class="panel-body">
+							
+							@if ($errors->has('selectedCompetences'))
+								<span class="help-block alert alert-danger">
+									<strong>{{ $errors->first('selectedCompetences') }}</strong>
+								</span>
+							@endif
+						
+							@foreach ($task->competencies as $competence)
+								
+								<input id="selectedCompetences" type="checkbox" name="selectedCompetences[]" value="{{ $competence->id }}"> {{ $competence->name }} <br/>
+								<input id="selectedCompetencesProficiencyLevel" type="hidden" name="selectedCompetencesProficiencyLevel[]" value="{{ $competence->pivot->competency_proficiency_level_id }}"> 
+								
+							@endforeach
+						</div>
 					</div>
 					
 					<td><button type="submit" class="btn btn-primary">Enviar Respostas</button></td>

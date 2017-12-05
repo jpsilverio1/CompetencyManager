@@ -44,6 +44,28 @@ class AnswerController extends Controller
 			$values = array('personal_competence_id' => $personal_competence_id, 'personal_competence_level_id' => $personal_competence_level_id, 'judge_user_id' => $judge_user_id, 'evaluated_user_id' => $evaluated_user_id, 'task_id' => $task_id);
 			\DB::table('answers')->insert($values);
 		}
+		
+		// Part 2 - add competencies to user_competencies table
+		$selectedTechnicalCompetencies = $request->get('selectedCompetences');
+		$selectedTechnicalCompetenciesProficiencyLevel = $request->get('selectedCompetencesProficiencyLevel');
+		for ($k = 0; $k < count($selectedTechnicalCompetencies); $k++) {
+			$techinalCompetenceId = $selectedTechnicalCompetencies->id;
+			$techinalCompetenceProficiencyLevelId = $selectedTechnicalCompetenciesProficiencyLevel[$k];
+			
+			$values = array('competence_id' => $techinalCompetenceId, 'user_id' => $judge_user_id, 'judge_user_id' => $judge_user_id, 'competence_proficiency_level_id' => $techinalCompetenceProficiencyLevelId);
+			
+			$user = \Auth::user();
+			$results = $user->competences()->where('competence_id', '=', $competenceId)->get();
+            if ($results->isEmpty()) {
+                echo "adicionar";
+                $user->competences()->attach([$competenceId => ['competence_proficiency_level_id'=>$competenceLevel]]);
+            } else {
+                echo "update";
+                //update competency level
+                $user->competences()->updateExistingPivot($competenceId, ['competence_proficiency_level_id'=>$competenceLevel]);
+            }
+		}
+		
 		return Redirect::route('tasks.show',$task_id)->withMessage('O formulário foi recebido com sucesso!');
 		
     }
