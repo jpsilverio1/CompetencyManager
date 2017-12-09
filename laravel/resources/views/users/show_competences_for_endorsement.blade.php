@@ -112,7 +112,6 @@
                     </tr>
                 @endforeach
 
-
                 </tbody>
             </table>
         @else
