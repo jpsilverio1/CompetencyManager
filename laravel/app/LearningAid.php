@@ -23,6 +23,13 @@ class LearningAid extends Model
         return $this->belongsToMany('App\Competency', 'learning_aids_competencies', 'learning_aid_id', 'competency_id')
             ->withPivot('competency_proficiency_level_id');
     }
+	
+	public function usersInThisLearningAid()
+    {
+		return $this->belongsToMany('App\User', 'learning_aids_user', 'learning_aid_id', 'user_id');
+        //return $this->hasMany('App\User', 'user_id')->withPivot('competency_proficiency_level_id')->withTimestamps();
+    }
+	
     /*public function author()
     {
         return $this->belongsTo('App\User');
@@ -146,4 +153,14 @@ class LearningAid extends Model
         return $result;
 
     }
+	
+	public function learnindAidStatus() {
+		
+		$completed_learning_aid = $this->usersInThisLearningAid->where('id', \Auth::user()->id);
+		if ($completed_learning_aid->count() > 0) {
+			return "finished";
+		}
+		return "created";
+	}
+	
 }

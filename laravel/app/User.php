@@ -32,9 +32,14 @@ class User extends Authenticatable
 		$newFinishTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $finishTime);
 
 
-		$diff_in_days = $newInitTime->diffInWeeks($newFinishTime);
+		$diff_in_weeks = $newInitTime->diffInMinutes($newFinishTime);
 		
-		return floor((0.19 + 0.6318*pow((1+$diff_in_days), (-0.68)))*100) + 18;
+		if ($diff_in_weeks == 0) {
+			return 100;
+		}
+		else {
+			return floor((0.19 + 0.6318*pow((1+($diff_in_weeks-1)), (-0.68)))*100);
+		}	
 	}
 
 
@@ -151,6 +156,12 @@ class User extends Authenticatable
     public function teams()
     {
         return $this->belongsToMany('App\Team', 'team_members');
+    }
+	
+	public function learningAidsThisUserJoined()
+    {
+		return $this->belongsToMany('App\LearningAid', 'learning_aids_user', 'user_id', 'learning_aid_id');
+        //return $this->hasMany('App\User', 'user_id')->withPivot('competency_proficiency_level_id')->withTimestamps();
     }
 
     /**

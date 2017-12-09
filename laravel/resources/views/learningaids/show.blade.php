@@ -61,18 +61,27 @@
                 </div>
                 @if (Auth::user()->isManager())
                 <div>
-                    <div class="col-md-2">
+                    <div class="col-xs-1">
                         <td><a href='{{ route('learningaids.edit', $learningAid->id) }}'/><button type="submit" class="btn btn-primary">Editar</button></td>
                     </div>
-                    <div>
-                        <form class="col-xs-offset-1" id="deleteLearningAidForm" role="form" method="POST" action="{{ route('learningaids.destroy', $learningAid->id ) }}">
+                    <div class="col-xs-1">
+                        <form id="deleteLearningAidForm" role="form" method="POST" action="{{ route('learningaids.destroy', $learningAid->id ) }}">
                             {{ csrf_field() }}
                             <input type="hidden" name="_method" value="DELETE" />
                             <td><button class="btn btn-danger">Excluir</button></td>
                         </form>
+						
                     </div>
                 </div>
                 @endif
+				<div class="col-xs-4">
+					<?php $learning_aid_status = $learningAid->learnindAidStatus(); ?> 
+					@if ($learning_aid_status == "created")
+						<td><a href="{{ '/learningaid-finish/'.$learningAid->id.'/' }}"/><button type="submit" class="btn btn-primary">Finalizar Treinamento</button></td>
+					@elseif ($learning_aid_status == "finished")
+						<td><a href="/"/><button type="submit" class="btn btn-primary" disabled>Treinamento Realizado</button></td>
+					@endif
+				</div>
 
             </div>
         </div>
