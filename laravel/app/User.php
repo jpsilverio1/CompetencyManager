@@ -158,17 +158,6 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Team', 'team_members');
     }
 	
-	/* Hector -> Métodos abaixo são temporários: não sabemos se vamos manter teams ou não.
-	public function hasTeam()
-	{
-		return !$this->teams()->isEmpty(); // verifica se o usuário está em algum time
-	}
-	
-	public function isOnTeam($teamId) {
-		$userIsOnTeam = $this->teams()->where("team_id", $teamId)->get();
-		return !$userIsOnTeam->isEmpty();
-	} */
-	
 	// Usuário tem autorização pra inicializar ou finalizar tarefa se ele está na tarefa ou se ele é Gerente
 	public function canInitializeOrFinishTask($taskId) {
 		$task = Task::findOrFail($taskId);
@@ -181,6 +170,7 @@ class User extends Authenticatable
 		return !$answers->isEmpty();
 	}
 	
+	// TODO: retornar algum tipo de calculo envolvendo competências pessoais (implementar caso julguemos necessário)
 	public function personalCompetences() {
 		$evaluatedAnswers = \DB::table('answers')->where("evaluated_user_id", $this->id)->get();
 		$personalCompetences = []; // array with personal Competences grades
@@ -200,7 +190,6 @@ class User extends Authenticatable
 	public function learningAidsThisUserJoined()
     {
 		return $this->belongsToMany('App\LearningAid', 'learning_aids_user', 'user_id', 'learning_aid_id');
-        //return $this->hasMany('App\User', 'user_id')->withPivot('competency_proficiency_level_id')->withTimestamps();
     }
 
     /**

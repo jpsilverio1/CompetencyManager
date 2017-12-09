@@ -164,10 +164,10 @@ class LearningAidController extends Controller
 		foreach ($competencies as $competence) {
 			
 			if ($user->competences->contains($competence->id)) {
-				$user->competences()->updateExistingPivot($competence->id, ['updated_at' => Carbon::now()]);
+				$user->competences()->updateExistingPivot($competence->id, ['updated_at' => Carbon::now(),  'competence_proficiency_level_id' => $competence->pivot->competency_proficiency_level_id]);
 			}
 			else {
-				$user->competences()->attach($competence->id, ['updated_at' => Carbon::now()]);
+				$user->competences()->attach($competence->id, ['updated_at' => Carbon::now(), 'competence_proficiency_level_id' => $competence->pivot->competency_proficiency_level_id]);
 			}
 		}
 		return Redirect::route('learningaids.show',$learningAidId);

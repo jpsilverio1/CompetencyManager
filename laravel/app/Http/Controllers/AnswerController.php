@@ -8,6 +8,8 @@ use App\Http\Requests\AnswerFormRequest;
 
 use Illuminate\Support\Facades\Redirect;
 
+use Carbon\Carbon;
+
 class AnswerController extends Controller
 {
     public function addAnswer(AnswerFormRequest $request) {
@@ -48,22 +50,18 @@ class AnswerController extends Controller
 		// Part 2 - add competencies to user_competencies table
 		$selectedTechnicalCompetencies = $request->get('selectedCompetences');
 		$selectedTechnicalCompetenciesProficiencyLevel = $request->get('selectedCompetencesProficiencyLevel');
+		$user = \Auth::user();
+		
 		for ($k = 0; $k < count($selectedTechnicalCompetencies); $k++) {
-			$techinalCompetenceId = $selectedTechnicalCompetencies->id;
+			$techinalCompetenceId = $selectedTechnicalCompetencies[$k];
 			$techinalCompetenceProficiencyLevelId = $selectedTechnicalCompetenciesProficiencyLevel[$k];
 			
-			$values = array('competence_id' => $techinalCompetenceId, 'user_id' => $judge_user_id, 'judge_user_id' => $judge_user_id, 'competence_proficiency_level_id' => $techinalCompetenceProficiencyLevelId);
-			
-			$user = \Auth::user();
-			$results = $user->competences()->where('competence_id', '=', $competenceId)->get();
-            if ($results->isEmpty()) {
-                echo "adicionar";
-                $user->competences()->attach([$competenceId => ['competence_proficiency_level_id'=>$competenceLevel]]);
-            } else {
-                echo "update";
-                //update competency level
-                $user->competences()->updateExistingPivot($competenceId, ['competence_proficiency_level_id'=>$competenceLevel]);
-            }
+			if ($user->competences->contains($techinalCompetenceId)) {
+				$user->competences()->updateExistingPivot($techinalCompetenceId, ['updated_at' => Carbon::now()]);
+			}
+			else {
+				$user->competences()->attach($techinalCompetenceId, ['updated_at' => Carbon::now(), 'competence_proficiency_level_id' => $techinalCompetenceProficiencyLevelId ]);
+			}
 		}
 		
 		return Redirect::route('tasks.show',$task_id)->withMessage('O formulário foi recebido com sucesso!');

@@ -25,7 +25,8 @@ class Task extends Model
 	public function members()
 	{
 		return \App\User::all();
-		//return $this->belongsToMany('App\User', 'tasks_users');
+		// O de baixo pode ser utilizado. Fazer isso no merge
+		//return $this->belongsToMany('App\User', 'task_teams', 'task_id', 'task_team_member_id');
 	}
 	
 	public function answers()
