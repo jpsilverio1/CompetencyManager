@@ -32,7 +32,7 @@ class User extends Authenticatable
 		$newFinishTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $finishTime);
 
 
-		$diff_in_weeks = $newInitTime->diffInMinutes($newFinishTime);
+		$diff_in_weeks = $newInitTime->diffInDays($newFinishTime);
 		
 		if ($diff_in_weeks == 0) {
 			return 100;

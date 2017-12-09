@@ -155,7 +155,6 @@ class LearningAid extends Model
     }
 	
 	public function learnindAidStatus() {
-		
 		$completed_learning_aid = $this->usersInThisLearningAid->where('id', \Auth::user()->id);
 		if ($completed_learning_aid->count() > 0) {
 			return "finished";
