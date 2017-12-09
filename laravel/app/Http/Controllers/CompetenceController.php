@@ -3,7 +3,7 @@
 
 namespace App\Http\Controllers;
 use App\Http\Requests\CreateCompetenceFormRequest;
-
+use App\Http\Requests\EditCompetenceFormRequest;
 use Illuminate\Support\Facades\Redirect;
 
 use DB;
@@ -106,19 +106,14 @@ class CompetenceController extends Controller
         $allCompetences = Competency::paginate(10);
         return view('competences.index', ['competences' => $allCompetences, 'message' => 'As competências foram cadastradas com sucesso!']);
 	}
-
-	public function update(CreateCompetenceFormRequest $request, $id)
+	public function update(EditCompetenceFormRequest $request, $id)
 	{
-        $names = $request->get('name');
+        $name = $request->get('name');
         $description = $request->get('description');
-
-        for ($i=0; $i<sizeOf($names); $i++) {
-			Competency::findOrFail($id)->update(['name' => $names[$i], 'description' => $description[$i]]);
-        }
+        Competency::findOrFail($id)->update(['name' => $name, 'description' => $description]);
 		$competence = Competency::findOrFail($id);
         return view('competences.show', ['id' => $id, 'competence' => $competence, 'message' => 'A competência foi atualizada com sucesso!']);
 	}
-
 
 	public function destroy($id)
 	{
@@ -131,6 +126,7 @@ class CompetenceController extends Controller
 		$competence->skilledUsers()->detach();
 		$competence->tasksThatRequireIt()->detach();
 		$competence->teamsThatHaveIt()->detach();
+        $competence->learningAidsThatRequireIt()->detach();
         $children = $competence->children;
         $parentNode = $competence->parent;
         echo " parent = $parentNode";
@@ -142,7 +138,6 @@ class CompetenceController extends Controller
             Competency::fixTree();
             echo "consertar";
         }
-
         return Redirect::route('competences.index')->withMessage('A competência foi excluída com sucesso!');
 
 	}

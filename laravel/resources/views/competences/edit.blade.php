@@ -24,21 +24,21 @@
                                     <td class="form-group  col-md-5{{ $errors->has('name.0') ? ' has-error' : '' }}">
                                         <label for="name" class="col-md-1 control-label">Competência</label>
                                         <div class=" col-md-offset-4">
-                                            <input type="text" class="form-control" name="name[]" placeholder="Nome da competência"  value="{{ old('name.0', $competence->name)}}">
-                                            @if ($errors->has('name.0'))
+                                            <input type="text" class="form-control" name="name" placeholder="Nome da competência"  value="{{ old('name', $competence->name)}}">
+                                            @if ($errors->has('name'))
                                                 <span class="help-block">
-													<strong>{{ $errors->first('name.0') }}</strong>
+													<strong>{{ $errors->first('name') }}</strong>
 												</span>
                                             @endif
                                         </div>
 
                                     </td>
-                                    <td class="form-group col-md-5 col-md-offset-2{{ $errors->has('description.0') ? ' has-error' : '' }}">
+                                    <td class="form-group col-md-5 col-md-offset-2{{ $errors->has('description') ? ' has-error' : '' }}">
                                         <div class="">
-                                            <input type="text" class="form-control" name="description[]" placeholder="Descrição da competência" value="{{ old('description.0', $competence->description) }}">
-                                            @if ($errors->has('description.0'))
+                                            <input type="text" class="form-control" name="description" placeholder="Descrição da competência" value="{{ old('description', $competence->description) }}">
+                                            @if ($errors->has('description'))
                                                 <span class="help-block">
-													<strong>{{ $errors->first('description.0') }}</strong>
+													<strong>{{ $errors->first('description') }}</strong>
 												</span>
                                             @endif
                                         </div>
@@ -49,7 +49,7 @@
 
                             <div class="form-group">
                                 <div class="col-xs-5 col-xs-offset-1">
-                                    <button type="submit" class="btn btn-primary">Salvar Competência</button>	
+                                    <button type="submit" class="btn btn-primary">Salvar Competência</button>
                                 </div>
                             </div>
                         </form>

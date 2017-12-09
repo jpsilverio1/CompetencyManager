@@ -34,6 +34,7 @@ class CreateUsersTable extends Migration
         Schema::dropIfExists('team_members');
         Schema::dropIfExists('user_competencies');
         Schema::dropIfExists('user_endorsements');
+        Schema::dropIfExists('task_teams');
         Schema::dropIfExists('users');
     }
 }

@@ -21,8 +21,26 @@ class User extends Authenticatable
     public function competences()
     {
         return $this->belongsToMany('App\Competency', 'user_competences', 'user_id', 'competence_id')
-            ->withPivot('competence_proficiency_level_id');
+            ->withPivot('competence_proficiency_level_id')->withTimestamps();
     }
+	
+	public function forgettingLevel($competence) {
+		$initTime = $competence->pivot->created_at;
+		$finishTime = $competence->pivot->updated_at;
+		
+		$newInitTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $initTime);
+		$newFinishTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $finishTime);
+
+
+		$diff_in_weeks = $newInitTime->diffInDays($newFinishTime);
+		
+		if ($diff_in_weeks == 0) {
+			return 100;
+		}
+		else {
+			return floor((0.19 + 0.6318*pow((1+($diff_in_weeks-1)), (-0.68)))*100);
+		}	
+	}
 
 
     public function hasCompetence($competenceId) {
@@ -178,6 +196,12 @@ class User extends Authenticatable
 		
 		return $personalCompetences;
 	}
+
+	public function learningAidsThisUserJoined()
+    {
+		return $this->belongsToMany('App\LearningAid', 'learning_aids_user', 'user_id', 'learning_aid_id');
+        //return $this->hasMany('App\User', 'user_id')->withPivot('competency_proficiency_level_id')->withTimestamps();
+    }
 
     /**
      * The attributes that should be hidden for arrays.

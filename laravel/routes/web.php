@@ -27,10 +27,11 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('tasks/show_form/{taskId}', 'TaskController@showForm');
 	
     Route::resource('tasks', 'TaskController');
-    Route::resource('teams', 'TeamController');
+    //Route::resource('teams', 'TeamController');
     Route::resource('competences', 'CompetenceController');
     Route::resource('users','UserController');
 	Route::resource('jobroles','JobRoleController');
+	Route::resource('learningaids','LearningAidController');
 
     /* pivot tables deletion routes */
     Route::delete('/user-team/{teamId}', array('as'=>'user-team','uses'=>'UserController@deleteUserFromTeam'));
@@ -38,6 +39,9 @@ Route::group(['middleware' => 'auth'], function() {
     Route::delete('/task-competency/{taskId}/{competencyId}', 'TaskController@deleteCompetencyFromTask');
     Route::delete('/jobrole-competency/{jobroleId}/{competencyId}', 'JobRoleController@deleteCompetencyFromJobRole');
     Route::delete('/team-member/{teamId}/{memberId}', 'TeamController@deleteMemberFromTeam');
+    Route::delete('/learningaid-competency/{learningAidId}/{competencyId}','LearningAidController@deleteCompetencyFromLearningAid');
+	
+	Route::get('/learningaid-finish/{learningAidId}', 'LearningAidController@finishLearningAid');
 
     Route::post('/user-competences', 'UserController@addCompetences');
     Route::post('/user-endorsements', 'EndorsementController@addEndorsement');

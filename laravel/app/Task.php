@@ -90,7 +90,15 @@ class Task extends Model
         }
         return $suitableUserSubsets;
     }
-
+    public function allCandidates() {
+        $total = [];
+        foreach($this->competencies as $taskCompetence) {
+            foreach($taskCompetence->skilledUsers as $skilledUser) {
+                $total[] = $skilledUser;
+            }
+        }
+        return $total;
+    }
     public function suitableAssigneesSets()
     {
 		return [];
