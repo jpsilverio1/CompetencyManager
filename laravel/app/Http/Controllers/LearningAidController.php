@@ -159,6 +159,17 @@ class LearningAidController extends Controller
 	
 	public function finishLearningAid($learningAidId) {
 		$task = LearningAid::findOrFail($learningAidId)->usersInThisLearningAid()->attach($learningAidId, ['completed_on' => Carbon::now(), 'user_id' => \Auth::user()->id]);
+		$competencies = LearningAid::findOrFail($learningAidId)->competencies;
+		$user = \Auth::user();
+		foreach ($competencies as $competence) {
+			
+			if ($user->competences->contains($competence->id)) {
+				$user->competences()->updateExistingPivot($competence->id, ['updated_at' => Carbon::now()]);
+			}
+			else {
+				$user->competences()->attach($competence->id, ['updated_at' => Carbon::now()]);
+			}
+		}
 		return Redirect::route('learningaids.show',$learningAidId);
 	}
 }
