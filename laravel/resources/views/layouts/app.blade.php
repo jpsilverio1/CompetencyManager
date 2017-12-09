@@ -20,6 +20,10 @@
     <link href="{{ asset('css/myStyle.css') }}" rel="stylesheet">
     <link href="{{ asset('css/competence-subtree.css') }}" rel="stylesheet">
     <link href="{{ asset('css/create-competence.css') }}" rel="stylesheet">
+    <!-- Styles from task-team-creation -->
+    <link href="{{ asset('css/task-team-creation-assistant.css') }}" rel="stylesheet">
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/> -->
+
 </head>
 <body>
     <div id="app">

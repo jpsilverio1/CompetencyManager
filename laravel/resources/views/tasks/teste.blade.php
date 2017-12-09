@@ -1,8 +1,4 @@
 @extends('layouts.app')
-<head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
-    <link href="{{ asset('css/task-team-creation-assistant.css') }}" rel="stylesheet">
-</head>
 @section('content')
     <!-- Latest Sortable -->
     <script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>
@@ -20,7 +16,7 @@
             @php ($taskCandidatesInfo = $task->getFinalRankAndExplanations())
             @if (count($taskCandidatesInfo["candidates"]) > 0)
                 @foreach ($taskCandidatesInfo["candidates"] as  $candidate)
-                    <li class="list-group-item" accesskey="{{$candidate->id}}">
+                    <li class="list-group-item" data-member-source="candidate" accesskey="{{$candidate->id}}">
                         {{$candidate->name}} -> {{$taskCandidatesInfo["ranking"][$candidate->id]}}
                         <span class="glyphicon glyphicon-info-sign" data-toggle = "tooltip" data-placement = "top" title="
                             @foreach ($taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"]["competence"] as $competence)
@@ -38,54 +34,78 @@
                 <table class="table col-md-9" style="text-align:center; background-color: white; max-width: 50%;min-height: 40px; padding:0;">
                     <!-- Table Body -->
                     <tbody>
-                    @if (count($task->competencies) > 0)
-                        @foreach ($task->competencies as $competence)
-                            <tr>
-                                <!-- Task Name -->
-                                <td class="table-text task-competence">
-                                    <div><a href="{{ route('competences.show', $competence->id) }}">{{ $competence->name }}</a></div>
-                                </td>
-                                <td>
-                                    <span accesskey="{{$competence->id}}" class="glyphicon glyphicon-ok competence_status unfulfilled-competency"></span>
-                                </td>
-                            </tr>
+                        @if (count($task->competencies) > 0)
+                            @foreach ($task->competencies as $competence)
+                                <tr>
+                                    <!-- Task Name -->
+                                    <td class="table-text task-competence">
+                                        <div><a href="{{ route('competences.show', $competence->id) }}">{{ $competence->name }}</a></div>
+                                    </td>
+                                    <td>
+                                        <span accesskey="{{$competence->id}}" class="glyphicon glyphicon-ok competence_status unfulfilled-competency"></span>
+                                    </td>
+                                </tr>
 
-                        @endforeach
-                    @endif
+                            @endforeach
+                        @endif
 
-                            </tbody>
+                    </tbody>
                 </table>
             </div>
 
         </div>
 
+
     </div >
+    @include('tasks.search-team-candidate')
+
     <script>
         var fulfilledCompetencies = [];
         var allTaskCompetenciesIds =  {!!  json_encode($task->competencies()->pluck('competencies.id')->toArray())  !!};
         var candidateContributions = {!!  json_encode($task->allCandidates()["candidatesContribution"])  !!};
     // Simple list
-    Sortable.create(teamCandidates, { group: "taskTeam" });
-    Sortable.create(candidateTeam, { group: "taskTeam", onRemove: function (/**Event*/evt) {
-        //var id = $( evt.item).attr('accessKey');
-        fulfilledCompetencies = [];
-        var listItems = $("#candidateTeam li");
-        //getting the id's of the candidates inside the candidate team list and creating input fields with them
-        listItems.each(function(candidate) {
-            var id = $(this).attr('accessKey');
-            $.each(candidateContributions[id]["competenceInfo"]["competence"], function (i, elem) {
-                fulfilledCompetencies.push(String(elem.id));
+    Sortable.create(teamCandidates, { group: "taskTeam",
+        sort: false});
+    Sortable.create(candidateTeam, { group: "taskTeam",
+        filter: '.js-remove, .user-entered-member',
+        onFilter: function (evt) {
+            var item = evt.item,
+                ctrl = evt.target;
+
+            if (Sortable.utils.is(ctrl, ".js-remove")) {  // Click on remove button
+                item.parentNode.removeChild(item); // remove sortable item
+            }
+        },
+        onRemove: function (/**Event*/evt) {
+            //var id = $( evt.item).attr('accessKey');
+            fulfilledCompetencies = [];
+            var listItems = $("#candidateTeam li");
+            listItems.each(function(candidate) {
+                var id = $(this).attr('accessKey');
+                var source =  $(this).attr('data-member-source');
+                if (source !== "userEnteredCandidate") {
+                    $.each(candidateContributions[id]["competenceInfo"]["competence"], function (i, elem) {
+                        fulfilledCompetencies.push(String(elem.id));
+                    });
+                }
+
             });
-        });
-        updateCompetenciesFullfilment();
-    }, onAdd: function (/**Event*/evt) {
-        //id do usuario
-        var id = $( evt.item).attr('accessKey');
-        $.each(candidateContributions[id]["competenceInfo"]["competence"], function (i, elem) {
-            fulfilledCompetencies.push(String(elem.id));
-        });
-        updateCompetenciesFullfilment();
-    } } );
+            updateCompetenciesFullfilment();
+        },
+        onAdd: function (/**Event*/evt) {
+            //id do usuario
+            var id = $( evt.item).attr('accessKey');
+            var source = $( evt.item).attr('data-member-source');
+            console.log("source: "+source);
+            if (source !== "userEnteredCandidate") {
+                $.each(candidateContributions[id]["competenceInfo"]["competence"], function (i, elem) {
+                    fulfilledCompetencies.push(String(elem.id));
+                });
+                updateCompetenciesFullfilment();
+            }
+
+        },
+    } );
     function updateCompetenciesFullfilment() {
         $('.competence_status').each(function(i, obj) {
             var competenceId = $(this).attr('accesskey');

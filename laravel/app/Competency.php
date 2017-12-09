@@ -52,12 +52,6 @@ class Competency extends Model
         $oi = $this->pivot->competency_proficiency_level_id;
         $compId = $userCompetence->name;
         $tudo = $userCompetence->pivot->competence_proficiency_level_id;
-        if (in_array($userCompetence->pivot->competence_proficiency_level_id, $acceptableLevels)) {
-            echo "aceitavel: comp: $compId - level: $tudo - required: $oi <br>";
-        }
-        else {
-            echo "inaceitavel: comp: $compId - level: $tudo - required: $oi <br>";
-        }
         return in_array($userCompetence->pivot->competence_proficiency_level_id, $acceptableLevels);
     }
     public function getAcceptableLevelsFromTaskCompetence() {

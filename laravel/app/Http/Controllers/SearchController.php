@@ -31,8 +31,8 @@ class SearchController extends Controller
     }
     public function autoCompleteUser(Request $request) {
         $query = $request->get('term','');
-
-        $users=User::where('name','LIKE','%'.$query.'%')->limit(20)->get();
+        $blackListedIds = $request->get('blacklistedIds',[]);
+        $users=User::where('name','LIKE','%'.$query.'%')->whereNotIn('id', $blackListedIds)->limit(20)->get();
 
         $data=array();
         foreach ($users as $user) {

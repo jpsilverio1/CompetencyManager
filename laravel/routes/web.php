@@ -52,6 +52,7 @@ Route::group(['middleware' => 'auth'], function() {
     /* autocomplete-related routes */
     Route::get('search-competence',array('as'=>'search-competence','uses'=>'SearchController@autocompleteCompetence'));
     Route::get('search-user',array('as'=>'search-user','uses'=>'SearchController@autocompleteUser'));
+    Route::get('search-team-candidate',array('as'=>'search-team-candidate','uses'=>'SearchController@autocompleteUser'));
     Route::post('tasks.store-team',array('as'=>'tasks.store-team','uses'=>'TaskCOntroller@storeTaskTeam'));
     //TODO - ERASE
     Route::get('testao', function () {
