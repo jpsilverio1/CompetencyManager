@@ -47,6 +47,15 @@ class User extends Authenticatable
     public function userEndorsementsForCompetence($competenceId) {
         return $this->endorsements()->where('competence_id', $competenceId)->get();
     }
+    public function getNumberOfEndorsementsPerLevelForCompetence($competence, $user){
+        $meuMapa = [];
+        $allCompetenceLevels = CompetenceProficiencyLevel::all()->pluck('id')->toArray();
+        foreach($allCompetenceLevels as $competenceLevelId) {
+                $meuMapa[$competenceLevelId] = ["ola" =>$user->endorsements()->where('competence_id', $competence->id)->where('competence_proficiency_endorsement_level_id', $competenceLevelId)->count(), "proficiencyLevelName" => \App\CompetenceProficiencyLevel::findOrFail($competenceLevelId)->name];
+        }
+        return $meuMapa;
+    }
+
     public function computeThings($competenceId) {
         $meuMapa = [];
         $totalEndorsements = 0;

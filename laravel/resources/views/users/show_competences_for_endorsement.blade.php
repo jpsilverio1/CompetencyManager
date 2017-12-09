@@ -42,14 +42,14 @@
 <div class="panel panel-default">
     <div class="panel-heading">Competências de {{$user->name}}</div>
 
-    <div class="panel-body">
+    <div class = "panel-body">
         @if (count($competences) > 0)
             <table class="table table-striped task-table" id="showCompetencesTable">
                 <!-- Table Headings -->
                 <thead>
                 <th>Competência</th>
                 <th>Nível</th>
-                <th>&nbsp;Número de endossos</th> <!-- number of endorsements -->
+                <th>&nbsp;Número de endossos</th><!-- number of endorsements -->
                 <th>&nbsp;</th> <!--endorsement status -->
                 @if ($showEndorsementSection)
                     <th>Endossar</th>
@@ -60,6 +60,7 @@
                 <tbody>
                 @foreach ($competences as $competence)
                     <?php $numberOfEndorsementsForCompetence = $user->getNumberOfEndorsementsForCompetence($user->endorsements(),$competence); ?>
+                    @php($ola = $user->getNumberOfEndorsementsPerLevelForCompetence($competence, $user))
 
                     <tr>
                         <form action="/user-endorsements" method="POST">
@@ -75,16 +76,11 @@
                             </td>
 
                             <td>
-                                <div class="btn btn-info btn-circle">{{$numberOfEndorsementsForCompetence}}</div>
-                                @if ($numberOfEndorsementsForCompetence >0)
-                                    <div class="most-endorsed-level-percentage">
-                                        <?php $result = $user->computeThings($competence->id); ?>
-                                        {{$result[0]}}%
-                                        @foreach ($result[1] as $maximumKey)
-                                            {{$maximumKey}}
-                                        @endforeach
-                                    </div>
-                                @endif
+                                <div>
+                                @foreach($ola as $proficiencyLevelId => $numberOfEndorsementsForProficiencyLevel)
+                                        <div class="btn btn-info btn-circle" data-toggle="tooltip" title='{{$numberOfEndorsementsForProficiencyLevel["proficiencyLevelName"]}}'>{{$numberOfEndorsementsForProficiencyLevel["ola"]}}</div><!--</td>-->
+                                @endforeach
+                                </div>
                             </td>
                             <td>
                                 <div class="col-md-8">
@@ -115,6 +111,8 @@
                         </form>
                     </tr>
                 @endforeach
+
+
                 </tbody>
             </table>
         @else
