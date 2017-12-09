@@ -21,8 +21,21 @@ class User extends Authenticatable
     public function competences()
     {
         return $this->belongsToMany('App\Competency', 'user_competences', 'user_id', 'competence_id')
-            ->withPivot('competence_proficiency_level_id');
+            ->withPivot('competence_proficiency_level_id')->withTimestamps();
     }
+	
+	public function forgettingLevel($competence) {
+		$initTime = $competence->pivot->created_at;
+		$finishTime = $competence->pivot->updated_at;
+		
+		$newInitTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $initTime);
+		$newFinishTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $finishTime);
+
+
+		$diff_in_days = $newInitTime->diffInWeeks($newFinishTime);
+		
+		return floor((0.19 + 0.6318*pow((1+$diff_in_days), (-0.68)))*100) + 18;
+	}
 
 
     public function hasCompetence($competenceId) {
