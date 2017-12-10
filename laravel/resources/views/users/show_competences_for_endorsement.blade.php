@@ -51,6 +51,7 @@
                 <th>Nível</th>
                 <th>&nbsp;Número de endossos</th> <!-- number of endorsements -->
                 <th>&nbsp;</th> <!--endorsement status -->
+				<th>Nível de Lembrança</th>
                 @if ($showEndorsementSection)
                     <th>Endossar</th>
                 @endif
@@ -59,7 +60,7 @@
                 <!-- Table Body -->
                 <tbody>
                 @foreach ($competences as $competence)
-                    <?php $numberOfEndorsementsForCompetence = $user->getNumberOfEndorsementsForCompetence($user->endorsements(),$competence); ?>
+                    <?php $numberOfEndorsementsForCompetence = $user->getNumberOfEndorsementsForCompetence($user->endorsements(),$competence); $forgettingLevel = Auth::user()->forgettingLevel($competence); ?>
 
                     <tr>
                         <form action="/user-endorsements" method="POST">
@@ -112,6 +113,9 @@
                                     </div>
                                 </td>
                             @endif
+							<td>
+							{{ $forgettingLevel}}%
+							</td>
                         </form>
                     </tr>
                 @endforeach

@@ -144,6 +144,25 @@ class Task extends Model
         return $this->belongsToMany('App\Competency', 'task_competencies')
             ->withPivot('competency_proficiency_level_id');
     }
+	
+	// TODO -> Retirar este método e permitir apenas o novo método na nova modelagem (Task x Users, sem Teams, como era antes) quando for fazer o merge
+	public function members()
+	{
+		return \App\User::all();
+		// O de baixo pode ser utilizado. Fazer isso no merge
+		//return $this->belongsToMany('App\User', 'task_teams', 'task_id', 'task_team_member_id');
+	}
+	
+	public function answers()
+	{
+		return DB::table('answers')->where("task_id", $this->id)->get();
+	}
+	
+	public function usersWhoAnsweredQuestions()
+	{
+		$judges_id = DB::table('answers')->select('judge_user_id')->where([ ['judge_user_id', '<>', null], ['task_id', '=', $this->id] ])->get();
+		return $judges_id;
+	}
 
     public function teamMembers() {
         return $this->belongsToMany('App\User', 'task_teams', 'task_id', 'task_team_member_id');
@@ -203,7 +222,7 @@ class Task extends Model
 
     public function suitableAssigneesSets()
     {
-
+        $allCompetenceLevels = CompetenceProficiencyLevel::all()->pluck('id')->toArray();
         $myUserSet = [];
         $allTaskCompetencesIdsAndLevels = [];
         $taskCompetences = $this->competencies;
@@ -273,4 +292,18 @@ class Task extends Model
         return $result;
 
     }
+
+	public function taskStatus() {
+		$start_date_original = $this->getOriginal('start_date');
+		$end_date_original = $this->getOriginal('end_date');
+		$date_null = null;
+		if ($start_date_original == $date_null) {
+			return "created";
+		} elseif ($start_date_original != $date_null and $end_date_original == $date_null ) {
+			return "initialized";
+		} elseif ($start_date_original != $date_null and $end_date_original != $date_null ) {
+			return "finished";
+		}
+	}
+	
 }

@@ -21,8 +21,26 @@ class User extends Authenticatable
     public function competences()
     {
         return $this->belongsToMany('App\Competency', 'user_competences', 'user_id', 'competence_id')
-            ->withPivot('competence_proficiency_level_id');
+            ->withPivot('competence_proficiency_level_id')->withTimestamps();
     }
+	
+	public function forgettingLevel($competence) {
+		$initTime = $competence->pivot->created_at;
+		$finishTime = $competence->pivot->updated_at;
+		
+		$newInitTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $initTime);
+		$newFinishTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $finishTime);
+
+
+		$diff_in_weeks = $newInitTime->diffInDays($newFinishTime);
+		
+		if ($diff_in_weeks == 0) {
+			return 100;
+		}
+		else {
+			return floor((0.19 + 0.6318*pow((1+($diff_in_weeks-1)), (-0.68)))*100);
+		}	
+	}
 
 
     public function hasCompetence($competenceId) {
@@ -138,6 +156,40 @@ class User extends Authenticatable
     public function teams()
     {
         return $this->belongsToMany('App\Team', 'team_members');
+    }
+	
+	// Usuário tem autorização pra inicializar ou finalizar tarefa se ele está na tarefa ou se ele é Gerente
+	public function canInitializeOrFinishTask($taskId) {
+		$task = Task::findOrFail($taskId);
+		$thisUserIsInTask = $task->members();
+		return !$thisUserIsInTask->isEmpty() || $this->isManager(); 
+	}
+	
+	public function answeredQuestions($taskId) {
+		$answers = \DB::table('answers')->where([ ['judge_user_id', '=', $this->id], ['task_id', '=', $taskId] ])->get();
+		return !$answers->isEmpty();
+	}
+	
+	// TODO: retornar algum tipo de calculo envolvendo competências pessoais (implementar caso julguemos necessário)
+	public function personalCompetences() {
+		$evaluatedAnswers = \DB::table('answers')->where("evaluated_user_id", $this->id)->get();
+		$personalCompetences = []; // array with personal Competences grades
+		foreach ($evaluatedAnswers as $answer) {
+			$personalCompetencesEvaluated = PersonalCompetence::findOrFail($answer["personal_competence_id"]);
+			foreach($personalCompetencesEvaluated as $personalCompetenceEvaluated) {
+				$personalCompetenceLevel = PersonalCompetenceLevel::findOrFail($answer["personal_competence_proficiency_level_id"]);
+				$value = 0;
+				// do some calculus with $value
+			}			
+			array_push($personalCompetences, $value);
+		}
+		
+		return $personalCompetences;
+	}
+
+	public function learningAidsThisUserJoined()
+    {
+		return $this->belongsToMany('App\LearningAid', 'learning_aids_user', 'user_id', 'learning_aid_id');
     }
 
     /**

@@ -44,28 +44,26 @@
                         Usuários aptos a realizar a tarefa
                     </div>
                     <div class="panel-body">
+							<?php $suitableAssigneesForTask = $task->suitableAssigneesSets(); ?>
+							@if (count($suitableAssigneesForTask) > 0)
+								<ul>
+								@foreach($suitableAssigneesForTask as $users)
+									<li> Grupo
+										<ul>
+											@foreach($users as $user)
+												<li><a href="{{ route('users.show', $user->id) }}">{{ $user->name }}</a></li>
+											@endforeach
 
-                            <?php $suitableAssigneesForTask = $task->suitableAssigneesSets(); ?>
-                                @if (count($suitableAssigneesForTask) > 0)
-                                    <ul>
-                                    @foreach($suitableAssigneesForTask as $users)
-                                        <li> Grupo
-                                            <ul>
-                                                @foreach($users as $user)
-                                                    <li><a href="{{ route('users.show', $user->id) }}">{{ $user->name }}</a></li>
-                                                @endforeach
-
-                                            </ul>
-                                        </li>
-                                    @endforeach
-                                    </ul>
-                                    @else
-                                        Não há usuários aptos a realizar esta tarefa
-                                    @endif
+										</ul>
+									</li>
+								@endforeach
+								</ul>
+							@else
+								Não há usuários aptos a realizar esta tarefa
+							@endif
                     </div>
                 </div>
                     @include('testando')
-
 
 <div class="panel panel-default">
    <div class="panel-heading" >
@@ -77,21 +75,50 @@
        'noCompetencesMessage' => 'Não há competências para exibição.'])
    </div>
 </div>
-
-   <div>
-       <div class="col-md-2">
-           <td><a href='{{ route('tasks.edit', $task->id) }}'/><button type="submit" class="btn btn-primary">Editar Tarefa</button></td>
-       </div>
-       <div>
-           <form class="col-xs-offset-1" id="deleteTaskForm" role="form" method="POST" action="{{ route('tasks.destroy', $task->id ) }}">
-               {{ csrf_field() }}
-               <input type="hidden" name="_method" value="DELETE" />
-               <td><button class="btn btn-danger">Excluir Tarefa</button></td>
-           </form>
-       </div>
-   </div>
-
-</div>
-</div>
-</div>
+                    <div>
+						<div class="col-md-2">
+                            <td><a href='{{ route('tasks.edit', $task->id) }}'/><button type="submit" class="btn btn-primary">Editar Tarefa</button></td>
+                        </div>
+                        <div>
+                            <form class="col-md-2" id="deleteTaskForm" role="form" method="POST" action="{{ route('tasks.destroy', $task->id ) }}">
+                                {{ csrf_field() }}
+                                <input type="hidden" name="_method" value="DELETE" />
+                                <td><button class="btn btn-danger">Excluir Tarefa</button></td>
+                            </form>
+                        </div>
+						<div class="col-md-2">
+							<?php $taskStatus = $task->taskStatus(); $userCanInitializeTask = \Auth::user()->canInitializeOrFinishTask($task->id); ?>
+							@if ($userCanInitializeTask)
+								@if ($taskStatus == "created")
+									<td><a href="{{ '/task-initialize/'.$task->id.'/' }}"/><button type="submit" class="btn btn-primary">Inicializar Tarefa</button></td>
+								@elseif ($taskStatus == "initialized")
+									<td><a href="{{ '/task-finish/'.$task->id.'/' }}"/><button type="submit" class="btn btn-primary">Finalizar Tarefa</button></td>
+								@elseif ($taskStatus == "finished")
+									<?php $userAnsweredQuestions = \Auth::user()->answeredQuestions($task->id); ?>
+									@if ($userAnsweredQuestions)
+										<td><a href=''/><button type="submit" class="btn btn-primary" disabled>Tarefa Finalizada - Questionário Respondido!</button></td>
+									@else
+										<td><a href="{{ 'show_form/'.$task->id.'/' }}"/><button type="submit" class="btn btn-primary">Tarefa Finalizada - Responder Questionário</button></td>
+									@endif
+								@endif
+							@else
+								@if ($taskStatus == "created")
+									<td><a href=""/><button type="submit" class="btn btn-primary" disabled alt="Você não tem autorização para inicializar esta tarefa pois não faz parte desta equipe">Tarefa Não-Inicializada</button></td>
+								@elseif ($taskStatus == "initialized")
+									<td><a href=""/><button type="submit" class="btn btn-primary" disabled alt="Você não tem autorização para finalizar esta tarefa pois não faz parte desta equipe">Tarefa em Andamento</button></td>
+								@elseif ($taskStatus == "finished")
+									<?php $userAnsweredQuestions = \Auth::user()->answeredQuestions($task->id); ?>
+									@if ($userAnsweredQuestions)
+										<td><a href=''/><button type="submit" class="btn btn-primary" disabled>Tarefa Finalizada - Questionário Respondido!</button></td>
+									@else
+										<td><a href="{{ 'show_form/'.$task->id.'/' }}"/><button type="submit" class="btn btn-primary">Tarefa Finalizada - Responder Questionário</button></td>
+									@endif
+								@endif
+							@endif
+                        </div>
+                    </div>
+				
+            </div>
+        </div>
+    </div>
 @endsection

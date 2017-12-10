@@ -54,6 +54,7 @@ class Competency extends Model
         $tudo = $userCompetence->pivot->competence_proficiency_level_id;
         return in_array($userCompetence->pivot->competence_proficiency_level_id, $acceptableLevels);
     }
+
     public function getAcceptableLevelsFromTaskCompetence() {
         $allCompetenceLevels = CompetenceProficiencyLevel::all()->pluck('id')->toArray();
         $taskRequiredCompetenceLevel = $this->pivot->competency_proficiency_level_id;
@@ -64,7 +65,4 @@ class Competency extends Model
         }
         return $acceptableCompetenceLevels;
     }
-
-
-    
 }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
 use DB;
 use App\Task;
+use Carbon\Carbon;
 
 class TaskController extends Controller
 {
@@ -159,5 +160,25 @@ class TaskController extends Controller
         $task = Task::findOrFail($taskId);
         $task->competencies()->detach($competencyId);
         return Redirect::route('tasks.edit', $taskId);
+    }
+	
+	public function initializeTask($taskId) {
+		$task = Task::findOrFail($taskId);
+		$task->start_date = Carbon::now();
+		$task->save();
+		return Redirect::route('tasks.show',$taskId);
+	}
+	
+	public function finishTask($taskId) {
+		$task = Task::findOrFail($taskId);
+		$task->end_date = Carbon::now();
+		$task->save();
+		return Redirect::route('tasks.show',$taskId);
+	}
+	
+	public function showForm($taskId)
+    {
+        $task = Task::findOrFail($taskId);
+		return view('tasks.show_form', ['task' => $task]);
     }
 }
