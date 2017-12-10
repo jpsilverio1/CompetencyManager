@@ -16,7 +16,7 @@ class CreateBasicStatisticsTable extends Migration
         Schema::create('basic_statistics', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-			$table->integer('count_number')->unsigned();
+			$table->float('value')->unsigned();
             $table->timestamps();
         });
     }

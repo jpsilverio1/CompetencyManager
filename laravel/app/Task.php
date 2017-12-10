@@ -102,7 +102,6 @@ class Task extends Model
     }
     public function suitableAssigneesSets()
     {
-		return [];
         $allCompetenceLevels = CompetenceProficiencyLevel::all()->pluck('id')->toArray();
         $myUserSet = [];
         $allTaskCompetencesIdsAndLevels = [];
