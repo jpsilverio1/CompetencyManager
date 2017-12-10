@@ -46,21 +46,21 @@
         @if (count($competences) > 0)
             <table class="table table-striped task-table" id="showCompetencesTable">
                 <!-- Table Headings -->
-                <thead>
-                <th>Competência</th>
-                <th>Nível</th>
-                <th>&nbsp;Número de endossos</th> <!-- number of endorsements -->
-                <th>&nbsp;</th> <!--endorsement status -->
-				<th>Nível de Lembrança</th>
+                <thead >
+                <th >Competência</th>
+                <th >Nível</th>
+                <th style="text-align: center">&nbsp;Número de endossos</th> <!-- number of endorsements -->
+                <th style="text-align: center">&nbsp;</th> <!--endorsement status -->
+				<th style="text-align: center">Nível de Lembrança</th>
                 @if ($showEndorsementSection)
-                    <th>Endossar</th>
+                    <th style="text-align: center">Endossar</th>
                 @endif
                 </thead>
 
                 <!-- Table Body -->
                 <tbody>
                 @foreach ($competences as $competence)
-                    <?php $numberOfEndorsementsForCompetence = $user->getNumberOfEndorsementsForCompetence($user->endorsements(),$competence); $forgettingLevel = Auth::user()->forgettingLevel($competence); ?>
+                    <?php $numberOfEndorsementsForCompetence = $user->getNumberOfEndorsementsForCompetence($user->endorsements(),$competence); $forgettingLevel = $user->forgettingLevel($competence); ?>
 
                     <tr>
                         <form action="/user-endorsements" method="POST">
@@ -75,7 +75,7 @@
                                 <div> {{\App\CompetenceProficiencyLevel::findOrFail($competence->pivot->competence_proficiency_level_id)->name}}</div>
                             </td>
 
-                            <td>
+                            <td style="text-align: center">
                                 <div class="btn btn-info btn-circle">{{$numberOfEndorsementsForCompetence}}</div>
                                 @if ($numberOfEndorsementsForCompetence >0)
                                     <div class="most-endorsed-level-percentage">
@@ -87,8 +87,8 @@
                                     </div>
                                 @endif
                             </td>
-                            <td>
-                                <div class="col-md-8">
+                            <td class="col-md-2">
+                                <div >
                                     @if($user->loggedUserEndorsedCompetence($user->endorsements(),$competence->id) > 0)
                                         Você endossou essa competência no nível
                                         <em>
@@ -97,6 +97,11 @@
                                         </em>.
                                         <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Você pode atualizar o nível de seu endosso mudando o nível e clicando em  endossar ao lado."></span>
                                     @endif
+                                </div>
+                            </td>
+                            <td>
+                                <div style="text-align: center">
+                                    {{ $forgettingLevel}}%
                                 </div>
                             </td>
                             @if ($showEndorsementSection)
@@ -113,9 +118,7 @@
                                     </div>
                                 </td>
                             @endif
-							<td>
-							{{ $forgettingLevel}}%
-							</td>
+
                         </form>
                     </tr>
                 @endforeach
