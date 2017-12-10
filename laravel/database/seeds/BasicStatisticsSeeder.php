@@ -27,8 +27,14 @@ class BasicStatisticsSeeder extends Seeder
 		$personal_competence_level_id_max = \DB::table('personal_competence_proficiency_levels')->max('id');
 		$average_collaboration_level = ((\DB::table('answers')->avg('personal_competence_level_id')) - ($personal_competence_level_id_min)) / ($personal_competence_level_id_max - $personal_competence_level_id_min);
 		$not_feasible_tasks_count = \DB::table('task_competencies')
-							->join('user_competences as UC', 'task_competencies.competency_id', '=', 'UC.competence_id')->where('UC.competence_id', '=', NULL)
-							->join('learning_aids_competencies', 'UC.competence_id', '=', 'learning_aids_competencies.competency_id')->where('learning_aids_competencies.competency_id', '=', NULL)->count("task_id");
+							->join('user_competences', function($join) {
+								$join->on('task_competencies.competency_id', '=', 'user_competences.competence_id');
+								$join->on('task_competencies.competency_proficiency_level_id', '>=', 'user_competences.competence_proficiency_level_id');	
+							})->where('user_competences.competence_id', '=', NULL)
+							->join('learning_aids_competencies', function($join) {
+								$join->on('user_competences.competence_id', '=', 'learning_aids_competencies.competency_id');
+								$join->on('learning_aids_competencies.competency_proficiency_level_id', '<', 'user_competences.competence_proficiency_level_id');
+							})->where('learning_aids_competencies.competency_id', '=', NULL)->count("task_id");
 							
 		$feasible_tasks_count = $tasks_count - $not_feasible_tasks_count;
 
