@@ -6,3 +6,11 @@
     color: #41be47;
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
+.task-team-creation-assistant-panel {
+    background-image: none;
+    background-color: #EDF5F9;
+}
+.js-remove{
+    color:#c00;
+    font-weight: bold;
+}
