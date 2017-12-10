@@ -8,6 +8,8 @@ use App\Competency;
 
 use App\User;
 
+use App\Task;
+
 class SearchController extends Controller
 {
     /**
@@ -63,5 +65,18 @@ class SearchController extends Controller
         return ['name'=>$competence->name,'description'=>$competence->description];
     }
 
+    public function autoCompleteTask(Request $request) {
+        $query = $request->get('term','');
+        $tasks=Task::where('title','LIKE','%'.$query.'%')->limit(20)->get();
+
+        $data=array();
+        foreach ($tasks as $task) {
+            $data[]=array('value'=>$task->title,'id'=>$task->id);
+        }
+        if(count($data))
+            return $data;
+        else
+            return ['value'=>'No Result Found','id'=>''];
+    }
 
 }
