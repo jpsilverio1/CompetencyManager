@@ -26,6 +26,12 @@ Route::group(['middleware' => 'auth'], function() {
 	
 	Route::get('tasks/show_form/{taskId}', 'TaskController@showForm');
 	
+	Route::get('/dashboards/tasks','DashboardController@taskReports');
+	Route::get('/dashboards/competences','DashboardController@competencesReports');
+	Route::get('/dashboards/users','DashboardController@usersReports');
+	Route::get('/dashboards/collaboration','DashboardController@collaborationReports');
+	Route::get('/dashboards/other','DashboardController@otherReports');
+	
     Route::resource('tasks', 'TaskController');
     //Route::resource('teams', 'TeamController');
     Route::resource('competences', 'CompetenceController');
@@ -43,6 +49,9 @@ Route::group(['middleware' => 'auth'], function() {
     Route::delete('/learningaid-competency/{learningAidId}/{competencyId}','LearningAidController@deleteCompetencyFromLearningAid');
 	
 	Route::get('/learningaid-finish/{learningAidId}', 'LearningAidController@finishLearningAid');
+	
+	
+	
 
     Route::post('/user-competences', 'UserController@addCompetences');
     Route::post('/user-endorsements', 'EndorsementController@addEndorsement');
