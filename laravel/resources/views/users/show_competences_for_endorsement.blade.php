@@ -19,30 +19,51 @@
         });
         return tmp;
     }();
+
     function getLabelForSliderValue(val) {
         return dictionary[val];
     }
+
     function updateTextInput(slider) {
         var rowHit = $(slider).parent().parent().parent();
         var sliderLabel = rowHit.find(".competence_level_label");
         var newLabel = getLabelForSliderValue(slider.value);
         sliderLabel.html(newLabel);
     }
+
     $(document).ready(function () {
 
         var numberOfCategories = {{\App\CompetenceProficiencyLevel::count()}}
-        $('.competence_level_slider').each(function(i, obj) {
+        $('.competence_level_slider').each(function (i, obj) {
             //console.log(obj.max);
             obj.max = numberOfCategories;
         });
         //information tooltip
         $('[data-toggle="tooltip"]').tooltip();
+        //popover
+        $(function () {
+            $(".pop").popover({trigger: "manual", html: true, animation: false})
+                .on("mouseenter", function () {
+                    var _this = this;
+                    $(this).popover("show");
+                    $(".popover").on("mouseleave", function () {
+                        $(_this).popover('hide');
+                    });
+                }).on("mouseleave", function () {
+                var _this = this;
+                setTimeout(function () {
+                    if (!$(".popover:hover").length) {
+                        $(_this).popover("hide");
+                    }
+                }, 300);
+            });
+        });
     });
 </script>
 <div class="panel panel-default">
     <div class="panel-heading">Competências de {{$user->name}}</div>
 
-    <div class = "panel-body">
+    <div class="panel-body">
         @if (count($competences) > 0)
             <table class="table table-striped task-table" id="showCompetencesTable">
                 <!-- Table Headings -->
@@ -59,15 +80,16 @@
                 <!-- Table Body -->
                 <tbody>
                 @foreach ($competences as $competence)
-                    <?php $numberOfEndorsementsForCompetence = $user->getNumberOfEndorsementsForCompetence($user->endorsements(),$competence); ?>
-                    @php($ola = $user->getNumberOfEndorsementsPerLevelForCompetence($competence, $user))
+                    <?php $numberOfEndorsementsForCompetence = $user->getNumberOfEndorsementsForCompetence($user->endorsements(), $competence); ?>
+                    @php($numberOfEndorsementsPerLevel = $user->getNumberOfEndorsementsPerLevelForCompetence($competence, $user))
 
+                    @php($endorsersPerLevel = $user->getEndorsersPerLevel($user,$competence))
                     <tr>
                         <form action="/user-endorsements" method="POST">
                             {{ csrf_field() }}
                             <td class="table-text">
-                                <input type="hidden" name="endorsed_user_id" value="{{$user->id}}" />
-                                <input type="hidden" name="competence_id" value="{{$competence->id}}" />
+                                <input type="hidden" name="endorsed_user_id" value="{{$user->id}}"/>
+                                <input type="hidden" name="competence_id" value="{{$competence->id}}"/>
                                 <div>{{ $competence->name }}</div>
 
                             </td>
@@ -77,9 +99,20 @@
 
                             <td>
                                 <div>
-                                @foreach($ola as $proficiencyLevelId => $numberOfEndorsementsForProficiencyLevel)
-                                        <div class="btn btn-info btn-circle" data-toggle="tooltip" title='{{$numberOfEndorsementsForProficiencyLevel["proficiencyLevelName"]}}'>{{$numberOfEndorsementsForProficiencyLevel["ola"]}}</div><!--</td>-->
-                                @endforeach
+                                    @foreach($numberOfEndorsementsPerLevel as $proficiencyLevelId => $numberOfEndorsementsForProficiencyLevel)
+                                        <div class="btn btn-info btn-circle pop" data-toggle="popover" data-html="true"
+                                             data-position="relative" data-container="body"
+                                             title='{{$numberOfEndorsementsForProficiencyLevel["proficiencyLevelName"]}}'
+                                             data-content="
+                                             @foreach($numberOfEndorsementsForProficiencyLevel["endorsers"] as $endorser)
+                                                   <a href='{{ route('users.show', $endorser->id) }}'>
+                                                   <button type='button' class='btn btn-info btn-circle'>
+                                                    {{$endorser->getInitialsFromName()}}
+                                                   </button>
+                                                   </a>
+                                             @endforeach
+                                             ">{{$numberOfEndorsementsForProficiencyLevel["endorsementPerLevel"]}}</div>
+                                    @endforeach
                                 </div>
                             </td>
                             <td>
@@ -90,7 +123,8 @@
                                             {{$user->getEndorsementLevel($competence->id)}}
 
                                         </em>.
-                                        <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Você pode atualizar o nível de seu endosso mudando o nível e clicando em  endossar ao lado."></span>
+                                        <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                              title="Você pode atualizar o nível de seu endosso mudando o nível e clicando em  endossar ao lado."></span>
                                     @endif
                                 </div>
                             </td>
@@ -99,7 +133,8 @@
                                     <div class="competency_level">
                                         <span class="competence_level_label" name="levels"><script>document.write(getLabelForSliderValue(1));</script></span>
                                         <input type="range" class="competence_level_slider"
-                                               name="competence_proficiency_level" min="1" max="3" value ="1" onchange="updateTextInput(this);">
+                                               name="competence_proficiency_level" min="1" max="3" value="1"
+                                               onchange="updateTextInput(this);">
                                     </div>
                                     <div class="form-group">
                                         <div class=" col-sm-1">
