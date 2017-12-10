@@ -21,10 +21,16 @@
                 @foreach ($taskCandidatesInfo["candidates"] as  $candidate)
                     <li class="list-group-item" data-member-source="candidate" accesskey="{{$candidate->id}}">
                         {{$candidate->name}} -> {{$taskCandidatesInfo["ranking"][$candidate->id]}}
-                        <span class="glyphicon glyphicon-info-sign" data-toggle = "tooltip" data-placement = "top" title="
-                            @foreach ($taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"]["competence"] as $competence)
-                        {{$competence->name}}  <br></span>
-                            @endforeach
+                        <span class="glyphicon glyphicon-info-sign" data-toggle = "popover" data-placement = "top"  data-html="true"
+                              data-content="
+
+                        @foreach ($taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"]["competence"] as $index =>$competence)
+                                <i class='fa fa-circle acceptableCompetenceLevel-{{$taskCandidatesInfo["rankingData"][$candidate->id][$competence->id]["number of competencies in acceptable level"]}}' aria-hidden='true'></i>
+                        {{$competence->name}} -
+                        {{$competence->pivot->competence_proficiency_level_id}} -
+                        {{$taskCandidatesInfo["rankingData"][$candidate->id][$competence->id]["remembering level"]}} -
+                        {{$taskCandidatesInfo["rankingData"][$candidate->id][$competence->id]["number of endorsements"]}}<br>
+                        @endforeach
                                 "></span>
                     </li>
                 @endforeach
@@ -42,7 +48,7 @@
                             <tr>
                                 <!-- Task Name -->
                                 <td class="table-text task-competence">
-                                    <div><a href="{{ route('competences.show', $competence->id) }}">{{ $competence->name }}</a></div>
+                                    <div><a href="{{ route('competences.show', $competence->id) }}">{{ $competence->name }}</a> - {{$competence->pivot->competency_proficiency_level_id}}</div>
                                 </td>
                                 <td>
                                     <span accesskey="{{$competence->id}}" class="glyphicon glyphicon-ok competence_status unfulfilled-competency"></span>

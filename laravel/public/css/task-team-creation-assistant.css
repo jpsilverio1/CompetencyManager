@@ -14,3 +14,10 @@
     color:#c00;
     font-weight: bold;
 }
+.acceptableCompetenceLevel-false {
+    color:orange;
+}
+.acceptableCompetenceLevel-true {
+    color: green;
+}
+
