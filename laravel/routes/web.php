@@ -53,6 +53,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('search-competence',array('as'=>'search-competence','uses'=>'SearchController@autocompleteCompetence'));
     Route::get('search-user',array('as'=>'search-user','uses'=>'SearchController@autocompleteUser'));
     Route::get('search-task',array('as'=>'search-task','uses'=>'SearchController@autocompleteTask'));
+    Route::get('search-learningAid',array('as'=>'search-learningAid','uses'=>'SearchController@autocompleteLearningAid'));
     //TODO - ERASE
     Route::get('testao', function () {
         return view('tasks.teste', ['task' => App\Task::findOrFail(2)]);

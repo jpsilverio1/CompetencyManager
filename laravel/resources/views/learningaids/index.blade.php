@@ -2,7 +2,12 @@
 @section('content')
 
     <div class="container">
-        <div class="col-md-6">
+        <div class="row">
+            @if (!Auth::guest())
+                @include('learningaids.search_learningaid')
+            @endif
+        </div>
+        <div class="col-md-6 row">
             <div class="panel panel-default">
 
                 <div class="panel-heading">Treinamentos</div>

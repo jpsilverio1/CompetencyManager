@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\LearningAid;
 use Illuminate\Http\Request;
 
 use App\Competency;
@@ -79,4 +80,17 @@ class SearchController extends Controller
             return ['value'=>'No Result Found','id'=>''];
     }
 
+    public function autoCompleteLearningAid(Request $request) {
+        $query = $request->get('term','');
+        $learningAids=LearningAid::where('name','LIKE','%'.$query.'%')->limit(20)->get();
+
+        $data=array();
+        foreach ($learningAids as $learningAid) {
+            $data[]=array('value'=>$learningAid->name,'id'=>$learningAid->id);
+        }
+        if(count($data))
+            return $data;
+        else
+            return ['value'=>'No Result Found','id'=>''];
+    }
 }
