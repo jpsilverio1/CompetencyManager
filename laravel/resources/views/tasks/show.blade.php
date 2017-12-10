@@ -64,31 +64,34 @@
                                     @endif
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading" >
-                        Competências requeridas pela tarefa
-                        @include('competences.show_paginated_competences', ['competences' => $task->competencies()->paginate(5, ['*'],'competences'),
-                        'showCompetenceLevel' => True,
-                        'showDeleteButton' => False,
-                        'useCompetency' => True,
-                        'noCompetencesMessage' => 'Não há competências para exibição.'])
-                    </div>
-                </div>
+                    @include('testando')
 
-                    <div>
-                        <div class="col-md-2">
-                            <td><a href='{{ route('tasks.edit', $task->id) }}'/><button type="submit" class="btn btn-primary">Editar Tarefa</button></td>
-                        </div>
-                        <div>
-                            <form class="col-xs-offset-1" id="deleteTaskForm" role="form" method="POST" action="{{ route('tasks.destroy', $task->id ) }}">
-                                {{ csrf_field() }}
-                                <input type="hidden" name="_method" value="DELETE" />
-                                <td><button class="btn btn-danger">Excluir Tarefa</button></td>
-                            </form>
-                        </div>
-                    </div>
-				
-            </div>
-        </div>
-    </div>
+
+<div class="panel panel-default">
+   <div class="panel-heading" >
+       Competências requeridas pela tarefa
+       @include('competences.show_paginated_competences', ['competences' => $task->competencies()->paginate(5, ['*'],'competences'),
+       'showCompetenceLevel' => True,
+       'showDeleteButton' => False,
+       'useCompetency' => True,
+       'noCompetencesMessage' => 'Não há competências para exibição.'])
+   </div>
+</div>
+
+   <div>
+       <div class="col-md-2">
+           <td><a href='{{ route('tasks.edit', $task->id) }}'/><button type="submit" class="btn btn-primary">Editar Tarefa</button></td>
+       </div>
+       <div>
+           <form class="col-xs-offset-1" id="deleteTaskForm" role="form" method="POST" action="{{ route('tasks.destroy', $task->id ) }}">
+               {{ csrf_field() }}
+               <input type="hidden" name="_method" value="DELETE" />
+               <td><button class="btn btn-danger">Excluir Tarefa</button></td>
+           </form>
+       </div>
+   </div>
+
+</div>
+</div>
+</div>
 @endsection
