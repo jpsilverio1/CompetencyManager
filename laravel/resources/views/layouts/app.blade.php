@@ -49,7 +49,6 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Visualizar <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li class="divider"></li>
                                     <li><a href="{{ route('users.show', Auth::user()->id) }}">Seu perfil</a></li>
                                     <li class="divider"></li>
                                     <li><a href="{{ route('competences.index') }}">Competências</a></li>
@@ -65,7 +64,6 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Cadastrar <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     @if (Auth::user()->isManager())
-                                        <li class="divider"></li>
                                         <li><a href="{{ route('competences.create')}}">Competências</a></li>
                                     @endif
                                    <li class="divider"></li>
