@@ -1,7 +1,12 @@
 @extends('layouts.app')
 @section('content')
     <div class="container">
-        <div class="col-md-6">
+        <div class="row">
+            @if (!Auth::guest())
+                @include('competences.search_competence')
+            @endif
+        </div>
+        <div class="col-md-6 row">
             <div class="panel panel-default">
                 <div class="panel-heading">Competências</div>
 
