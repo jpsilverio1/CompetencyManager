@@ -151,7 +151,7 @@
                     }
                 });
             },
-            minLength: 2,
+            minLength: 1,
             select: function (e, ui) {
                 addCompetence(ui.item.value, ui.item.id,numberOfCategories);
                 $(this).val('');
