@@ -25,12 +25,10 @@ class User extends Authenticatable
     }
 	
 	public function forgettingLevel($competence) {
-		$initTime = $competence->pivot->created_at;
-		$finishTime = $competence->pivot->updated_at;
+		$initTime = $competence->pivot->updated_at;
 		
 		$newInitTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $initTime);
-		$newFinishTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $finishTime);
-
+		$newFinishTime = \Carbon\Carbon::now();
 
 		$diff_in_weeks = $newInitTime->diffInDays($newFinishTime);
 		
