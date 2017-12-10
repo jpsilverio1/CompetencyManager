@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('users','UserController');
 	Route::resource('jobroles','JobRoleController');
 	Route::resource('learningaids','LearningAidController');
+	Route::resource('dashboards', 'DashboardController');
 
     /* pivot tables deletion routes */
     Route::delete('/user-team/{teamId}', array('as'=>'user-team','uses'=>'UserController@deleteUserFromTeam'));
