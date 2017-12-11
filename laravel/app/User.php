@@ -153,7 +153,7 @@ class User extends Authenticatable
 
     public function createdTasks()
     {
-        return $this->hasMany('App\Task', 'author_id');
+        return $this->hasMany('App\Task', 'author_id')->orderBy('title');
     }
 
     //endorsements where the current user is the endorsed entity
