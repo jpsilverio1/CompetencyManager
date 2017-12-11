@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Competency;
 use Illuminate\Http\Request;
 use App\User;
-
+use Illuminate\Support\Facades\DB;
 class UserController extends Controller
 {
     /**
@@ -23,7 +24,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $allUsers = User::paginate(10);
+        $allUsers = User::orderBy('name')->paginate(10);
         return view('users.index', ['users' => $allUsers]);
     }
 

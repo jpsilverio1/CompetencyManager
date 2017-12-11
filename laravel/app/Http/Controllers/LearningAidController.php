@@ -28,7 +28,7 @@ class LearningAidController extends Controller
      */
     public function index()
     {
-        $allLearningAids = LearningAid::paginate(10);
+        $allLearningAids = LearningAid::orderBy('name')->paginate(10);
         return view('learningaids.index', ['learningAids' => $allLearningAids]);
     }
 

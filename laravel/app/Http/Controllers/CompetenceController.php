@@ -32,7 +32,7 @@ class CompetenceController extends Controller
 
 	public function index()
 	{
-        $allCompetences = Competency::paginate(10);
+        $allCompetences = Competency::orderBy('name')->paginate(10);
         return view('competences.index', ['competences' => $allCompetences, 'message' => '']);
 	}
 	
