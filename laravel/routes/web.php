@@ -45,11 +45,11 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::post('/user-competences', 'UserController@addCompetences');
     Route::post('/user-endorsements', 'EndorsementController@addEndorsement');
+
+    Route::get('task-initialize/{taskId}',array('as'=>'task-initialize','uses'=>'TaskController@initializeTask'));
+    Route::get('task-finish/{taskId}',array('as'=>'task-finish','uses'=>'TaskController@finishTask'));
 	
-	Route::get('/task-initialize/{taskId}', 'TaskController@initializeTask');
-	Route::get('/task-finish/{taskId}', 'TaskController@finishTask');
-	
-	Route::post('/task-answer-form', 'AnswerController@addAnswer');
+	Route::post('task-answer-form', 'AnswerController@addAnswer');
 	
 
     Route::get('competence-proficiency-level',function(){
@@ -69,7 +69,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('tasks.store-team',array('as'=>'tasks.store-team','uses'=>'TaskCOntroller@storeTaskTeam'));
     //TODO - ERASE
     Route::get('testao', function () {
-        return view('tasks.teste', ['task' => App\Task::findOrFail(9)]);
+        return view('tasks.teste', ['task' => App\Task::findOrFail(8)]);
     });
 });
 

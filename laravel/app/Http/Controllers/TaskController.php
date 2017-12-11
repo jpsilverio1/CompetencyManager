@@ -164,9 +164,14 @@ class TaskController extends Controller
 	
 	public function initializeTask($taskId) {
 		$task = Task::findOrFail($taskId);
-		$task->start_date = Carbon::now();
-		$task->save();
-		return Redirect::route('tasks.show',$taskId);
+		if($task->canBeInitialized()) {
+            $task->start_date = Carbon::now();
+            $task->save();
+            return Redirect::route('tasks.show',$taskId);
+        } else {
+            return Redirect::route('tasks.show',$taskId)->withMessage('A tarefa não pôde ser inicializada pois nenhuma equipe foi desiganda para ela');
+        }
+
 	}
 	
 	public function finishTask($taskId) {

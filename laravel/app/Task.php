@@ -20,7 +20,7 @@ class Task extends Model
     const REMBEMRING_LEVEL = "remembering level";
     const NUMBER_OF_ENDORSEMENTS = "number of endorsements";
     const COLLABORATIVE_COMPETENCIES = "collaborative competencies";
-    const PARAMETER_PRIORITIZATION_MAP = array(self::COLLABORATIVE_COMPETENCIES => FALSE,
+    const PARAMETER_PRIORITIZATION_MAP = array(self::COLLABORATIVE_COMPETENCIES => TRUE,
         self::NUMBER_OF_COMPETENCIES => TRUE,
         self::NUMBER_OF_COMPETENCES_IN_ACCEPTABLE_LEVEL => TRUE,
         self::REMBEMRING_LEVEL => TRUE,
@@ -38,18 +38,23 @@ class Task extends Model
         self::NUMBER_OF_ENDORSEMENTS => 'getRankBiggerAtributtesFirst');
 
     public function getFinalRankAndExplanations() {
+
         $taskCandidatesInfo = $this->allCandidates();
         $finalRanks = [];
         $individualRanks = [];
         $individualAtributteValues = [];
         $candidates = $taskCandidatesInfo["candidates"];
         $outroInfo = [];
+        echo "number of candidates ";
+        echo count($candidates);
+        echo"- <br>";
         foreach($candidates as $candidate) {
             $finalRanks[$candidate->id] = 0;
         }
         foreach(self::PARAMETER_PRIORITIZATION_MAP as $paramater => $useParameter) {
             if ($useParameter) {
                 foreach($candidates as $candidate) {
+                    echo "olha o candidatooo";
                     $valueCalculationFunction = self::PRIOTIRY_PARAMTER_ATTRIBUTE_VALUE_FUNCTION[$paramater];
                     $info = $this->$valueCalculationFunction($taskCandidatesInfo, $candidate);
                     $individualAtributteValues[$paramater][$candidate->id] = $info["finalValue"];
@@ -58,6 +63,9 @@ class Task extends Model
                     }
                 }
                 $ola = self::PARAMATER_SORT_FUNCTION_MAP[$paramater];
+                var_dump($individualAtributteValues);
+                $output = new Symfony\Component\Console\Output\ConsoleOutput();
+                $output->writeln("<info>Turu poom mennas?</info>");
                 $individualRanks[$paramater] = $this->$ola($individualAtributteValues[$paramater]);
                 foreach($candidates as $candidate) {
                     $finalRanks[$candidate->id] = $finalRanks[$candidate->id] + $individualRanks[$paramater][$candidate->id];
@@ -82,7 +90,8 @@ class Task extends Model
         $total = [];
         $candidateContribution = [];
         foreach($this->competencies as $taskCompetence) {
-            foreach($taskCompetence->skilledUsers as $skilledUser) {
+            //$taskCompetence->skilledUsersConsideringSubCategories();
+            foreach($taskCompetence->skilledUsersConsideringSubCategories as $skilledUser) {
                 $total[$skilledUser->id] = $skilledUser;
                 if (array_key_exists($skilledUser->id, $candidateContribution)) {
                     $candidateContribution[$skilledUser->id]["competenceInfo"]["competence"][] = $skilledUser->competences()->where('competence_id', $taskCompetence->id)->first();
@@ -149,6 +158,9 @@ class Task extends Model
         $candidateId = $candidate->id;
         $personal_competence_level_id_min = \DB::table('personal_competence_proficiency_levels')->min('id');
         $personal_competence_level_id_max = \DB::table('personal_competence_proficiency_levels')->max('id');
+        if ($personal_competence_level_id_max == $personal_competence_level_id_min) {
+            return ["finalValue" => 0, "individualValues" => []];
+        }
         $average_collaboration_level = ((\DB::table('answers')->where([
             ['evaluated_user_id', '=', $candidateId],
             ['judge_user_id', '<>', $candidateId],
@@ -179,22 +191,11 @@ class Task extends Model
         return $this::sortAndReturnCandidateRanks($candidateAtributteValueArray, TRUE);
     }
 
-
-
-
     public function competencies()
     {
         return $this->belongsToMany('App\Competency', 'task_competencies')
             ->withPivot('competency_proficiency_level_id');
     }
-	
-	// TODO -> Retirar este método e permitir apenas o novo método na nova modelagem (Task x Users, sem Teams, como era antes) quando for fazer o merge
-	public function members()
-	{
-		return \App\User::all();
-		// O de baixo pode ser utilizado. Fazer isso no merge
-		//return $this->belongsToMany('App\User', 'task_teams', 'task_id', 'task_team_member_id');
-	}
 	
 	public function answers()
 	{
@@ -209,6 +210,11 @@ class Task extends Model
 
     public function teamMembers() {
         return $this->belongsToMany('App\User', 'task_teams', 'task_id', 'task_team_member_id');
+    }
+
+    public function hasTeamAssigned() {
+        echo count($this->teamMembers);
+        return count($this->teamMembers) > 0;
     }
 
     public function author()
@@ -263,7 +269,7 @@ class Task extends Model
         return $suitableUserSubsets;
     }
 
-    public function suitableAssigneesSets()
+    public function taskTeamRecommendations()
     {
         $allCompetenceLevels = CompetenceProficiencyLevel::all()->pluck('id')->toArray();
         $myUserSet = [];
@@ -340,7 +346,11 @@ class Task extends Model
 		$start_date_original = $this->getOriginal('start_date');
 		$end_date_original = $this->getOriginal('end_date');
 		$date_null = null;
+
 		if ($start_date_original == $date_null) {
+		    if ($this->hasTeamAssigned()) {
+		        return "teamAssigned";
+            }
 			return "created";
 		} elseif ($start_date_original != $date_null and $end_date_original == $date_null ) {
 			return "initialized";
@@ -348,5 +358,10 @@ class Task extends Model
 			return "finished";
 		}
 	}
+
+	public function canBeInitialized() {
+        $start_date_original = $this->getOriginal('start_date');
+        return (($start_date_original == null) && $this->hasTeamAssigned());
+    }
 	
 }

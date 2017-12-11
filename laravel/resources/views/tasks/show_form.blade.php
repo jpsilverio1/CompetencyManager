@@ -28,7 +28,7 @@
 							O preenchimento é obrigatório para todas as perguntas.<br />
 						</div>
 					@endif
-					<?php $userInThisTask = $task->members(); $questions = \App\Question::all(); $personalCompetencies = \App\PersonalCompetence::all(); $answerLevels= \App\PersonalCompetenceProficiencyLevel::all(); ?>
+					<?php $userInThisTask = $task->teamMembers; $questions = \App\Question::all(); $personalCompetencies = \App\PersonalCompetence::all(); $answerLevels= \App\PersonalCompetenceProficiencyLevel::all(); ?>
 					@for ($indiceUsuario = 0; $indiceUsuario < count($userInThisTask); $indiceUsuario++)
 						<?php $user = $userInThisTask[$indiceUsuario]; ?>
 						<center><h4>Avaliação do Usuário: <b>{{ $user->name }}</b></h4></center>

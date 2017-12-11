@@ -23,25 +23,21 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Competency', 'user_competences', 'user_id', 'competence_id')
             ->withPivot('competence_proficiency_level_id')->withTimestamps();
     }
-	
-	public function forgettingLevel($competence) {
-		$initTime = $competence->pivot->created_at;
-		$finishTime = $competence->pivot->updated_at;
-		
-		$newInitTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $initTime);
-		$newFinishTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $finishTime);
 
+    public function forgettingLevel($competence) {
+        $initTime = $competence->pivot->updated_at;
 
-		$diff_in_weeks = $newInitTime->diffInDays($newFinishTime);
-		
-		if ($diff_in_weeks == 0) {
-			return 100;
-		}
-		else {
-			return floor((0.19 + 0.6318*pow((1+($diff_in_weeks-1)), (-0.68)))*100);
-		}	
-	}
+        $newInitTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $initTime);
+        $newFinishTime = \Carbon\Carbon::now();
+        $diff_in_weeks = $newInitTime->diffInDays($newFinishTime);
 
+        if ($diff_in_weeks == 0) {
+            return 100;
+        }
+        else {
+            return floor((0.19 + 0.6318*pow((1+($diff_in_weeks-1)), (-0.68)))*100);
+        }
+    }
 
     public function hasCompetence($competenceId) {
         $userHasCompetence = $this->competences()->where("competence_id", $competenceId)->get();
@@ -161,9 +157,11 @@ class User extends Authenticatable
 	// Usuário tem autorização pra inicializar ou finalizar tarefa se ele está na tarefa ou se ele é Gerente
 	public function canInitializeOrFinishTask($taskId) {
 		$task = Task::findOrFail($taskId);
-		$thisUserIsInTask = $task->members();
-		return !$thisUserIsInTask->isEmpty() || $this->isManager(); 
+		return $this->isTaskTeamMember($task) || $this->isManager();
 	}
+	public function isTaskTeamMember($task) {
+        return $task->teamMembers->contains($this->id);
+    }
 	
 	public function answeredQuestions($taskId) {
 		$answers = \DB::table('answers')->where([ ['judge_user_id', '=', $this->id], ['task_id', '=', $taskId] ])->get();
