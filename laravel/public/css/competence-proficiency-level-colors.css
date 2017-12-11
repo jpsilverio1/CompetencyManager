@@ -1,43 +1,22 @@
-.profiency-level-button-0{
+.profiency-level-button-0, .profiency-level-button-0:hover{
     background-color: #b4ddb4;
     border-color: #b4ddb4;
 
 }
-.profiency-level-button-1{
+.profiency-level-button-1, .profiency-level-button-1:hover{
     background-color: #83c783;
     border-color: #83c783;
 }
-.profiency-level-button-2{
+.profiency-level-button-2, .profiency-level-button-2:hover{
      background-color: #52b152;
      border-color: #52b152;
 }
-.profiency-level-button-3{
+.profiency-level-button-3, .profiency-level-button-3:hover{
       background-color: #008a00;
       border-color: #008a00;
 }
-.profiency-level-button-4{
+.profiency-level-button-4, .profiency-level-button-4:hover{
        background-color: #005700;
        border-color: #005700;
-}
-
-.profiency-level-button-0:hover{
-    background-color: #b4ddb4;
-    border-color: #b4ddb4;
-}
-.profiency-level-button-1:hover{
-    background-color: #83c783;
-    border-color: #83c783;
-}
-.profiency-level-button-2:hover{
-    background-color: #52b152;
-    border-color: #52b152;
-}
-.profiency-level-button-3:hover{
-    background-color: #008a00;
-    border-color: #008a00;
-}
-.profiency-level-button-4:hover{
-    background-color: #005700;
-    border-color: #005700;
 }
 
