@@ -21,7 +21,7 @@ class User extends Authenticatable
     public function competences()
     {
         return $this->belongsToMany('App\Competency', 'user_competences', 'user_id', 'competence_id')
-            ->withPivot('competence_proficiency_level_id');
+            ->withPivot('competence_proficiency_level_id')->orderBy('name');
     }
 
 
@@ -66,6 +66,7 @@ class User extends Authenticatable
         }
         return $meuMapa;
     }
+
 
     public function getInitialsFromName(){
         $fullName = $this->name;
