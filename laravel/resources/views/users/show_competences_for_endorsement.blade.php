@@ -80,6 +80,8 @@
                 <!-- Table Body -->
                 <tbody>
                 @foreach ($competences as $competence)
+                    @php($numberOfCompetenceLevels = \App\CompetenceProficiencyLevel::count())
+                    @php($step = $numberOfCompetenceLevels/5)
                     <?php $numberOfEndorsementsForCompetence = $user->getNumberOfEndorsementsForCompetence($user->endorsements(), $competence); ?>
                     @php($numberOfEndorsementsPerLevel = $user->getNumberOfEndorsementsPerLevelForCompetence($competence, $user))
 
@@ -99,8 +101,10 @@
 
                             <td>
                                 <div>
+                                    @php($levelIndex = 0)
                                     @foreach($numberOfEndorsementsPerLevel as $proficiencyLevelId => $numberOfEndorsementsForProficiencyLevel)
-                                        <div class="btn btn-info btn-circle pop" data-toggle="popover" data-html="true"
+                                        @php($colorIndex =  ceil($levelIndex/$step))
+                                        <div class="btn btn-info btn-circle pop profiency-level-button-{{$colorIndex}}" data-toggle="popover" data-html="true"
                                              data-position="relative" data-container="body"
                                              title='{{$numberOfEndorsementsForProficiencyLevel["proficiencyLevelName"]}}'
                                              data-content="
@@ -111,47 +115,48 @@
                                                    </button>
                                                    </a>
                                              @endforeach
-                                             ">{{$numberOfEndorsementsForProficiencyLevel["endorsementPerLevel"]}}</div>
+                                             ">{{$numberOfEndorsementsForProficiencyLevel["endorsementPerLevel"]}} </div>
+                                            @php($levelIndex = $levelIndex + 1)
                                     @endforeach
-                                </div>
-                            </td>
-                            <td>
-                                <div class="col-md-8">
-                                    @if($user->loggedUserEndorsedCompetence($user->endorsements(),$competence->id) > 0)
-                                        Você endossou essa competência no nível
-                                        <em>
-                                            {{$user->getEndorsementLevel($competence->id)}}
+</div>
+</td>
+<td>
+<div class="col-md-8">
+@if($user->loggedUserEndorsedCompetence($user->endorsements(),$competence->id) > 0)
+Você endossou essa competência no nível
+<em>
+    {{$user->getEndorsementLevel($competence->id)}}
 
-                                        </em>.
-                                        <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                                              title="Você pode atualizar o nível de seu endosso mudando o nível e clicando em  endossar ao lado."></span>
-                                    @endif
-                                </div>
-                            </td>
-                            @if ($showEndorsementSection)
-                                <td class="col-md-3">
-                                    <div class="competency_level">
-                                        <span class="competence_level_label" name="levels"><script>document.write(getLabelForSliderValue(1));</script></span>
-                                        <input type="range" class="competence_level_slider"
-                                               name="competence_proficiency_level" min="1" max="3" value="1"
-                                               onchange="updateTextInput(this);">
-                                    </div>
-                                    <div class="form-group">
-                                        <div class=" col-sm-1">
-                                            <button type="submit" class="btn btn-primary"> Endossar</button>
-                                        </div>
-                                    </div>
-                                </td>
-                            @endif
-                        </form>
-                    </tr>
-                @endforeach
+</em>.
+<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+      title="Você pode atualizar o nível de seu endosso mudando o nível e clicando em  endossar ao lado."></span>
+@endif
+</div>
+</td>
+@if ($showEndorsementSection)
+<td class="col-md-3">
+<div class="competency_level">
+<span class="competence_level_label" name="levels"><script>document.write(getLabelForSliderValue(1));</script></span>
+<input type="range" class="competence_level_slider"
+       name="competence_proficiency_level" min="1" max="3" value="1"
+       onchange="updateTextInput(this);">
+</div>
+<div class="form-group">
+<div class=" col-sm-1">
+    <button type="submit" class="btn btn-primary"> Endossar</button>
+</div>
+</div>
+</td>
+@endif
+</form>
+</tr>
+@endforeach
 
-                </tbody>
-            </table>
-        @else
-            Você ainda não cadastrou nenhuma competência.
-        @endif
-    </div>
+</tbody>
+</table>
+@else
+Você ainda não cadastrou nenhuma competência.
+@endif
+</div>
 </div>
 
