@@ -45,9 +45,9 @@ class Task extends Model
         $individualAtributteValues = [];
         $candidates = $taskCandidatesInfo["candidates"];
         $outroInfo = [];
-        echo "number of candidates ";
-        echo count($candidates);
-        echo"- <br>";
+        if (count($candidates) < 1) {
+            return ["candidates" => []];
+        }
         foreach($candidates as $candidate) {
             $finalRanks[$candidate->id] = 0;
         }
@@ -64,8 +64,6 @@ class Task extends Model
                 }
                 $ola = self::PARAMATER_SORT_FUNCTION_MAP[$paramater];
                 var_dump($individualAtributteValues);
-                $output = new Symfony\Component\Console\Output\ConsoleOutput();
-                $output->writeln("<info>Turu poom mennas?</info>");
                 $individualRanks[$paramater] = $this->$ola($individualAtributteValues[$paramater]);
                 foreach($candidates as $candidate) {
                     $finalRanks[$candidate->id] = $finalRanks[$candidate->id] + $individualRanks[$paramater][$candidate->id];

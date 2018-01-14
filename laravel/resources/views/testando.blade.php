@@ -34,7 +34,10 @@
                                 "></span>
                     </li>
                 @endforeach
+                @else
+                Não há candidatos que possuam as competências requeridas por esta tarefa mas você ainda pode adicionar candidatos manualmente!
             @endif
+
         </ul>
         <ul id="candidateTeam" class="list-group col-md-3 col-md-offset-1" style="background-color: white; min-height: 40px;max-width: 50%; padding:0;">
         </ul>
