@@ -26,11 +26,12 @@ Route::group(['middleware' => 'auth'], function() {
 	
 	Route::get('tasks/show_form/{taskId}', 'TaskController@showForm');
 	
+	/*
 	Route::get('/dashboards/tasks','DashboardController@taskReports');
 	Route::get('/dashboards/competences','DashboardController@competencesReports');
 	Route::get('/dashboards/users','DashboardController@usersReports');
 	Route::get('/dashboards/collaboration','DashboardController@collaborationReports');
-	Route::get('/dashboards/other','DashboardController@otherReports');
+	Route::get('/dashboards/other','DashboardController@otherReports'); */
 	
     Route::resource('tasks', 'TaskController');
     //Route::resource('teams', 'TeamController');
@@ -39,6 +40,20 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::resource('jobroles','JobRoleController');
 	Route::resource('learningaids','LearningAidController');
 	Route::resource('dashboards', 'DashboardController');
+	
+	/* dashboard routes */
+	Route::get('/dashboards/tasks/finished','DashboardController@finishedTasksReport');
+	Route::get('/dashboards/tasks/not-finished','DashboardController@notFinishedTasksReport');
+	Route::get('/dashboards/tasks/not-initialized','DashboardController@notInitializedTasksReport');
+	Route::get('/dashboards/tasks/unfeasible','DashboardController@unfeasibleTasksReport');
+	Route::get('/dashboards/competences/covered','DashboardController@coveredCompetencesReport');
+	Route::get('/dashboards/competences/needed','DashboardController@neededCompetencesReport');
+	Route::get('/dashboards/competences/most-learned','DashboardController@mostLearnedCompetencesReport');
+	Route::get('/dashboards/collaboration/most-collaborative-users','DashboardController@mostCollaborativeUsersReport');
+	Route::get('/dashboards/collaboration/most-collaborative-groups','DashboardController@mostCollaborativeGroupsReport');
+	//Route::get('/dashboards/collaboration/unanswered-collaboration-form','DashboardController@usersWhoDidntAnswerCollaborationFormReport');
+	Route::get('/dashboards/users/highest-competence-number','DashboardController@usersWithHighestCompetenceNumberReport');
+	Route::get('/dashboards/users/most-tasks-performed','DashboardController@usersWithMoreTasksPerformedReport');
 
     /* pivot tables deletion routes */
     Route::delete('/user-team/{teamId}', array('as'=>'user-team','uses'=>'UserController@deleteUserFromTeam'));
@@ -49,9 +64,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::delete('/learningaid-competency/{learningAidId}/{competencyId}','LearningAidController@deleteCompetencyFromLearningAid');
 	
 	Route::get('/learningaid-finish/{learningAidId}', 'LearningAidController@finishLearningAid');
-	
-	
-	
 
     Route::post('/user-competences', 'UserController@addCompetences');
     Route::post('/user-endorsements', 'EndorsementController@addEndorsement');
