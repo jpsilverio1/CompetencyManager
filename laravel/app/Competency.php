@@ -21,7 +21,38 @@ class Competency extends Model
             return $value->isNotEmpty();
         });
         return $multiplied->flatten();
+    }
+    public function skilledUsersConsideringSubCategories() {
+        $meuTeste = [];
+        $competenceAndSubCompetences = Competency::descendantsAndSelf($this->id);
+        foreach ($competenceAndSubCompetences as $competence) {
+            foreach($competence->skilledUsers as $skilledUser) {
+                if (array_key_exists($skilledUser->id, $meuTeste)) {
+                    $meuTeste[$skilledUser->id]["competences"][] = $competence;
+                } else {
+                    $meuTeste[$skilledUser->id]["user"] = $skilledUser;
+                    $meuTeste[$skilledUser->id]["competences"] = [$competence];
+                }
+            }
+        }
+        return $meuTeste;
+        /*  print the array
+          foreach($meuTeste as $coisa) {
+            $usuario = $coisa["user"];
+            $olar = "";
+            foreach($coisa["competences"] as $comp) {
+                $olar = $comp->name .  " || " . $olar;
+            }
+            echo "-*- $usuario->name | [$olar]  <br>";
+        } */
 
+        /* returning just the skilled users
+        $multiplied = Competency::descendantsAndSelf($this->id)->map(function ($item, $key) {
+            return $item->skilledUsers;
+        })->filter(function ($value, $key) {
+            return $value->isNotEmpty();
+        });
+        return $multiplied->flatten(); */
     }
     public function skilledUsersConsideringCompetenceLevels($acceptableCompetenceLevels) {
         return $this->belongsToMany('App\User', 'user_competences', 'competence_id', 'user_id')

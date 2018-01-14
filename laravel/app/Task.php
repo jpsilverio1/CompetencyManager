@@ -54,7 +54,6 @@ class Task extends Model
         foreach(self::PARAMETER_PRIORITIZATION_MAP as $paramater => $useParameter) {
             if ($useParameter) {
                 foreach($candidates as $candidate) {
-                    echo "olha o candidatooo";
                     $valueCalculationFunction = self::PRIOTIRY_PARAMTER_ATTRIBUTE_VALUE_FUNCTION[$paramater];
                     $info = $this->$valueCalculationFunction($taskCandidatesInfo, $candidate);
                     $individualAtributteValues[$paramater][$candidate->id] = $info["finalValue"];
@@ -63,7 +62,6 @@ class Task extends Model
                     }
                 }
                 $ola = self::PARAMATER_SORT_FUNCTION_MAP[$paramater];
-                var_dump($individualAtributteValues);
                 $individualRanks[$paramater] = $this->$ola($individualAtributteValues[$paramater]);
                 foreach($candidates as $candidate) {
                     $finalRanks[$candidate->id] = $finalRanks[$candidate->id] + $individualRanks[$paramater][$candidate->id];
@@ -88,15 +86,13 @@ class Task extends Model
         $total = [];
         $candidateContribution = [];
         foreach($this->competencies as $taskCompetence) {
-            //$taskCompetence->skilledUsersConsideringSubCategories();
-            foreach($taskCompetence->skilledUsersConsideringSubCategories as $skilledUser) {
-                $total[$skilledUser->id] = $skilledUser;
-                if (array_key_exists($skilledUser->id, $candidateContribution)) {
-                    $candidateContribution[$skilledUser->id]["competenceInfo"]["competence"][] = $skilledUser->competences()->where('competence_id', $taskCompetence->id)->first();
-                    $candidateContribution[$skilledUser->id]["competenceInfo"]["acceptableLevel"][] = $taskCompetence->isCompetenceLevelAcceptable($skilledUser->competences()->where("competence_id", $taskCompetence->id)->first());
-                } else {
-                    $candidateContribution[$skilledUser->id]["competenceInfo"]["competence"] = [$skilledUser->competences()->where('competence_id', $taskCompetence->id)->first()];
-                    $candidateContribution[$skilledUser->id]["competenceInfo"]["acceptableLevel"] = [$taskCompetence->isCompetenceLevelAcceptable($skilledUser->competences()->where("competence_id", $taskCompetence->id)->first())];
+            foreach($taskCompetence->skilledUsersConsideringSubCategories() as $userId=>$userData) {
+                $skilledUser = $userData["user"];
+                $total[$userId] = $skilledUser;
+                foreach($userData["competences"] as $competence) {
+                    $userCompetence = $skilledUser->competences()->where("competence_id", $competence->id)->first();
+                    $candidateContribution[$skilledUser->id]["competenceInfo"]["competence"][] = $userCompetence;
+                    $candidateContribution[$skilledUser->id]["competenceInfo"]["acceptableLevel"][] = $taskCompetence->isCompetenceLevelAcceptable($userCompetence);
                 }
             }
         }
