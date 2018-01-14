@@ -45,8 +45,19 @@ class DashboardController extends Controller
 		]);
 	}
 	
-	public function feasibleTasksPieChart($tasks_count, $feasible_tasks_count) {
-		return;
+	public function feasibleTasksPieChart($feasible_tasks_count, $not_feasible_tasks_count) {
+		$feasible_tasks_pie_chart = \Lava::DataTable();
+		$feasible_tasks_pie_chart->addStringColumn('Tarefas');
+		$feasible_tasks_pie_chart->addNumberColumn('Porcentagem');
+		$feasible_tasks_pie_chart->addRow(['Executáveis',$feasible_tasks_count]);
+		$feasible_tasks_pie_chart->addRow(['Não-executáveis',$not_feasible_tasks_count]);
+		
+		return \Lava::PieChart('feasible_tasks_pie_chart', $feasible_tasks_pie_chart, [
+			'title' => 'Gráfico de Tarefas Executáveis vs Não-Executáveis',
+			'legend' => [
+				'position' => 'in'
+			]
+		]);
 	}
 	
 	public function averageCollaborationLevelIndicator($average_collaboration_level){
@@ -127,7 +138,7 @@ class DashboardController extends Controller
 		$this->basicStatisticsTableForDashboard($users_count, $competences_count, $learningaids_count, $jobroles_count, $tasks_count);
 		
 		// Grafico de Pizza de Tasks Executáveis
-		//$this->feasibleTasksPieChart($tasks_count, $not_feasible_tasks_count)
+		$this->feasibleTasksPieChart($feasible_tasks_count, $not_feasible_tasks_count);
 		
 		// Circulo exibindo nível médio de colaboração, altera cor de acordo com numero
 		//$this->averageCollaborationLevelIndicator($average_collaboration_level);

@@ -14,6 +14,10 @@
 				<?= Lava::render('TableChart', 'basic_statistics_table', 'basic_statistics_table_div') ?>
 				<div id="basic_statistics_table_div"></div>
 					</div>
+					
+				<?= Lava::render('PieChart', 'feasible_tasks_pie_chart', 'feasible_tasks_pie_chart_div') ?>
+				<div id="feasible_tasks_pie_chart_div"></div>
+					</div>
 				</div>
 			</div>
         </div>
