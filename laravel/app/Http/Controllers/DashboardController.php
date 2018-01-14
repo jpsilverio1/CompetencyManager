@@ -37,6 +37,22 @@ class DashboardController extends Controller
 		$tasks_count = DB::table('basic_statistics')->where("name", "tasks_count")->select('value')->first()->value;
 		//$basic_statistics_table = 0;
 		
+		$datatable_basic_statistics = \Lava::DataTable();
+		$datatable_basic_statistics->addStringColumn('Estatística');
+		$datatable_basic_statistics->addNumberColumn('Valor');
+		$datatable_basic_statistics->addRow(["Quantidade de Usuários", $users_count]);
+		$datatable_basic_statistics->addRow(["Quantidade de Competências", $competences_count]);
+		$datatable_basic_statistics->addRow(["Quantidade de Treinamentos", $learningaids_count]);
+		$datatable_basic_statistics->addRow(["Quantidade de Cargos", $jobroles_count]);
+		$datatable_basic_statistics->addRow(["Quantidade de Tarefas", $tasks_count]);
+		
+		\Lava::TableChart('basic_statistics_table', $datatable_basic_statistics, [
+			'title' => 'Estatísticas Básicas',
+			'legend' => [
+				'position' => 'in'
+			]
+		]);
+		
 		// Grafico de Pizza
 		$feasible_tasks_count = DB::table('basic_statistics')->where("name", "=", "feasible_tasks_count")->select('value')->first()->value;
 		
@@ -80,10 +96,8 @@ class DashboardController extends Controller
 */
 		$datatable_columnChart = \Lava::DataTable();
 		$datatable_columnChart->addDateColumn('Semana X');
+		
 		$datatable_columnChart->addNumberColumn('Count');
-		//$datatable_columnChart->addDateColumn('Semana 2');
-		//$datatable_columnChart->addDateColumn('Semana 3');
-		//$datatable_columnChart->addDateColumn('Semana 4');
 		
 		$datatable_columnChart->addRow([$oneWeeksAgo, 2]);
 		$datatable_columnChart->addRow([$twoWeeksAgo,4]);
@@ -95,8 +109,13 @@ class DashboardController extends Controller
 			'title' => 'Tarefas Finalizadas',
 			'legend' => [
 				'position' => 'in'
-			]
+			],
+			'hAxis' => [
+				'title' => 'Time of Day',
+				'format' => 'h:mm a',
+			],
 		]);
+		
 		
 		
 		/*
@@ -311,7 +330,6 @@ class DashboardController extends Controller
 		$datatable3 = \Lava::DataTable();
 		$datatable3->addStringColumn('Tarefa');
 		$datatable3->addStringColumn('Status');
-
 		
 		$tasks = \App\Task::all();
 		foreach ($tasks as $task) {
