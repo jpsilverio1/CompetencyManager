@@ -26,17 +26,8 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-		
-		// Tabela de Estatísticas Básicas
-		$users_count = DB::table('basic_statistics')->where('name', 'users_count')->select('value')->first()->value;
-		$competences_count = DB::table('basic_statistics')->where("name", "competences_count")->select('value')->first()->value;
-		$learningaids_count = DB::table('basic_statistics')->where("name", "learningaids_count")->select('value')->first()->value;
-		$jobroles_count = DB::table('basic_statistics')->where("name", "jobroles_count")->select('value')->first()->value;
-		$tasks_count = DB::table('basic_statistics')->where("name", "tasks_count")->select('value')->first()->value;
-		//$basic_statistics_table = 0;
-		
+	 
+	public function basicStatisticsTableForDashboard($users_count, $competences_count, $learningaids_count, $jobroles_count, $tasks_count) {
 		$datatable_basic_statistics = \Lava::DataTable();
 		$datatable_basic_statistics->addStringColumn('Estatística');
 		$datatable_basic_statistics->addNumberColumn('Valor');
@@ -46,22 +37,23 @@ class DashboardController extends Controller
 		$datatable_basic_statistics->addRow(["Quantidade de Cargos", $jobroles_count]);
 		$datatable_basic_statistics->addRow(["Quantidade de Tarefas", $tasks_count]);
 		
-		\Lava::TableChart('basic_statistics_table', $datatable_basic_statistics, [
+		return \Lava::TableChart('basic_statistics_table', $datatable_basic_statistics, [
 			'title' => 'Estatísticas Básicas',
 			'legend' => [
 				'position' => 'in'
 			]
 		]);
-		
-		// Grafico de Pizza
-		$feasible_tasks_count = DB::table('basic_statistics')->where("name", "=", "feasible_tasks_count")->select('value')->first()->value;
-		
-		$not_feasible_tasks_count = $tasks_count - $feasible_tasks_count;
-		var_dump($not_feasible_tasks_count);
-		
-		// Circulo exibindo numero, altera cor de acordo com numero
-		$average_collaboration_level = DB::table('basic_statistics')->where("name", "average_collaboration_level")->get();
-		
+	}
+	
+	public function feasibleTasksPieChart($tasks_count, $feasible_tasks_count) {
+		return;
+	}
+	
+	public function averageCollaborationLevelIndicator($average_collaboration_level){
+		return;
+	}
+	
+	public function learningAidsColumnChartForDashboard() {
 		$date_now = Carbon::now();
 		$oneWeeksAgo = $date_now->subWeeks(1);
 		$twoWeeksAgo = $date_now->subWeeks(2);
@@ -115,34 +107,34 @@ class DashboardController extends Controller
 				'format' => 'h:mm a',
 			],
 		]);
-		
-		
-		
-		/*
-		$population = \Lava::DataTable();
-		
-		
-
-		$population->addDateColumn('Year')
-				   ->addNumberColumn('Number of People')
-				   ->addRow(['2006', 623452])
-				   ->addRow(['2007', 685034])
-				   ->addRow(['2008', 716845])
-				   ->addRow(['2009', 757254])
-				   ->addRow(['2010', 778034])
-				   ->addRow(['2011', 792353])
-				   ->addRow(['2012', 839657])
-				   ->addRow(['2013', 842367])
-				   ->addRow(['2014', 873490]);
-
-		\Lava::AreaChart('Population', $population, [
-			'title' => 'Population Growth',
-			'legend' => [
-				'position' => 'in'
-			]
-		]);
-		 */
+	}
 	
+    public function index()
+    {
+		$users_count = DB::table('basic_statistics')->where('name', 'users_count')->select('value')->first()->value;
+		$competences_count = DB::table('basic_statistics')->where("name", "competences_count")->select('value')->first()->value;
+		$learningaids_count = DB::table('basic_statistics')->where("name", "learningaids_count")->select('value')->first()->value;
+		$jobroles_count = DB::table('basic_statistics')->where("name", "jobroles_count")->select('value')->first()->value;
+		$tasks_count = DB::table('basic_statistics')->where("name", "tasks_count")->select('value')->first()->value;
+		//$basic_statistics_table = 0;
+		
+		$feasible_tasks_count = DB::table('basic_statistics')->where("name", "=", "feasible_tasks_count")->select('value')->first()->value;
+		$not_feasible_tasks_count = $tasks_count - $feasible_tasks_count;
+		
+		$average_collaboration_level = DB::table('basic_statistics')->where("name", "average_collaboration_level")->get();
+		
+		// Tabela de Estatísticas Básicas
+		$this->basicStatisticsTableForDashboard($users_count, $competences_count, $learningaids_count, $jobroles_count, $tasks_count);
+		
+		// Grafico de Pizza de Tasks Executáveis
+		//$this->feasibleTasksPieChart($tasks_count, $not_feasible_tasks_count)
+		
+		// Circulo exibindo nível médio de colaboração, altera cor de acordo com numero
+		//$this->averageCollaborationLevelIndicator($average_collaboration_level);
+		
+		// Grafico de Barras com número de treinamentos nas últimas 4 semanas
+		$this->learningAidsColumnChartForDashboard();
+		
         return view('dashboards.index', ['users' => 'oi']);
     }
 	
