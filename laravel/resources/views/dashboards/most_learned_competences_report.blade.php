@@ -16,18 +16,6 @@
 				<div id="finished_tasks_div"></div>
 				
 			<br/>	
-			
-			<?= Lava::render('TableChart', 'Tarefas Inicializadas', 'initialized_tasks_div') ?>
-				<div id="initialized_tasks_div"></div>
-			
-			<br/>
-			
-			<?= Lava::render('TableChart', 'Tarefas Não-Inicializadas', 'not_initialized_tasks_div') ?>
-				<div id="not_initialized_tasks_div"></div>
-				
-			<?= Lava::render('ColumnChart', 'Tarefas Finalizadas/Chart', 'finished_tasks_div_chart') ?>
-				<div id="finished_tasks_div_chart"></div>
-				
 
 				<div>
                 <h4>

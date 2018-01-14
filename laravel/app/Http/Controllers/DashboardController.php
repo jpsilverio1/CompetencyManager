@@ -54,6 +54,84 @@ class DashboardController extends Controller
         return view('dashboards.index', ['users' => 'oi']);
     }
 	
+	public function show($id) {
+		return;
+	}
+	
+	public function finishedTasksReport() {
+		// Tarefas Finalizadas
+		$datatable = \Lava::DataTable();
+		$datatable->addStringColumn('Tarefa');
+		$datatable->addStringColumn('Status');
+
+		
+		$tasks = \App\Task::all();
+		foreach ($tasks as $task) {
+			if ($task->taskStatus() == "finished") {
+				$datatable->addRow([$task->title, "Finalizada"]);
+			}
+		}
+
+		\Lava::TableChart('Tarefas Finalizadas', $datatable, [
+			'title' => 'Tarefas Finalizadas',
+			'legend' => [
+				'position' => 'in'
+			]
+		]);
+		return view('dashboards.finished_tasks_report', ['user' => 'oi'	]);
+	}
+	
+	public function notFinishedTasksReport() {
+		return view('dashboards.not_finished_tasks_report', ['user' => 'oi'	]);
+	}
+	
+	
+	public function notInitializedTasksReport() {
+		return view('dashboards.not_initialized_tasks_report', ['user' => 'oi'	]);
+	}
+	
+	
+	public function unfeasibleTasksReport() {
+		return view('dashboards.unfeasible_tasks_report', ['user' => 'oi'	]);
+	}
+	
+	
+	public function coveredCompetencesReport() {
+		return view('dashboards.covered_competences_report', ['user' => 'oi'	]);
+	}
+	
+	
+	public function neededCompetencesReport() {
+		return view('dashboards.needed_competences_report', ['user' => 'oi'	]);
+	}
+	
+	
+	public function mostLearnedCompetencesReport() {
+		return view('dashboards.most_learned_competences_report', ['user' => 'oi'	]);
+	}
+	
+	
+	public function mostCollaborativeUsersReport() {
+		return view('dashboards.most_collaborative_users_report', ['user' => 'oi'	]);
+	}
+	
+	
+	public function mostCollaborativeGroupsReport() {
+		return view('dashboards.most_collaborative_groups_report', ['user' => 'oi'	]);
+	}
+	
+	public function usersWhoDidntAnswerCollaborationFormReport() {
+		return view('dashboards.users_who_didnt_answer_collaboration_form_report', ['user' => 'oi'	]);
+	}
+	
+	public function usersWithHighestCompetenceNumberReport() {
+		return view('dashboards.users_with_highest_competence_number_report', ['user' => 'oi'	]);
+	}
+	
+	public function usersWithMoreTasksPerformedReport() {
+		return view('dashboards.users_with_more_tasks_performed_report', ['user' => 'oi'	]);
+	}
+	
 	public function taskReports()
     {	
 		// Tarefas Finalizadas
@@ -104,7 +182,7 @@ class DashboardController extends Controller
 		$eightWeeksAgo = $date_now->subWeeks(8);
 		
 		
-		$tasksWeek1 = \App\Task::whereBetween("end_date", [$eightWeeksAgo, $sevenWeeksAgo])->count();
+		/*$tasksWeek1 = \App\Task::whereBetween("end_date", [$eightWeeksAgo, $sevenWeeksAgo])->count();
 		$tasksWeek2 = \App\Task::whereBetween("end_date", [$sevenWeeksAgo, $sixWeeksAgo])->count();
 		$tasksWeek3 = \App\Task::whereBetween("end_date", [$sixWeeksAgo, $fiveWeeksAgo])->count();
 		$tasksWeek4 = \App\Task::whereBetween("end_date", [$fiveWeeksAgo, $fourWeeksAgo])->count();
@@ -134,7 +212,7 @@ class DashboardController extends Controller
 			'legend' => [
 				'position' => 'in'
 			]
-		]);
+		]); */
 		
 		// Tarefas inicializadas, mas não finalizadas
 		$datatable2 = \Lava::DataTable();

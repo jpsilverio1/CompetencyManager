@@ -4,7 +4,7 @@
         <div class="panel panel-default">
             <div class="panel-heading text-center text-capitalize" >
                 <h2>
-                    Dashboard
+                    Tarefas Finalizadas
                 </h2>
             </div>
             <div class="panel-body">
@@ -12,31 +12,30 @@
 			
 			
 			
-			<?= Lava::render('AreaChart', 'Population', 'pop_div') ?>
-				<div id="pop_div"></div>
+			<?= Lava::render('TableChart', 'Tarefas Finalizadas', 'finished_tasks_div') ?>
+				<div id="finished_tasks_div"></div>
 				
+			<br/>	
 
 				<div>
                 <h4>
-                    Descrição
+                    
                 </h4>
-                <p>oi</p>
+                <p></p>
                 <h4>
-                    Autor
+                    
                 </h4>
-                <p> oi</p>
+                <p> </p>
 
                 <div class="panel panel-default">
                     <div class="panel-heading" >
-                        Usuários aptos a realizar a tarefa
+                       
                     </div>
                     <div class="panel-body">
-							oioi
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading" >
-                        oiee
                     </div>
                 </div>
 				
