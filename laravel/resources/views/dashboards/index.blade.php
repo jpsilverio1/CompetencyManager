@@ -8,6 +8,8 @@
 
 					<div class="panel-body">
 						Aqui entram os gráficos
+						<?= Lava::render('ColumnChart', 'Tarefas Finalizadas', 'finished_tasks_div') ?>
+				<div id="finished_tasks_div"></div>
 					</div>
 				</div>
 			</div>

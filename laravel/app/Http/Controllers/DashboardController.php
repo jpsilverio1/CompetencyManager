@@ -8,6 +8,8 @@ use Khill\Lavacharts\Lavacharts;
 
 use Carbon\Carbon;
 
+use DB;
+
 class DashboardController extends Controller
 {
     /**
@@ -26,11 +28,81 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        //$allUsers = User::paginate(10);
 		
-		//$lava = new Lavacharts; // See note below for Laravel
+		// Tabela de Estatísticas Básicas
+		$users_count = DB::table('basic_statistics')->where('name', 'users_count')->select('value')->first()->value;
+		$competences_count = DB::table('basic_statistics')->where("name", "competences_count")->select('value')->first()->value;
+		$learningaids_count = DB::table('basic_statistics')->where("name", "learningaids_count")->select('value')->first()->value;
+		$jobroles_count = DB::table('basic_statistics')->where("name", "jobroles_count")->select('value')->first()->value;
+		$tasks_count = DB::table('basic_statistics')->where("name", "tasks_count")->select('value')->first()->value;
+		//$basic_statistics_table = 0;
+		
+		// Grafico de Pizza
+		$feasible_tasks_count = DB::table('basic_statistics')->where("name", "=", "feasible_tasks_count")->select('value')->first()->value;
+		
+		$not_feasible_tasks_count = $tasks_count - $feasible_tasks_count;
+		var_dump($not_feasible_tasks_count);
+		
+		// Circulo exibindo numero, altera cor de acordo com numero
+		$average_collaboration_level = DB::table('basic_statistics')->where("name", "average_collaboration_level")->get();
+		
+		$date_now = Carbon::now();
+		$oneWeeksAgo = $date_now->subWeeks(1);
+		$twoWeeksAgo = $date_now->subWeeks(2);
+		$threeWeeksAgo = $date_now->subWeeks(3);
+		$fourWeeksAgo = $date_now->subWeeks(4);
+		
+		// Grafico de barras
+		
+		//$all_learning_aids = \App\LearningAid->all();
+		
+		//$w1 = $all_learning_aids->learnindAidStatus() == "finished" ? $w1++; skip;
+		
+		
+		$users_Learningaids_Week1 = DB::table('learning_aids_user')->whereBetween("completed_on", [$fourWeeksAgo, $threeWeeksAgo])->count();
+		$users_Learningaids_Week2 = DB::table('learning_aids_user')->whereBetween("completed_on", [$threeWeeksAgo, $twoWeeksAgo])->count();
+		$users_Learningaids_Week3 = DB::table('learning_aids_user')->whereBetween("completed_on", [$twoWeeksAgo, $oneWeeksAgo])->count();
+		$users_Learningaids_Week4 = DB::table('learning_aids_user')->whereBetween("completed_on", [$oneWeeksAgo, $date_now])->count();
+		
+		var_dump($users_Learningaids_Week1);
+		var_dump($users_Learningaids_Week2);
+		var_dump($users_Learningaids_Week3);
+		var_dump($users_Learningaids_Week4);
+		
+		var_dump($oneWeeksAgo);
+		
+/*
+		$users_Learningaids_Week1 = \App\LearningAid::whereBetween("completed_on", [$fourWeeksAgo, $threeWeeksAgo])->count();
+		$users_Learningaids_Week2 = \App\LearningAid::whereBetween("completed_on", [$threeWeeksAgo, $twoWeeksAgo])->count();
+		$users_Learningaids_Week3 = \App\LearningAid::whereBetween("completed_on", [$twoWeeksAgo, $oneWeeksAgo])->count();
+		$users_Learningaids_Week4 = \App\LearningAid::whereBetween("completed_on", [$oneWeeksAgo, $date_now])->count();
+		
+*/
+		$datatable_columnChart = \Lava::DataTable();
+		$datatable_columnChart->addDateColumn('Semana X');
+		$datatable_columnChart->addNumberColumn('Count');
+		//$datatable_columnChart->addDateColumn('Semana 2');
+		//$datatable_columnChart->addDateColumn('Semana 3');
+		//$datatable_columnChart->addDateColumn('Semana 4');
+		
+		$datatable_columnChart->addRow([$oneWeeksAgo, 2]);
+		$datatable_columnChart->addRow([$twoWeeksAgo,4]);
+		$datatable_columnChart->addRow([$threeWeeksAgo, 0]);
+		$datatable_columnChart->addRow([$fourWeeksAgo, 10]);
+		
 
+		\Lava::ColumnChart('Tarefas Finalizadas', $datatable_columnChart, [
+			'title' => 'Tarefas Finalizadas',
+			'legend' => [
+				'position' => 'in'
+			]
+		]);
+		
+		
+		/*
 		$population = \Lava::DataTable();
+		
+		
 
 		$population->addDateColumn('Year')
 				   ->addNumberColumn('Number of People')
@@ -50,6 +122,7 @@ class DashboardController extends Controller
 				'position' => 'in'
 			]
 		]);
+		 */
 	
         return view('dashboards.index', ['users' => 'oi']);
     }
