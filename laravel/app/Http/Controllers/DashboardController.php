@@ -61,7 +61,27 @@ class DashboardController extends Controller
 	}
 	
 	public function averageCollaborationLevelIndicator($average_collaboration_level){
-		return;
+		$average_collaboration_level_circle = \Lava::DataTable();
+		$average_collaboration_level_circle->addStringColumn('Índice médio de Colaboração');
+		$average_collaboration_level_circle->addNumberColumn('Valor');
+		$average_collaboration_level_circle->addRow(['Valor', $average_collaboration_level]);
+		
+		
+		return \Lava::GaugeChart('average_collaboration_level_circle', $average_collaboration_level_circle, [
+			'title' => 'Indicador do Nível Médio de Colaboração',
+			'legend' => [
+				'position' => 'in',
+			],
+			'width'      => 400,
+			'greenFrom'  => 0.7,
+			'greenTo'    => 1.0,
+			'yellowFrom' => 0.5,
+			'yellowTo'   => 0.69,
+			'redFrom'    => 0,
+			'redTo'      => 0.49,
+			'min' => 0,
+			'max' => 1,
+		]);
 	}
 	
 	public function learningAidsColumnChartForDashboard() {
@@ -132,7 +152,7 @@ class DashboardController extends Controller
 		$feasible_tasks_count = DB::table('basic_statistics')->where("name", "=", "feasible_tasks_count")->select('value')->first()->value;
 		$not_feasible_tasks_count = $tasks_count - $feasible_tasks_count;
 		
-		$average_collaboration_level = DB::table('basic_statistics')->where("name", "average_collaboration_level")->get();
+		$average_collaboration_level = DB::table('basic_statistics')->where("name", "average_collaboration_level")->first()->value;
 		
 		// Tabela de Estatísticas Básicas
 		$this->basicStatisticsTableForDashboard($users_count, $competences_count, $learningaids_count, $jobroles_count, $tasks_count);
@@ -141,7 +161,7 @@ class DashboardController extends Controller
 		$this->feasibleTasksPieChart($feasible_tasks_count, $not_feasible_tasks_count);
 		
 		// Circulo exibindo nível médio de colaboração, altera cor de acordo com numero
-		//$this->averageCollaborationLevelIndicator($average_collaboration_level);
+		$this->averageCollaborationLevelIndicator($average_collaboration_level);
 		
 		// Grafico de Barras com número de treinamentos nas últimas 4 semanas
 		$this->learningAidsColumnChartForDashboard();

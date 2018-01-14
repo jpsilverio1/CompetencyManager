@@ -18,6 +18,11 @@
 				<?= Lava::render('PieChart', 'feasible_tasks_pie_chart', 'feasible_tasks_pie_chart_div') ?>
 				<div id="feasible_tasks_pie_chart_div"></div>
 					</div>
+				
+				<?= Lava::render('GaugeChart', 'average_collaboration_level_circle', 'average_collaboration_level_circle_div') ?>
+				<div id="average_collaboration_level_circle_div"></div>
+					</div>
+				
 				</div>
 			</div>
         </div>
