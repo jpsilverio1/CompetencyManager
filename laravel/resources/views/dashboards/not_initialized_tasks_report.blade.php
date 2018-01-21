@@ -4,41 +4,17 @@
         <div class="panel panel-default">
             <div class="panel-heading text-center text-capitalize" >
                 <h2>
-                    Tarefas Finalizadas
+                    Tarefas Não-inicializadas
                 </h2>
             </div>
             <div class="panel-body">
-			
-			
-			
-			
-			<?= Lava::render('TableChart', 'Tarefas Finalizadas', 'finished_tasks_div') ?>
-				<div id="finished_tasks_div"></div>
+				<?= Lava::render('TableChart', 'not_initialized_tasks_table_div', 'not_initialized_tasks_table_div') ?>
+					<center><div id="not_initialized_tasks_table_div"></div></center>
 				
-			<br/>	
-
-				<div>
-                <h4>
-                    
-                </h4>
-                <p></p>
-                <h4>
-                    
-                </h4>
-                <p> </p>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading" >
-                       
-                    </div>
-                    <div class="panel-body">
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading" >
-                    </div>
-                </div>
-				
+				<br>
+					
+				<?= Lava::render('ColumnChart', 'not_initialized_tasks_chart_div', 'not_initialized_tasks_chart_div') ?>
+					<div id="not_initialized_tasks_chart_div"></div>
             </div>
         </div>
     </div>
