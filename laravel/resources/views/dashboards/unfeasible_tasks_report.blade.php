@@ -4,40 +4,13 @@
         <div class="panel panel-default">
             <div class="panel-heading text-center text-capitalize" >
                 <h2>
-                    Tarefas Finalizadas
+                    Tarefas Não-executáveis
                 </h2>
             </div>
             <div class="panel-body">
 			
-			
-			
-			
-			<?= Lava::render('TableChart', 'Tarefas Finalizadas', 'finished_tasks_div') ?>
-				<div id="finished_tasks_div"></div>
-				
-			<br/>	
-
-				<div>
-                <h4>
-                    
-                </h4>
-                <p></p>
-                <h4>
-                    
-                </h4>
-                <p> </p>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading" >
-                       
-                    </div>
-                    <div class="panel-body">
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading" >
-                    </div>
-                </div>
+				<?= Lava::render('TableChart', 'unfeasible_tasks_report_table', 'unfeasible_tasks_report_table') ?>
+					<center><div id="unfeasible_tasks_report_table"></div></center>
 				
             </div>
         </div>
