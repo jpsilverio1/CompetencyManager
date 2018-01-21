@@ -77,23 +77,7 @@
                                 </ul>
                             </li>
 							@if (Auth::user()->isManager())
-								<li class="dropdown">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Relatórios <b class="caret"></b></a>
-									<ul class="dropdown-menu">
-										<li class="divider"></li>
-										<li><a href="{{ route('dashboards.index')}}">Dashboard</a></li>
-										<li class="divider"></li>
-										<li><a href="/dashboards/tasks">Tarefas</a></li>
-										<li class="divider"></li>
-										<li><a href="/dashboards/competences">Competências</a></li>
-										<li class="divider"></li>
-										<li><a href="/dashboards/users">Usuários</a></li>
-										<li class="divider"></li>
-										<li><a href="/dashboards/collaboration">Colaboração</a></li>
-										<li class="divider"></li>
-										<li><a href="/dashboards/other">Outros</a></li>
-									</ul>	
-								</li>
+								<li class=""><a href="{{ route('dashboards.index')}}">Relatórios</a></li>
                             @endif
                         @endif
                     </ul>
