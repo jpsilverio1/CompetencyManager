@@ -42,18 +42,18 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::resource('dashboards', 'DashboardController');
 	
 	/* dashboard routes */
-	Route::get('/dashboards/tasks/finished','DashboardController@finishedTasksReport');
-	Route::get('/dashboards/tasks/not-finished','DashboardController@notFinishedTasksReport');
-	Route::get('/dashboards/tasks/not-initialized','DashboardController@notInitializedTasksReport');
-	Route::get('/dashboards/tasks/unfeasible','DashboardController@unfeasibleTasksReport');
-	Route::get('/dashboards/competences/covered','DashboardController@coveredCompetencesReport');
-	Route::get('/dashboards/competences/needed','DashboardController@neededCompetencesReport');
-	Route::get('/dashboards/competences/most-learned','DashboardController@mostLearnedCompetencesReport');
-	Route::get('/dashboards/collaboration/most-collaborative-users','DashboardController@mostCollaborativeUsersReport');
-	Route::get('/dashboards/collaboration/most-collaborative-groups','DashboardController@mostCollaborativeGroupsReport');
-	//Route::get('/dashboards/collaboration/unanswered-collaboration-form','DashboardController@usersWhoDidntAnswerCollaborationFormReport');
-	Route::get('/dashboards/users/highest-competence-number','DashboardController@usersWithHighestCompetenceNumberReport');
-	Route::get('/dashboards/users/most-tasks-performed','DashboardController@usersWithMoreTasksPerformedReport');
+	Route::get('/dashboards/tasks/finished','DashboardController@finishedTasksReport')->name('finished-tasks-report');;
+	Route::get('/dashboards/tasks/not-finished','DashboardController@notFinishedTasksReport')->name('not-finished-tasks-report');
+	Route::get('/dashboards/tasks/not-initialized','DashboardController@notInitializedTasksReport')->name('not-initialized-tasks-report');
+	Route::get('/dashboards/tasks/unfeasible','DashboardController@unfeasibleTasksReport')->name('unfeasible-tasks-report');
+	Route::get('/dashboards/competences/covered','DashboardController@coveredCompetencesReport')->name('covered-competences-report');
+	Route::get('/dashboards/competences/needed','DashboardController@neededCompetencesReport')->name('needed-competences-report');
+	Route::get('/dashboards/competences/most-learned','DashboardController@mostLearnedCompetencesReport')->name('most-learned-competences-report');
+	Route::get('/dashboards/collaboration/most-collaborative-users','DashboardController@mostCollaborativeUsersReport')->name('most-collaborative-users-report');
+	Route::get('/dashboards/collaboration/most-collaborative-groups','DashboardController@mostCollaborativeGroupsReport')->name('most-collaborative-groups-report');
+	//Route::get('/dashboards/collaboration/unanswered-collaboration-form','DashboardController@usersWhoDidntAnswerCollaborationFormReport')->name('users-who-didnt-answer-collaboration-form-report');
+	Route::get('/dashboards/users/highest-competence-number','DashboardController@usersWithHighestCompetenceNumberReport')->name('users-with-highest-competence-number-report');
+	Route::get('/dashboards/users/most-tasks-performed','DashboardController@usersWithMoreTasksPerformedReport')->name('users-with-more-tasks-performed-report');
 
     /* pivot tables deletion routes */
     Route::delete('/user-team/{teamId}', array('as'=>'user-team','uses'=>'UserController@deleteUserFromTeam'));
