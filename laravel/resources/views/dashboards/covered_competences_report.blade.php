@@ -12,9 +12,7 @@
 			
 			
 			
-			<?= Lava::render('TableChart', 'Tarefas Finalizadas', 'finished_tasks_div') ?>
-				<div id="finished_tasks_div"></div>
-				
+			
 			<br/>	
 
 				<div>
