@@ -15,7 +15,7 @@ class Task extends Model
         'title', 'description',
     ];
 
-    private $debugEnabled = True;
+    private $debugEnabled = False;
 
     const NUMBER_OF_COMPETENCIES = "number of competencies";
     const NUMBER_OF_COMPETENCES_IN_ACCEPTABLE_LEVEL = "number of competencies in acceptable level";
@@ -47,6 +47,7 @@ class Task extends Model
         $individualAtributteValues = [];
         $candidates = $taskCandidatesInfo["candidates"];
         $outroInfo = [];
+        $another = [];
         if (count($candidates) < 1) {
             return ["candidates" => []];
         }
@@ -59,9 +60,11 @@ class Task extends Model
                     $valueCalculationFunction = self::PRIOTIRY_PARAMTER_ATTRIBUTE_VALUE_FUNCTION[$paramater];
                     $info = $this->$valueCalculationFunction($taskCandidatesInfo, $candidate);
                     $individualAtributteValues[$paramater][$candidate->id] = $info["finalValue"];
-                    foreach($info["individualValues"] as $competenceId => $individualValue) {
+                    foreach($info["individualTaskValues"] as $competenceId => $individualValue) {
                         $outroInfo[$candidate->id][$competenceId][$paramater] = $individualValue;
                     }
+
+                    $another[$candidate->id][$paramater] =  $info["individualCandidateValues"];
                 }
                 $ola = self::PARAMATER_SORT_FUNCTION_MAP[$paramater];
                 $individualRanks[$paramater] = $this->$ola($individualAtributteValues[$paramater]);
@@ -76,7 +79,6 @@ class Task extends Model
             print_r($individualAtributteValues);
             echo "final ranks: <br>";
             print_r($individualRanks);
-            echo " <br> ACABOU";
         }
         $fullInfo = [];
         asort($finalRanks);
@@ -84,8 +86,10 @@ class Task extends Model
             $fullInfo["candidates"][] =  $taskCandidatesInfo["candidates"][$candidateId];
             $fullInfo["ranking"][$candidateId] = $finalRank;
             $fullInfo["candidatesContribution"] = $taskCandidatesInfo["candidatesContribution"];
-            $fullInfo["rankingData"] = $outroInfo;
+            $fullInfo["rankingData"]["details"] = $outroInfo;
+            // data by priority parameter and user
             $fullInfo["rankingData"]["individualRankingValues"] = $individualAtributteValues;
+            $fullInfo["individualCandidateValues"] = $another;
         // TODO - > finish and display the collaborative things in view
         }
         return $fullInfo;
@@ -102,7 +106,7 @@ class Task extends Model
                 foreach($userData["competences"] as $competence) {
                     $userCompetence = $skilledUser->competences()->where("competence_id", $competence->id)->first();
                     $candidateContribution[$skilledUser->id]["competenceInfo"][$taskCompetence->id]["competence"][] = $userCompetence;
-                    $candidateContribution[$skilledUser->id]["competenceInfo"][$taskCompetence->id]["acceptableLevel"][] = $taskCompetence->isCompetenceLevelAcceptable($userCompetence);
+                    $candidateContribution[$skilledUser->id]["competenceInfo"][$taskCompetence->id]["acceptableLevel"][$userCompetence->id] = $taskCompetence->isCompetenceLevelAcceptable($userCompetence);
                 }
             }
         }
@@ -115,7 +119,8 @@ class Task extends Model
                     echo "\t $taskCompetence->name - $taskCompetence->id: <br>";
                     if (array_key_exists($taskCompetence->id, $userContribution["competenceInfo"])) {
                         foreach($userContribution["competenceInfo"][$taskCompetence->id]["competence"] as $index => $userCompetence) {
-                            if ($userContribution["competenceInfo"][$taskCompetence->id]["acceptableLevel"][$index]) {
+                            $acceptableLevelKeys = array_keys($userContribution["competenceInfo"][$taskCompetence->id]["acceptableLevel"]);
+                            if ($userContribution["competenceInfo"][$taskCompetence->id]["acceptableLevel"][$acceptableLevelKeys[$index]]) {
                                 echo "\t\t $userCompetence->name -> nível aceitavel <br>";
                             } else {
                                 echo "\t\t $userCompetence->name -> nivel inaceitavel <br>";
@@ -135,45 +140,58 @@ class Task extends Model
         if ($this->debugEnabled) {
             echo "$candidate->name - count number of competencies: $numberOfCompetencies <br>";
         }
-        return ["finalValue" => $numberOfCompetencies, "individualValues" => []];
+        return ["finalValue" => $numberOfCompetencies, "individualTaskValues" => [], "individualCandidateValues" => []];
     }
 
     function candidateNumberOfCompetenciesInAcceptableLevel($taskCandidatesInfo, $candidate) {
         $rank =0;
-        $individualValues = [];
+        $individualTaskValues = [];
+        $individualCandidateValues = [];
         foreach($taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"] as $taskCompetenceId => $data) {
-            $individualValues[$taskCompetenceId] = "false";
-            foreach($data["acceptableLevel"] as $competenceInAcceptableLevel) {
+            foreach($data["acceptableLevel"] as $candidateCompetenceId=>$competenceInAcceptableLevel) {
+                $individualCandidateValues[$candidateCompetenceId] = "false";
+                if ($competenceInAcceptableLevel) {
+                    $individualCandidateValues[$candidateCompetenceId] = "true";
+                }
+            }
+        }
+        foreach($taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"] as $taskCompetenceId => $data) {
+            $individualTaskValues[$taskCompetenceId] = "false";
+            foreach($data["acceptableLevel"] as $candidateCompetenceId=>$competenceInAcceptableLevel) {
                 if ($competenceInAcceptableLevel) {
                     $rank = $rank + 1;
-                    $individualValues[$taskCompetenceId] = "true";
+                    $individualTaskValues[$taskCompetenceId] = "true";
                     break;
                 }
             }
         }
         if ($this->debugEnabled) {
             echo "$candidate->name - count number of competencies in acceptable level: $rank individual values: ";
-            print_r($individualValues);
+            print_r($individualTaskValues);
             echo "<br>";
         }
 
-        return ["finalValue" => $rank, "individualValues" =>$individualValues];
+        return ["finalValue" => $rank, "individualTaskValues" =>$individualTaskValues, "individualCandidateValues" => $individualCandidateValues];
     }
     function candidateNumberOfEndorsements($taskCandidatesInfo, $candidate) {
         $rank = 0;
         $total = $this::candidateNumberOfCompetenciesRank($taskCandidatesInfo, $candidate)["finalValue"];
-        $individualValues = [];
+        $individualTaskValues = [];
+
         if ($total == 0) {
-            return ["finalValue" => 0, "individualValues" => []];
+            return ["finalValue" => 0, "individualTaskValues" => [], "individualCandidateValues" => []];
         }
+        $individualCandidateValues = [];
         foreach($taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"] as $taskCompetenceId => $data) {
             $numberOfEndorsements = [];
             foreach($data["competence"] as $candidateCompetence) {
-                $numberOfEndorsements[] = $candidate->getNumberOfEndorsementsForCompetence($candidate->endorsements(),$candidateCompetence);
+                $numberOfEndorsementsVal = $candidate->getNumberOfEndorsementsForCompetence($candidate->endorsements(),$candidateCompetence);
+                $numberOfEndorsements[] = $numberOfEndorsementsVal;
+                $individualCandidateValues[$candidateCompetence->id] = $numberOfEndorsementsVal;
             }
             $maxNumberOfEndorsements = max($numberOfEndorsements);
             $rank = $rank + $maxNumberOfEndorsements;
-            $individualValues[$taskCompetenceId] = $maxNumberOfEndorsements;
+            $individualTaskValues[$taskCompetenceId] = $maxNumberOfEndorsements;
             if ($this->debugEnabled) {
                 echo "candidato: $candidate->name - max number: $maxNumberOfEndorsements -> number of endorsements array: ";
                 print_r($numberOfEndorsements);
@@ -182,27 +200,30 @@ class Task extends Model
         }
         if ($this->debugEnabled) {
             echo "$candidate->name - final number of endorsements: $rank individual values: ";
-            print_r($individualValues);
+            print_r($individualTaskValues);
             echo "<br>";
         }
 
-        return ["finalValue" => ($rank/$total), "individualValues" => $individualValues];
+        return ["finalValue" => ($rank/$total), "individualTaskValues" => $individualTaskValues, "individualCandidateValues" => $individualCandidateValues];
     }
     function candidateRememberingLevel($taskCandidatesInfo, $candidate) {
         $rank = 0;
         $total = $this::candidateNumberOfCompetenciesRank($taskCandidatesInfo, $candidate)["finalValue"];
-        $individualValues = [];
+        $individualTaskValues = [];
         if ($total == 0) {
-            return ["finalValue" => 0, "individualValues" => []];
+            return ["finalValue" => 0, "individualTaskValues" => [], "individualCandidateValues" => []];
         }
+        $individualCandidateValues = [];
         foreach($taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"] as $taskCompetenceId => $data) {
             $rememberingLevels = [];
             foreach($data["competence"] as $candidateCompetence) {
-                $rememberingLevels[] = $candidate->forgettingLevel($candidateCompetence);
+                $rememberingLevel = $candidate->forgettingLevel($candidateCompetence);
+                $rememberingLevels[] = $rememberingLevel;
+                $individualCandidateValues[$candidateCompetence->id] = $rememberingLevel;
             }
             $maxRememberingLevel = max($rememberingLevels);
             $rank = $rank + $maxRememberingLevel;
-            $individualValues[$taskCompetenceId] = $maxRememberingLevel;
+            $individualTaskValues[$taskCompetenceId] = $maxRememberingLevel;
             if ($this->debugEnabled) {
                 echo "candidato: $candidate->name - max number: $maxRememberingLevel -> remembering levels array: ";
                 print_r($rememberingLevels);
@@ -212,24 +233,24 @@ class Task extends Model
         }
         if ($this->debugEnabled) {
             echo "$candidate->name - final remembering level: $rank individual values: ";
-            print_r($individualValues);
+            print_r($individualTaskValues);
             echo "<br>";
         }
 
-        return ["finalValue" => ($rank/$total), "individualValues" => $individualValues];
+        return ["finalValue" => ($rank/$total), "individualTaskValues" => $individualTaskValues, "individualCandidateValues" => $individualCandidateValues];
     }
     function candidateCollaborativeCompetencies($taskCandidatesInfo, $candidate) {
         $candidateId = $candidate->id;
         $personal_competence_level_id_min = \DB::table('personal_competence_proficiency_levels')->min('id');
         $personal_competence_level_id_max = \DB::table('personal_competence_proficiency_levels')->max('id');
         if ($personal_competence_level_id_max == $personal_competence_level_id_min) {
-            return ["finalValue" => 0, "individualValues" => []];
+            return ["finalValue" => 0, "individualTaskValues" => [], "individualCandidateValues" => []];
         }
         $average_collaboration_level = ((\DB::table('answers')->where([
             ['evaluated_user_id', '=', $candidateId],
             ['judge_user_id', '<>', $candidateId],
         ])->avg('personal_competence_level_id')) - ($personal_competence_level_id_min)) / ($personal_competence_level_id_max - $personal_competence_level_id_min);
-        return ["finalValue" => $average_collaboration_level, "individualValues" => []];
+        return ["finalValue" => $average_collaboration_level, "individualTaskValues" => [], "individualCandidateValues" => []];
     }
 
     function sortAndReturnCandidateRanks($candidateAtributteValueArray, $sortInAscendingOrder) {

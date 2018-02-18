@@ -16,6 +16,7 @@
         </div>
 
         <ul id="teamCandidates" class="list-group col-md-3 col-md-offset-1" style="background-color: white; min-height: 40px;max-width: 50%; padding:0;">
+        @php ($taskCandidatesInfo = $task->allCandidates())
      @php ($taskCandidatesInfo = $task->getFinalRankAndExplanations())
 
     @if (count($taskCandidatesInfo["candidates"]) > 0)
@@ -31,23 +32,17 @@
                               <ul>
                               @foreach($taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"][$taskCompetence->id]["competence"] as $index => $candidateCompetence)
                                 <li>
+                <i class='fa fa-circle acceptableCompetenceLevel-{{$taskCandidatesInfo["individualCandidateValues"][$candidate->id]["number of competencies in acceptable level"][$candidateCompetence->id]}}' aria-hidden='true'></i>
                 {{$candidateCompetence->name}} -
                 {{$candidateCompetence->pivot->competence_proficiency_level_id}} -
-                {{$candidate->forgettingLevel($candidateCompetence)}} -
-                {{$candidate->getNumberOfEndorsementsForCompetence($candidate->endorsements(),$candidateCompetence)}}
+                {{$taskCandidatesInfo["individualCandidateValues"][$candidate->id]["remembering level"][$candidateCompetence->id]}} -
+                {{$taskCandidatesInfo["individualCandidateValues"][$candidate->id]["number of endorsements"][$candidateCompetence->id]}}
                 </li>
                                 @endforeach
 
                               </ul>
                     @endif
                 @endforeach
-                {{--@foreach ($taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"]["competence"] as $index =>$competence)
-                        <i class='fa fa-circle acceptableCompetenceLevel-{{$taskCandidatesInfo["rankingData"][$candidate->id][$competence->id]["number of competencies in acceptable level"]}}' aria-hidden='true'></i>
-                {{$competence->name}} -
-                {{$competence->pivot->competence_proficiency_level_id}} -
-                {{$taskCandidatesInfo["rankingData"][$candidate->id][$competence->id]["remembering level"]}} -
-                {{$taskCandidatesInfo["rankingData"][$candidate->id][$competence->id]["number of endorsements"]}}<br>
-                @endforeach --}}
                         "></div>
             </li>
         @endforeach
