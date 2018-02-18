@@ -4,42 +4,19 @@
         <div class="panel panel-default">
             <div class="panel-heading text-center text-capitalize" >
                 <h2>
-                    Tarefas Finalizadas
+                    Lista de Competências Não-mapeadas (por Pessoas ou Treinamentos)
                 </h2>
             </div>
             <div class="panel-body">
 			
+			<center>Clique na competência para ver detalhes a respeito dela</center>
+			<br/>
 			
-			
-			
-			<?= Lava::render('TableChart', 'Tarefas Finalizadas', 'finished_tasks_div') ?>
-				<div id="finished_tasks_div"></div>
+			<?= Lava::render('TableChart', 'needed_competences_report', 'needed_competences_report_div') ?>
+				<center><div id="needed_competences_report_div"></div></center>
 				
 			<br/>	
 
-				<div>
-                <h4>
-                    
-                </h4>
-                <p></p>
-                <h4>
-                    
-                </h4>
-                <p> </p>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading" >
-                       
-                    </div>
-                    <div class="panel-body">
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading" >
-                    </div>
-                </div>
-				
-            </div>
         </div>
     </div>
 @endsection

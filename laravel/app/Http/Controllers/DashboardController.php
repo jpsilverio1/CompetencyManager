@@ -603,6 +603,7 @@ class DashboardController extends Controller
 			
 		$competences2 = DB::table('competencies as c')
 			->join('user_competences as u','u.competence_id','=','c.id')->union($competences)->select('c.name as competence_name', 'c.id as competence_id')->distinct()->get();
+			
 		
 		foreach ($competences2 as $competence) {
 			$datatable->addRow(["<a href='".route('competences.show', $competence->competence_id)."'>".$competence->competence_name."</a>"]);
@@ -621,6 +622,27 @@ class DashboardController extends Controller
 	
 	
 	public function neededCompetencesReport() {
+		$datatable = \Lava::DataTable();
+		$datatable->addStringColumn('Nome da Competência');
+		
+		$competences_learningaids = DB::table('learning_aids_competencies')->select('competency_id as id')->distinct()->get()->map(function($x){ return $x->id; })->toArray();
+		$competences_user = DB::table('user_competences')->select('competence_id as id')->distinct()->get()->map(function($x){ return $x->id; })->toArray();
+		$covered_competences_ids = array_merge($competences_learningaids, $competences_user);
+						
+		$competences = DB::table('competencies')->select('name', 'id')->whereNotIn('id', $covered_competences_ids)->get();
+		
+		foreach ($competences as $competence) {
+			$datatable->addRow(["<a href='".route('competences.show', $competence->id)."'>".$competence->name."</a>"]);
+		}
+		
+		\Lava::TableChart('needed_competences_report', $datatable, [
+			'title' => 'Lista de Competências Não-mapeadas (por Treinamentos ou Pessoas)',
+			'legend' => [
+				'position' => 'in'
+			],
+			'allowHtml' => true,
+		]);
+		
 		return view('dashboards.needed_competences_report');
 	}
 	

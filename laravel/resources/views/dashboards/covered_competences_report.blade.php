@@ -8,7 +8,7 @@
                 </h2>
             </div>
             <div class="panel-body">
-				<center>Clique no nome da competência para ver quais pessoas ou treinamentos a possuem</center>
+				<center>Clique no nome da competência para ver quais pessoas ou treinamentos a possui</center>
 				<br/>
 				<?= Lava::render('TableChart', 'covered_competences_report', 'covered_competences_report_div') ?>
 				<center><div id="covered_competences_report_div"></div></center>
