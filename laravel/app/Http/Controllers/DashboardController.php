@@ -729,6 +729,25 @@ class DashboardController extends Controller
 	}
 	
 	public function usersWithMoreTasksPerformedReport() {
+		$users_with_tasks_number = DB::table('users')->select('name')->join('task_teams', 'users.id', '=', 'task_teams.task_team_member_id')->select(DB::raw('count(task_id) as count_tasks, users.name as user_name, users.id as user_id'))->groupBy('users.id', 'user_name')->orderBy('count_tasks', 'desc')->get();
+		
+		$datatable = \Lava::DataTable();
+		$datatable->addStringColumn('Nome do Usuário');
+		$datatable->addNumberColumn('Número de Tarefas');
+		
+		foreach ($users_with_tasks_number as $user) {
+			$datatable->addRow(["<a href='".route('users.show', $user->user_id)."'>".$user->user_name."</a>", $user->count_tasks]);
+		}
+		
+		\Lava::TableChart('users_with_more_tasks_performed_table', $datatable, [
+			'title' => 'Tabela de Usuários com maior Número de Tarefas',
+			'legend' => [
+				'position' => 'in'
+			],
+			'allowHtml' => true,
+		]);
+		
+		
 		return view('dashboards.users_with_more_tasks_performed_report');
 	}
 	
