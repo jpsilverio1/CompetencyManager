@@ -4,42 +4,19 @@
         <div class="panel panel-default">
             <div class="panel-heading text-center text-capitalize" >
                 <h2>
-                    Tarefas Finalizadas
+                    Lista de Competências com o Maior Nível de Aprendizado
                 </h2>
             </div>
             <div class="panel-body">
 			
 			
+			<center>Clique na competência para ver mais detalhes sobre ela</center>
+			<br/>
 			
-			
-			<?= Lava::render('TableChart', 'Tarefas Finalizadas', 'finished_tasks_div') ?>
-				<div id="finished_tasks_div"></div>
+			<?= Lava::render('TableChart', 'most_learned_competences_report_table', 'most_learned_competences_report_table_div') ?>
+				<center><div id="most_learned_competences_report_table_div"></div></center>
 				
-			<br/>	
-
-				<div>
-                <h4>
-                    
-                </h4>
-                <p></p>
-                <h4>
-                    
-                </h4>
-                <p> </p>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading" >
-                       
-                    </div>
-                    <div class="panel-body">
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading" >
-                    </div>
-                </div>
-				
-            </div>
+			<br/>
         </div>
     </div>
 @endsection

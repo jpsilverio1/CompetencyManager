@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use Khill\Lavacharts\Lavacharts;
 
+use App\Competency;
+
 use Carbon\Carbon;
 
 use DB;
@@ -648,6 +650,44 @@ class DashboardController extends Controller
 	
 	
 	public function mostLearnedCompetencesReport() {
+		$competences_with_learning_level = array();
+		$all_user_competences = DB::table('user_competences')->get();
+		
+		
+		
+		foreach ($all_user_competences as $user_competence) {
+			$user = \App\User::find($user_competence->user_id);
+			
+			$competence = \App\Competency::find($user_competence->competence_id);
+			$forgettingLevel = $user->forgettingLevel($competence);
+			
+			$competences_with_learning_level[$competence->id] = array($forgettingLevel, $competence->name);
+		}	
+		
+		arsort($competences_with_learning_level);
+		
+		$datatable = \Lava::DataTable();
+		$datatable->addStringColumn('Nome do Competência');
+		$datatable->addNumberColumn('Nível de Lembrança Médio');
+		
+		foreach($competences_with_learning_level as $competence_id => $competence_with_learning_level) {
+			$datatable->addRow(["<a href='".route('competences.show', $competence_id)."'>".$competence_with_learning_level[1]."</a>", $competence_with_learning_level[0]]);
+		}
+		
+		//$users_with_competence_number = DB::table('competencies')->select('name')->join('user_competences', 'competencies.id', '=', 'user_competences.competence_id')->select(DB::raw('count(competence_id) as count_competences, users.name as user_name, users.id as user_id'))->groupBy('users.id', 'user_name')->orderBy('count_competences', 'desc')->get();
+		
+		
+		
+		
+		\Lava::TableChart('most_learned_competences_report_table', $datatable, [
+			'title' => 'Tabela de Competências com o Maior Nível de Aprendizado',
+			'legend' => [
+				'position' => 'in'
+			],
+			'allowHtml' => true,
+		]);
+		
+		
 		return view('dashboards.most_learned_competences_report');
 	}
 	
