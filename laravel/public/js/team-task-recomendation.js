@@ -20,8 +20,8 @@ Sortable.create(candidateTeam, { group: "taskTeam",
             var id = $(this).attr('accessKey');
             var source =  $(this).attr('data-member-source');
             if (source !== "userEnteredCandidate") {
-                $.each(candidateContributions[id]["competenceInfo"]["competence"], function (i, elem) {
-                    fulfilledCompetencies.push(String(elem.id));
+                $.each(candidateContributions[id]["competenceRep"], function (i, elem) {
+                    fulfilledCompetencies.push(String(elem));
                 });
             }
 
@@ -34,8 +34,8 @@ Sortable.create(candidateTeam, { group: "taskTeam",
         var source = $( evt.item).attr('data-member-source');
         console.log("source: "+source);
         if (source !== "userEnteredCandidate") {
-            $.each(candidateContributions[id]["competenceInfo"]["competence"], function (i, elem) {
-                fulfilledCompetencies.push(String(elem.id));
+            $.each(candidateContributions[id]["competenceRep"], function (i, elem) {
+                fulfilledCompetencies.push(String(elem));
             });
             updateCompetenciesFullfilment();
         }
