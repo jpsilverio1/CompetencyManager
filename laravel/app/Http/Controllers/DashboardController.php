@@ -643,6 +643,26 @@ class DashboardController extends Controller
 	
 	
 	public function mostCollaborativeGroupsReport() {
+		$personal_competence_level_id_max = \DB::table('personal_competence_proficiency_levels')->max('id');
+		$users_with_collaboration_level = DB::table('tasks')->select('title')->join('answers', 'tasks.id', '=', 'answers.task_id')->select(DB::raw('avg(personal_competence_level_id) / ' . $personal_competence_level_id_max . ' as collab_level, title, answers.task_id as task__id'))->groupBy('task__id', 'title')->orderBy('collab_level', 'desc')->get();
+		
+		$datatable = \Lava::DataTable();
+		$datatable->addStringColumn('Nome da Tarefa');
+		$datatable->addNumberColumn('Nível de Colaboração entre Membros da Tarefa');
+		
+		foreach ($users_with_collaboration_level as $user) {
+			$datatable->addRow(["<a href='".route('tasks.show', $user->task__id)."'>".$user->title."</a>", $user->collab_level]);
+			
+		}
+		
+		\Lava::TableChart('most_collaborative_groups_report_table', $datatable, [
+			'title' => 'Tabela de Grupos de Tarefa mais Colaborativos',
+			'legend' => [
+				'position' => 'in'
+			],
+			'allowHtml' => true,
+		]);
+		
 		return view('dashboards.most_collaborative_groups_report');
 	}
 	
