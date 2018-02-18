@@ -600,6 +600,7 @@ class DashboardController extends Controller
 			->get();
 		//$all_user_competences = DB::table('user_competences')->select('competence_id')->distinct()->get();
 		
+		
 		var_dump($all_learning_aids_competencies);
 		
 		return view('dashboards.covered_competences_report');
@@ -616,25 +617,27 @@ class DashboardController extends Controller
 	}
 	
 	
-	public function mostCollaborativeUsersReport() {
-		//->select('personal_competence_level_id')->distinct()->get();
-		//$collaborative_level_per_user = DB::table('answers')->groupBy('evaluated_user_id')->select(DB::raw('*, avg(personal_competence_level_id)'))->get();//->avg('personal_competence_level_id');
+	public function mostCollaborativeUsersReport() {	
+		$personal_competence_level_id_max = \DB::table('personal_competence_proficiency_levels')->max('id');
+		$users_with_collaboration_level = DB::table('users')->select('name')->join('answers', 'users.id', '=', 'answers.evaluated_user_id')->select(DB::raw('avg(personal_competence_level_id) / ' . $personal_competence_level_id_max . ' as collab_level, name, evaluated_user_id'))->groupBy('evaluated_user_id', 'name')->orderBy('collab_level', 'desc')->get();
 		
-		$collaborative_level_per_user = DB::table('answers')->select('evaluated_user_id', 'personal_competence_level_id')->groupBy('answers.evaluated_user_id')->get();
+		$datatable = \Lava::DataTable();
+		$datatable->addStringColumn('Nome do Usuário');
+		$datatable->addNumberColumn('Nível de Colaboração');
 		
+		foreach ($users_with_collaboration_level as $user) {
+			$datatable->addRow(["<a href='".route('users.show', $user->evaluated_user_id)."'>".$user->name."</a>", $user->collab_level]);
+			
+		}
 		
+		\Lava::TableChart('most_collaborative_users_report_table', $datatable, [
+			'title' => 'Tabela de Usuários mais Colaborativos',
+			'legend' => [
+				'position' => 'in'
+			],
+			'allowHtml' => true,
+		]);
 		
-		//$collaborative_level_per_user = ($personal_competence_level_id_max - $personal_competence_level_id_mix)*100;
-		var_dump($collaborative_level_per_user);
-		
-		/*
-		$collaborative_level_per_user_percent = array();
-		foreach($collaborative_level_per_user as $user) {
-			$collaborative_level_per_user_percent = 0;
-		} */
-		
-		$personal_competence_level_id_min = DB::table('personal_competence_proficiency_levels')->min('id');
-		$personal_competence_level_id_max = DB::table('personal_competence_proficiency_levels')->max('id');
 		return view('dashboards.most_collaborative_users_report');
 	}
 	
