@@ -92,7 +92,7 @@
                             <td class="table-text">
                                 <input type="hidden" name="endorsed_user_id" value="{{$user->id}}"/>
                                 <input type="hidden" name="competence_id" value="{{$competence->id}}"/>
-                                <div>{{ $competence->name }}</div>
+                                <div><a href="{{ route('competences.show', $competence->id) }}">{{ $competence->name }}</a></div>
 
                             </td>
                             <td class="table-text">
