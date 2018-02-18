@@ -4,40 +4,16 @@
         <div class="panel panel-default">
             <div class="panel-heading text-center text-capitalize" >
                 <h2>
-                    Tarefas Finalizadas
+                    Lista de Competências Abrangidas (por Pessoas ou Treinamentos)
                 </h2>
             </div>
             <div class="panel-body">
-			
-			
-			
-			
-			
+				<center>Clique no nome da competência para ver quais pessoas ou treinamentos a possuem</center>
+				<br/>
+				<?= Lava::render('TableChart', 'covered_competences_report', 'covered_competences_report_div') ?>
+				<center><div id="covered_competences_report_div"></div></center>
 			<br/>	
 
-				<div>
-                <h4>
-                    
-                </h4>
-                <p></p>
-                <h4>
-                    
-                </h4>
-                <p> </p>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading" >
-                       
-                    </div>
-                    <div class="panel-body">
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading" >
-                    </div>
-                </div>
-				
-            </div>
         </div>
     </div>
 @endsection

@@ -595,13 +595,26 @@ class DashboardController extends Controller
 	
 	
 	public function coveredCompetencesReport() {
-		$all_learning_aids_competencies = DB::table('learning_aids_competencies')->select('competency_id')->distinct()
-			->join('user_competences', 'user_competences.competence_id', '<>', 'learning_aids_competencies.competency_id')
-			->get();
-		//$all_user_competences = DB::table('user_competences')->select('competence_id')->distinct()->get();
+		$datatable = \Lava::DataTable();
+		$datatable->addStringColumn('Nome da Competência');
 		
+		$competences = DB::table('competencies as c')
+			->join('learning_aids_competencies as l', 'l.competency_id', '=', 'c.id')->select('c.name as competence_name', 'c.id as competence_id')->distinct();
+			
+		$competences2 = DB::table('competencies as c')
+			->join('user_competences as u','u.competence_id','=','c.id')->union($competences)->select('c.name as competence_name', 'c.id as competence_id')->distinct()->get();
 		
-		var_dump($all_learning_aids_competencies);
+		foreach ($competences2 as $competence) {
+			$datatable->addRow(["<a href='".route('competences.show', $competence->competence_id)."'>".$competence->competence_name."</a>"]);
+		}
+		
+		\Lava::TableChart('covered_competences_report', $datatable, [
+			'title' => 'Lista de Competências Abrangidas (por Treinamentos ou Pessoas)',
+			'legend' => [
+				'position' => 'in'
+			],
+			'allowHtml' => true,
+		]);
 		
 		return view('dashboards.covered_competences_report');
 	}
@@ -652,7 +665,6 @@ class DashboardController extends Controller
 		
 		foreach ($users_with_collaboration_level as $user) {
 			$datatable->addRow(["<a href='".route('tasks.show', $user->task__id)."'>".$user->title."</a>", $user->collab_level]);
-			
 		}
 		
 		\Lava::TableChart('most_collaborative_groups_report_table', $datatable, [
@@ -680,7 +692,6 @@ class DashboardController extends Controller
 		
 		foreach ($users_with_competence_number as $user) {
 			$datatable->addRow(["<a href='".route('users.show', $user->user_id)."'>".$user->user_name."</a>", $user->count_competences]);
-			
 		}
 		
 		\Lava::TableChart('users_with_highest_competence_number_table', $datatable, [
