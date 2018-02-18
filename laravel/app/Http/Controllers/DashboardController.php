@@ -672,7 +672,27 @@ class DashboardController extends Controller
 	}
 	
 	public function usersWithHighestCompetenceNumberReport() {
+		$users_with_competence_number = DB::table('users')->select('name')->join('user_competences', 'users.id', '=', 'user_competences.user_id')->select(DB::raw('count(competence_id) as count_competences, users.name as user_name, users.id as user_id'))->groupBy('users.id', 'user_name')->orderBy('count_competences', 'desc')->get();
+		
+		$datatable = \Lava::DataTable();
+		$datatable->addStringColumn('Nome do Usuário');
+		$datatable->addNumberColumn('Número de Competências');
+		
+		foreach ($users_with_competence_number as $user) {
+			$datatable->addRow(["<a href='".route('users.show', $user->user_id)."'>".$user->user_name."</a>", $user->count_competences]);
+			
+		}
+		
+		\Lava::TableChart('users_with_highest_competence_number_table', $datatable, [
+			'title' => 'Tabela de Usuários com maior Número de Competências',
+			'legend' => [
+				'position' => 'in'
+			],
+			'allowHtml' => true,
+		]);
+		
 		return view('dashboards.users_with_highest_competence_number_report');
+
 	}
 	
 	public function usersWithMoreTasksPerformedReport() {
