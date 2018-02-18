@@ -41,6 +41,26 @@ class User extends Authenticatable
 			return floor((0.19 + 0.6318*pow((1+($diff_in_weeks-1)), (-0.68)))*100);
 		}	
 	}
+	
+	public function forgettingLevel2($competence_id) {
+		$user_competence_row = \DB::table('user_competences')->where([['competence_id',$competence_id], ['user_id', $this->id]])->get();
+		
+		$initTime = $user_competence_row[0]->created_at;
+		$finishTime = $user_competence_row[0]->updated_at;
+		
+		$newInitTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $initTime);
+		$newFinishTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $finishTime);
+
+
+		$diff_in_weeks = $newInitTime->diffInDays($newFinishTime);
+		
+		if ($diff_in_weeks == 0) {
+			return 100;
+		}
+		else {
+			return floor((0.19 + 0.6318*pow((1+($diff_in_weeks-1)), (-0.68)))*100);
+		}	
+	}
 
 
     public function hasCompetence($competenceId) {

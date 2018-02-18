@@ -659,7 +659,8 @@ class DashboardController extends Controller
 			$user = \App\User::find($user_competence->user_id);
 			
 			$competence = \App\Competency::find($user_competence->competence_id);
-			$forgettingLevel = $user->forgettingLevel($competence);
+			$forgettingLevel = $user->forgettingLevel2($user_competence->competence_id);
+			
 			
 			$competences_with_learning_level[$competence->id] = array($forgettingLevel, $competence->name);
 		}	
