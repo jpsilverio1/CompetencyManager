@@ -83,7 +83,10 @@
                                     @endif
                                 </ul>
                             </li>
+							@if (Auth::user()->isManager())
+								<li class=""><a href="{{ route('dashboards.index')}}">Relatórios</a></li>
                             @endif
+                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
