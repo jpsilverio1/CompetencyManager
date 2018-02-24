@@ -7,7 +7,11 @@
                  -->
                 <h3>{{ $user->name }}</h3>
                 <div class="profile-usertitle-job text-capitalize">
-                    {{ $user->role }}
+                    @if($user->role == "manager")
+                        Gerente
+                        @else
+                            Funcionário
+                    @endif
                 </div>
                 <i class="icon-envelope"></i> {{$user->email}} <br>
             </center>

@@ -18,6 +18,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myStyle.css') }}" rel="stylesheet">
+    <link href="{{asset('css/competence-proficiency-level-colors.css')}}" rel="stylesheet">
     <link href="{{ asset('css/competence-subtree.css') }}" rel="stylesheet">
     <link href="{{ asset('css/create-competence.css') }}" rel="stylesheet">
     <!-- Styles from task-team-creation -->
@@ -48,12 +49,11 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp; <li class="active"><a href="{{ route('home') }}">Home</a></li>
+                        &nbsp; <li class="active"><a href="{{ route('home') }}">Início</a></li>
                         @if (!Auth::guest())
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Visualizar <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li class="divider"></li>
                                     <li><a href="{{ route('users.show', Auth::user()->id) }}">Seu perfil</a></li>
                                     <li class="divider"></li>
                                     <li><a href="{{ route('competences.index') }}">Competências</a></li>
@@ -69,7 +69,6 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Cadastrar <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     @if (Auth::user()->isManager())
-                                        <li class="divider"></li>
                                         <li><a href="{{ route('competences.create')}}">Competências</a></li>
                                     @endif
                                    <li class="divider"></li>
@@ -89,7 +88,7 @@
                         <!-- Authentication Links -->
                         @if (Auth::guest())
                             <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Register</a></li>
+                            <li><a href="{{ route('register') }}">Registro</a></li>
                         @else
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

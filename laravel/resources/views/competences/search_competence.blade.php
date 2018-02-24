@@ -1,7 +1,7 @@
-<div class="col-sm-3 col-md-3 navbar-right" >
+<div class="navbar-left" >
     <form class="navbar-form" role="search">
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="Buscar usuário" name="q" id="search_user">
+            <input type="text" class="form-control" placeholder="Buscar competência" name="q" id="search_competence">
             <div class="input-group-btn">
                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
             </div>
@@ -11,17 +11,16 @@
 
 <script>
 
-    function retrieveUser(name, userId) {
-        let path = '/users/'+userId;
+    function retrieveCompetence(name, competenceID) {
+        var path = '/competences/'+competenceID;
         window.location.href = path;
     }
     $(document).ready(function () {
-        src_user = "{{ route('search-user') }}";
-        console.log("usuario   "+src_user);
-        $("#search_user").autocomplete({
+        src_competence = "{{ route('search-competence') }}";
+        $("#search_competence").autocomplete({
             source: function (request, response) {
                 $.ajax({
-                    url: src_user,
+                    url: src_competence,
                     dataType: "json",
                     data: {
                         term: request.term
@@ -34,7 +33,7 @@
             },
             minLength: 1,
             select: function (e, ui) {
-                retrieveUser(ui.item.value, ui.item.id);
+                retrieveCompetence(ui.item.value, ui.item.id);
                 $(this).val('');
                 return false;
             }

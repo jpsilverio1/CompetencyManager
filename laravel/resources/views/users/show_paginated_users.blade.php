@@ -16,7 +16,13 @@
                     <div><a href="{{ route('users.show', $user->id) }}">{{ $user->name }}</a></div>
                 </td>
                 <td class="table-text text-capitalize">
-                    <div>{{ $user->role}}</div>
+                    <div>
+                        @if($user->role == "manager")
+                            Gerente
+                        @else
+                            Funcionário
+                        @endif
+                    </div>
                 </td>
 				@if (isset($showDeleteButton))
 					@if($showDeleteButton)

@@ -3,7 +3,12 @@
 
 
     <div class="container">
-        <div class="col-md-6">
+        <div class="row">
+            @if (!Auth::guest())
+                @include('tasks.search_task')
+            @endif
+        </div>
+        <div class="col-md-6 row">
             <div class="panel panel-default">
 				
                 <div class="panel-heading">Tarefas</div>

@@ -1,7 +1,7 @@
-<div class="col-sm-3 col-md-3 navbar-right" >
+<div class="navbar-left" >
     <form class="navbar-form" role="search">
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="Buscar usuário" name="q" id="search_user">
+            <input type="text" class="form-control" placeholder="Buscar treinamento" name="q" id="search_learningAid">
             <div class="input-group-btn">
                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
             </div>
@@ -11,17 +11,17 @@
 
 <script>
 
-    function retrieveUser(name, userId) {
-        let path = '/users/'+userId;
+    function retrieveLearningAid(name, learningAidID) {
+        var path = '/learnignaids/'+learningAidID;
         window.location.href = path;
     }
     $(document).ready(function () {
-        src_user = "{{ route('search-user') }}";
-        console.log("usuario   "+src_user);
-        $("#search_user").autocomplete({
+        src_learningAid = "{{ route('search-learningAid') }}";
+        console.log(src_learningAid);
+        $("#search_learningAid").autocomplete({
             source: function (request, response) {
                 $.ajax({
-                    url: src_user,
+                    url: src_learningAid,
                     dataType: "json",
                     data: {
                         term: request.term
@@ -34,7 +34,7 @@
             },
             minLength: 1,
             select: function (e, ui) {
-                retrieveUser(ui.item.value, ui.item.id);
+                retrieveLearningAid(ui.item.value, ui.item.id);
                 $(this).val('');
                 return false;
             }
