@@ -292,6 +292,9 @@ class DashboardController extends Controller
 			'legend' => [
 				'position' => 'in'
 			],
+			'page' => 'enable',
+			'pageSize' => 20,
+			'pagingButtons' => 4,
 			'allowHtml' => true,
 		]);
 		
@@ -401,6 +404,9 @@ class DashboardController extends Controller
 			'legend' => [
 				'position' => 'in'
 			],
+			'page' => 'enable',
+			'pageSize' => 20,
+			'pagingButtons' => 4,
 			'allowHtml' => true,
 		]);
 		
@@ -511,6 +517,9 @@ class DashboardController extends Controller
 			'legend' => [
 				'position' => 'in'
 			],
+			'page' => 'enable',
+			'pageSize' => 20,
+			'pagingButtons' => 4,
 			'allowHtml' => true,
 		]);
 		
@@ -589,6 +598,9 @@ class DashboardController extends Controller
 			'legend' => [
 				'position' => 'in'
 			],
+			'page' => 'enable',
+			'pageSize' => 20,
+			'pagingButtons' => 4,
 			'allowHtml' => true,
 		]);
 		
@@ -616,6 +628,9 @@ class DashboardController extends Controller
 			'legend' => [
 				'position' => 'in'
 			],
+			'page' => 'enable',
+			'pageSize' => 20,
+			'pagingButtons' => 4,
 			'allowHtml' => true,
 		]);
 		
@@ -642,6 +657,9 @@ class DashboardController extends Controller
 			'legend' => [
 				'position' => 'in'
 			],
+			'page' => 'enable',
+			'pageSize' => 20,
+			'pagingButtons' => 4,
 			'allowHtml' => true,
 		]);
 		
@@ -675,16 +693,14 @@ class DashboardController extends Controller
 			$datatable->addRow(["<a href='".route('competences.show', $competence_id)."'>".$competence_with_learning_level[1]."</a>", $competence_with_learning_level[0]]);
 		}
 		
-		//$users_with_competence_number = DB::table('competencies')->select('name')->join('user_competences', 'competencies.id', '=', 'user_competences.competence_id')->select(DB::raw('count(competence_id) as count_competences, users.name as user_name, users.id as user_id'))->groupBy('users.id', 'user_name')->orderBy('count_competences', 'desc')->get();
-		
-		
-		
-		
 		\Lava::TableChart('most_learned_competences_report_table', $datatable, [
 			'title' => 'Tabela de Competências com o Maior Nível de Aprendizado',
 			'legend' => [
 				'position' => 'in'
 			],
+			'page' => 'enable',
+			'pageSize' => 20,
+			'pagingButtons' => 4,
 			'allowHtml' => true,
 		]);
 		
@@ -711,6 +727,9 @@ class DashboardController extends Controller
 			'legend' => [
 				'position' => 'in'
 			],
+			'page' => 'enable',
+			'pageSize' => 20,
+			'pagingButtons' => 4,
 			'allowHtml' => true,
 		]);
 		
@@ -735,6 +754,9 @@ class DashboardController extends Controller
 			'legend' => [
 				'position' => 'in'
 			],
+			'page' => 'enable',
+			'pageSize' => 20,
+			'pagingButtons' => 4,
 			'allowHtml' => true,
 		]);
 		
@@ -762,6 +784,9 @@ class DashboardController extends Controller
 			'legend' => [
 				'position' => 'in'
 			],
+			'page' => 'enable',
+			'pageSize' => 20,
+			'pagingButtons' => 4,
 			'allowHtml' => true,
 		]);
 		
@@ -785,6 +810,9 @@ class DashboardController extends Controller
 			'legend' => [
 				'position' => 'in'
 			],
+			'page' => 'enable',
+			'pageSize' => 20,
+			'pagingButtons' => 4,
 			'allowHtml' => true,
 		]);
 		
