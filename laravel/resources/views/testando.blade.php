@@ -28,8 +28,8 @@
 
                  @foreach($task->competencies as $taskCompetence)
                     @if(array_key_exists($taskCompetence->id, $taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"]))
-                              <hX>{{$taskCompetence->name}}</hX>
-                              <ul>
+                              <hX><b>{{$taskCompetence->name}}</b/></hX>
+                              <ul class='sub-competence'>
                               @foreach($taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"][$taskCompetence->id]["competence"] as $index => $candidateCompetence)
                                 <li>
                 <i class='fa fa-circle acceptableCompetenceLevel-{{$taskCandidatesInfo["individualCandidateValues"][$candidate->id]["number of competencies in acceptable level"][$candidateCompetence->id]}}' aria-hidden='true'></i>
