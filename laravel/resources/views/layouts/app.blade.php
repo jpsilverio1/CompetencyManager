@@ -63,6 +63,8 @@
                                     <li><a href="{{ route('tasks.index') }}">Tarefas</a></li>
                                     <li class="divider"></li>
                                     <li><a href="{{ route('learningaids.index') }}">Treinamentos</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('jobroles.index') }}">Cargos</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">
@@ -76,6 +78,8 @@
                                     @if (Auth::user()->isManager())
                                         <li class="divider"></li>
                                         <li><a href="{{ route('learningaids.create')}}">Treinamentos</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="{{ route('jobroles.create')}}">Cargo</a></li>
                                     @endif
                                 </ul>
                             </li>
