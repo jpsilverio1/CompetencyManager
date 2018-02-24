@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Khill\Lavacharts\Lavacharts;
 
 use App\Competency;
+use App\User;
 
 use Carbon\Carbon;
 
@@ -665,24 +666,35 @@ class DashboardController extends Controller
 		
 		return view('dashboards.needed_competences_report');
 	}
-	
-	
+
+	public function getCompetencesWithAverageLearningLevel() {
+        $users = User::all();
+        $competences_with_learning_level = array();
+        $competence_object = [];
+        //skilledUsers
+        if ($users) {
+            foreach ($users as $user) {
+                foreach($user->competences as $competence) {
+                    if (array_key_exists($competence->id, $competences_with_learning_level)) {
+                        $competences_with_learning_level[$competence->id] = $competences_with_learning_level[$competence->id] + $user->forgettingLevel($competence);
+                    } else {
+                        $competences_with_learning_level[$competence->id] = $user->forgettingLevel($competence);
+                        $competence_object[$competence->id] = $competence;
+                    }
+                }
+            }
+        }
+        $competencesWithAverageLearningLevel = [];
+        foreach ($competences_with_learning_level as $competenceId=>$sumOfForgettingLevels) {
+            $competenceObject = $competence_object[$competenceId];
+            $competencesWithAverageLearningLevel[$competenceId] = [($sumOfForgettingLevels/count($competenceObject->skilledUsers)), $competenceObject->name];
+        }
+        return $competencesWithAverageLearningLevel;
+    }
+
 	public function mostLearnedCompetencesReport() {
-		$competences_with_learning_level = array();
-		$all_user_competences = DB::table('user_competences')->get();
-		
-		
-		
-		foreach ($all_user_competences as $user_competence) {
-			$user = \App\User::find($user_competence->user_id);
-			
-			$competence = \App\Competency::find($user_competence->competence_id);
-			$forgettingLevel = $user->forgettingLevel2($user_competence->competence_id);
-			
-			
-			$competences_with_learning_level[$competence->id] = array($forgettingLevel, $competence->name);
-		}	
-		
+
+        $competences_with_learning_level = $this->getCompetencesWithAverageLearningLevel();
 		arsort($competences_with_learning_level);
 		
 		$datatable = \Lava::DataTable();
