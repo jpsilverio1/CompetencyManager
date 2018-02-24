@@ -65,11 +65,12 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('search-competence',array('as'=>'search-competence','uses'=>'SearchController@autocompleteCompetence'));
     Route::get('search-user',array('as'=>'search-user','uses'=>'SearchController@autocompleteUser'));
     Route::get('search-team-candidate',array('as'=>'search-team-candidate','uses'=>'SearchController@autocompleteUser'));
-
+    Route::post('search-competence-db',array('as'=>'search-competence-db','uses'=>'SearchController@searchCompetence'));
     Route::post('tasks.store-team',array('as'=>'tasks.store-team','uses'=>'TaskCOntroller@storeTaskTeam'));
-    //TODO - ERASE
-    Route::get('testao', function () {
-        return view('tasks.teste', ['task' => App\Task::findOrFail(8)]);
+
+
+    Route::get('testao/{taskId}', function ($taskId) {
+        return view('tasks.teste', ['task' => App\Task::findOrFail($taskId)]);
     });
 });
 
