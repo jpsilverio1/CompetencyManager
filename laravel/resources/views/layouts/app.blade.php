@@ -105,11 +105,11 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
-                                    @if(auth()->user()->notifications->count() == 0)
+                                    @if(auth()->user()->unreadNotifications->count() == 0)
                                         <li><a>Sem notificações</a></li>
                                     @else
-                                        @foreach(auth()->user()->notifications as $notification)
-                                            <li><a href="">{{$notification->data['data']}}</a></li>
+                                        @foreach(auth()->user()->unreadNotifications as $notification)
+                                            <li><a href="{{ route( 'show-task-form', $notification->data['id']) }}">Tarefa "{{$notification->data['title']}}" terminada PLACEHOLDER</a></li>
                                         @endforeach
                                     @endif
                                 </ul>

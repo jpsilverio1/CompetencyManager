@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Http\Controllers;
 use App\Http\Requests\CreateTaskFormRequest;
 use App\Http\Requests\EditTaskFormRequest;
@@ -8,7 +9,7 @@ use Illuminate\Http\Request;
 use DB;
 use App\Task;
 use Carbon\Carbon;
-
+use App\Notifications\TaskCompleted;
 class TaskController extends Controller
 {
     /**
@@ -178,6 +179,9 @@ class TaskController extends Controller
 		$task = Task::findOrFail($taskId);
 		$task->end_date = Carbon::now();
 		$task->save();
+        foreach ($task->teamMembers()->get() as $user){
+            $user->notify(new TaskCompleted($task));
+        }
 		return Redirect::route('tasks.show',$taskId);
 	}
 	

@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Task;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,9 +17,10 @@ class TaskCompleted extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public $task;
+    public function __construct($task)
     {
-        //
+        $this->task = $task;
     }
 
     /**
@@ -55,7 +57,8 @@ class TaskCompleted extends Notification
     public function toArray($notifiable)
     {
         return [
-            'data' => 'Tarefa terminada'
+            'title' => $this->task->title,
+            'id' =>$this->task->id
         ];
     }
 }

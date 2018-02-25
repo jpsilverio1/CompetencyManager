@@ -101,7 +101,7 @@
                                         @if ($userAnsweredQuestions)
                                             <td><a href=''/><button type="submit" class="btn btn-primary" disabled>Tarefa Finalizada - Questionário Respondido!</button></td>
                                         @else
-                                            <td><a href={{ route('tasks.show_form', $task->id) }}/><button type="submit" class="btn btn-primary">Tarefa Finalizada - Responder Questionário</button></td>
+                                            <td><a href="{{ 'show_form/'.$task->id.'/' }}"/><button type="submit" class="btn btn-primary">Tarefa Finalizada - Responder Questionário</button></td>
                                         @endif
                                     @endif
 
