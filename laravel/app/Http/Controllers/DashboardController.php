@@ -331,7 +331,7 @@ class DashboardController extends Controller
 	}
 	
 	public function notFinishedTasksReport() {
-		// Tarefas Não-finalizadas - gráfico de colunas indicando número por semanas
+		// Tarefas Em Andamento (Não-finalizadas) - gráfico de colunas indicando número por semanas
 		$oneWeeksAgo = Carbon::now()->subWeeks(1);
 		$twoWeeksAgo = Carbon::now()->subWeeks(2);
 		$threeWeeksAgo = Carbon::now()->subWeeks(3);
@@ -362,7 +362,7 @@ class DashboardController extends Controller
 		$datatable_columnChart->addDateColumn('Semana');
 		$datatable_columnChart->addNumberColumn('Quantidade');
 		
-		// Tarefas Não-finalizadas - tabela
+		// Tarefas em Andamento (Não-finalizadas) - tabela
 		$datatable = \Lava::DataTable();
 		$datatable->addStringColumn('Tarefa');
 		$datatable->addStringColumn('Status');
@@ -371,7 +371,7 @@ class DashboardController extends Controller
 		$tasks = \App\Task::all();
 		foreach ($tasks as $task) {
 			if ($task->taskStatus() == "initialized") {
-				$datatable->addRow(["<a href='".route('tasks.show', $task->id)."'>".$task->title."</a>", "Não-finalizada"]);
+				$datatable->addRow(["<a href='".route('tasks.show', $task->id)."'>".$task->title."</a>", "Em Andamento"]);
 				if (Carbon::createFromFormat('Y-m-d H:i:s',$task->start_date)->between($tweelveWeeksAgo, $elevenWeeksAgo)) {
 					$notFinishedTasks_Week1 += 1;
 				} elseif (Carbon::createFromFormat('Y-m-d H:i:s',$task->start_date)->between($elevenWeeksAgo, $tenWeeksAgo)) {
@@ -401,7 +401,7 @@ class DashboardController extends Controller
 		}
 
 		\Lava::TableChart('not_finished_tasks_table_div', $datatable, [
-			'title' => 'Tarefas Não-finalizadas',
+			'title' => 'Tarefas em Andamento',
 			'legend' => [
 				'position' => 'in'
 			],
@@ -426,7 +426,7 @@ class DashboardController extends Controller
 		$datatable_columnChart->addRow([$oneWeeksAgo, $notFinishedTasks_Week12]);
 		
 		\Lava::ColumnChart('not_finished_tasks_chart_div', $datatable_columnChart, [
-			'title' => 'Tarefas Não-finalizadas por Semana',
+			'title' => 'Tarefas em Andamento (por Semana)',
 			'legend' => [
 				'position' => 'none'
 			],

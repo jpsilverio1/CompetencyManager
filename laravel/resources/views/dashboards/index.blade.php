@@ -35,7 +35,7 @@
 				<div class="col-xs-5 col-xs-offset-1">
 					<h3>Tarefas</h3>
 					<div><a href="{{ route('finished-tasks-report') }}">Listar Tarefas Finalizadas </a></div>
-					<div><a href="{{ route('not-finished-tasks-report') }}">Listar Tarefas Não-finalizadas </a></div>
+					<div><a href="{{ route('not-finished-tasks-report') }}">Listar Tarefas em Andamento </a></div>
 					<div><a href="{{ route('not-initialized-tasks-report') }}">Listar Tarefas Não-inicializadas </a></div>
 					<div><a href="{{ route('unfeasible-tasks-report') }}">Listar Tarefas Não-executáveis </a></div>
 					

@@ -4,7 +4,7 @@
         <div class="panel panel-default">
             <div class="panel-heading text-center text-capitalize" >
                 <h2>
-                    Tarefas Não-finalizadas
+                    Tarefas em Andamento
                 </h2>
             </div>
             <div class="panel-body">
