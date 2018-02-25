@@ -97,14 +97,16 @@ class Task extends Model
         return $fullInfo;
     }
 
-    public function isTaskCompetenceCoveredInAcceptableLevel($taskCompetenceId, $candidateId, $competenceInfo) {
+
+    public function userCompetencesThatCoverTaskCompetenceInAcceptableLevel($taskCompetenceId, $competenceInfo) {
+        $userCompetencesInAcceptableLevel = [];
         foreach($competenceInfo[$taskCompetenceId]["acceptableLevel"] as $userCompetenceId =>$isLevelAcceptable) {
             if ($isLevelAcceptable) {
                 //alguma competence em nivel aceitavel
-                return True;
+                $userCompetencesInAcceptableLevel[] = $userCompetenceId;
             }
         }
-        return False;
+        return $userCompetencesInAcceptableLevel;
     }
 
 
@@ -112,11 +114,18 @@ class Task extends Model
     {
         $taskCompetenciesCoveredByCandidates = [];
         $keepCand = [];
+
+        $suitableCandidates = [];
+        $suitableCandidatesContribution = [];
+
         foreach($candidatesContribution as $candidateId => $data) {
             foreach($data["competenceRep"] as $taskCompetenceId) {
-                if ($this->isTaskCompetenceCoveredInAcceptableLevel($taskCompetenceId, $candidateId, $data["competenceInfo"])) {
+                $userCompetencesThatCoverTaskCompetenceInAcceptableLevel = $this->userCompetencesThatCoverTaskCompetenceInAcceptableLevel($taskCompetenceId, $data["competenceInfo"]);
+                if (count($userCompetencesThatCoverTaskCompetenceInAcceptableLevel)>0) {
                     $taskCompetenciesCoveredByCandidates[$taskCompetenceId] = $taskCompetenceId;
                     $keepCand[$candidateId] = $candidateId;
+                    $suitableCandidatesContribution[$candidateId]["competenceRep"][] = $taskCompetenceId;
+                    $suitableCandidatesContribution[$candidateId]["competenceInfo"][$taskCompetenceId]["competence"] = $userCompetencesThatCoverTaskCompetenceInAcceptableLevel;
                 }
             }
         }
@@ -149,13 +158,15 @@ class Task extends Model
         $newArray = [];
         foreach ($keepCand as $userId) {
             $newArray[] = $candidates[$userId];
+            $suitableCandidates[$userId] = $candidates[$userId];
         }
         //no final myUserSet vai ter todos os usuarios que tem alguma competencia da task num nivel aceitavel.
         // gerar todos os subsets desse set e ver se os usuarios tem todas as competencias
 
         $allSubsetsOfMyUserSet = $this::powerSet($newArray, 1);
         $suitableAssigneesIdsSet = $this::getSuitableAssigneesFromSubset($allSubsetsOfMyUserSet, $allTaskCompetencesIdsAndLevels);
-        return $this::filterSets($suitableAssigneesIdsSet);
+        return ["finalResult" => $this::filterSets($suitableAssigneesIdsSet), "candidates" => $suitableCandidates, "candidatesContribution" => $suitableCandidatesContribution];
+        //return $this::filterSets($suitableAssigneesIdsSet);
 
     }
 
@@ -199,6 +210,7 @@ class Task extends Model
 
         return ["candidates" => $candidates, "candidatesContribution" => $candidateContribution];
     }
+
     function candidateNumberOfCompetenciesRank($taskCandidatesInfo, $candidate) {
         $numberOfCompetencies = count($taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"]);
         if ($this->debugEnabled) {

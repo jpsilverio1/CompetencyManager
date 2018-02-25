@@ -1,12 +1,12 @@
 
-<div class="panel panel-default col-md-3 col-xs-1 col-md-offset-1">
+<div class="panel panel-default col-md-4 col-md-offset-1">
     <div class="panel-heading" >
         Equipes sugeridas
     </div>
     <div class="panel-body">
-                <?php $suitableAssigneesForTask = $task->getFinalRankAndExplanations()["novaRecomendacao"]; ?>
+                <?php $suitableAssigneesForTask = $task->getFinalRankAndExplanations()["novaRecomendacao"]["finalResult"]; ?>
                 @if (count($suitableAssigneesForTask) > 0)
-                        <table class="table table-striped">
+                        <table class="table table-striped" id="team-suggestion-table">
                             <!-- Table Headings -->
                             <thead >
                             <th >Equipe</th>
@@ -25,7 +25,7 @@
                                         </ul>
                                     </td>
                                     <td>
-                                        fazer
+                                        <button type="button" class="btn btn-primary add-candidates-to-team">Adicionar usuários à equipe</button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -37,3 +37,12 @@
                 @endif
     </div>
 </div>
+<script>
+
+
+    $(document).ready(function () {
+        $("#team-suggestion-table").on('click', '.add-candidates-to-team', function () {
+            alert("cliquei aqui nesss bosta");
+        });
+    });
+</script>
