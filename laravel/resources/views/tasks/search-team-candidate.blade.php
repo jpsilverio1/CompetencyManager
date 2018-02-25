@@ -1,6 +1,6 @@
 <div class="panel panel-default col-md-3 col-xs-1 col-md-offset-1">
     <div class="panel-heading" >
-        Adicionar usuario especifico
+        Adicionar usuário especifico
     </div>
     <form class="navbar-form" role="search">
         <div class="input-group">

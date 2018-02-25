@@ -48,8 +48,9 @@ class Task extends Model
         $candidates = $taskCandidatesInfo["candidates"];
         $outroInfo = [];
         $another = [];
+
         if (count($candidates) < 1) {
-            return ["candidates" => []];
+            return ["candidates" => [], "novaRecomendacao" => []];
         }
         foreach($candidates as $candidate) {
             $finalRanks[$candidate->id] = 0;
@@ -91,17 +92,77 @@ class Task extends Model
             $fullInfo["rankingData"]["individualRankingValues"] = $individualAtributteValues;
             $fullInfo["individualCandidateValues"] = $another;
         // TODO - > finish and display the collaborative things in view
+            $fullInfo["novaRecomendacao"] = $this->taskTeamRecommendations($candidates, $taskCandidatesInfo["candidatesContribution"]);
         }
         return $fullInfo;
     }
 
+    public function isTaskCompetenceCoveredInAcceptableLevel($taskCompetenceId, $candidateId, $competenceInfo) {
+        foreach($competenceInfo[$taskCompetenceId]["acceptableLevel"] as $userCompetenceId =>$isLevelAcceptable) {
+            if ($isLevelAcceptable) {
+                //alguma competence em nivel aceitavel
+                return True;
+            }
+        }
+        return False;
+    }
+
+
+    public function taskTeamRecommendations($candidates, $candidatesContribution)
+    {
+        $satis = [];
+        $keepCand = [];
+        foreach($candidatesContribution as $candidateId => $data) {
+            foreach($data["competenceRep"] as $taskCompetenceId) {
+                if ($this->isTaskCompetenceCoveredInAcceptableLevel($taskCompetenceId, $candidateId, $data["competenceInfo"])) {
+                    $satis[$taskCompetenceId] = $taskCompetenceId;
+                    $keepCand[$candidateId] = $candidateId;
+                }
+            }
+        }
+        echo "satisfied task competencies: ";
+        print_r($satis);
+        echo "<br> suitable candidates: ";
+        print_r($keepCand);
+        $olar = $this->competencies()->pluck('competencies.id')->toArray();
+        echo "<br> tarefa: ";
+        print_r($olar);
+        $containsAllValues = !array_diff($olar, $satis);
+        if(!$containsAllValues) {
+            echo "nao tem sugestao";
+            //there is no user that has the competency in an acceptable level
+            return [];
+        }
+
+        $allTaskCompetencesIdsAndLevels = [];
+        $taskCompetences = $this->competencies;
+        foreach ($taskCompetences as $taskCompetence) {
+            $allTaskCompetencesIdsAndLevels[$taskCompetence->id] = $taskCompetence->getAcceptableLevelsFromTaskCompetence();
+        }
+
+        if (count($allTaskCompetencesIdsAndLevels) == 0) {
+            return [];
+        }
+        $newArray = [];
+        foreach ($keepCand as $userId) {
+            $newArray[] = $candidates[$userId];
+        }
+        //no final myUserSet vai ter todos os usuarios que tem alguma competencia da task num nivel aceitavel.
+        // gerar todos os subsets desse set e ver se os usuarios tem todas as competencias
+
+        $allSubsetsOfMyUserSet = $this::powerSet($newArray, 1);
+        $suitableAssigneesIdsSet = $this::getSuitableAssigneesFromSubset($allSubsetsOfMyUserSet, $allTaskCompetencesIdsAndLevels);
+        return $this::filterSets($suitableAssigneesIdsSet);
+
+    }
+
     public function allCandidates() {
-        $total = [];
+        $candidates = [];
         $candidateContribution = [];
         foreach($this->competencies as $taskCompetence) {
             foreach($taskCompetence->skilledUsersConsideringSubCategories() as $userId=>$userData) {
                 $skilledUser = $userData["user"];
-                $total[$userId] = $skilledUser;
+                $candidates[$userId] = $skilledUser;
                 $candidateContribution[$skilledUser->id]["competenceRep"][] = $taskCompetence->id;
                 foreach($userData["competences"] as $competence) {
                     $userCompetence = $skilledUser->competences()->where("competence_id", $competence->id)->first();
@@ -113,7 +174,7 @@ class Task extends Model
 
         if ($this->debugEnabled) {
             foreach ($candidateContribution as $userId => $userContribution) {
-                $user = $total[$userId];
+                $user = $candidates[$userId];
                 echo "--------Usuario: $user->name <br>";
                 foreach($this->competencies as $taskCompetence) {
                     echo "\t $taskCompetence->name - $taskCompetence->id: <br>";
@@ -133,7 +194,7 @@ class Task extends Model
             }
         }
 
-        return ["candidates" => $total, "candidatesContribution" => $candidateContribution];
+        return ["candidates" => $candidates, "candidatesContribution" => $candidateContribution];
     }
     function candidateNumberOfCompetenciesRank($taskCandidatesInfo, $candidate) {
         $numberOfCompetencies = count($taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"]);
@@ -368,7 +429,7 @@ class Task extends Model
         return $suitableUserSubsets;
     }
 
-    public function taskTeamRecommendations()
+    public function oldTaskTeamRecommendations()
     {
         $allCompetenceLevels = CompetenceProficiencyLevel::all()->pluck('id')->toArray();
         $myUserSet = [];
@@ -394,6 +455,8 @@ class Task extends Model
             return [];
         }
         $newArray = [];
+        echo " old method: ";
+        print_r(array_keys($myUserSet));
         foreach ($myUserSet as $user) {
             $newArray[] = $user;
         }

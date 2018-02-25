@@ -81,9 +81,15 @@
 
 
 </div >
-    <div class="row">
-        @include('tasks.search-team-candidate')
-    </div>
+            <div class="row">
+                <div >
+                    @include('tasks.search-team-candidate')
+                </div>
+                <div >
+                    @include('tasks.task-team-recommendation')
+                </div>
+            </div>
+
 
 
 <script>
