@@ -60,6 +60,8 @@ class LearningAidController extends Controller
         $learningAid->description = $description;
         //$learningAid->author_id = $author_id;
         $learningAid->save();
+		
+		\DB::table('basic_statistics')->where('name', 'learningaids_count')->increment('value');
 
         $competenceIds = $request->get('competence_ids');
         $competenceProficiencyLevels = $request->get('competency_proficiency_levels');
@@ -146,6 +148,8 @@ class LearningAidController extends Controller
         $learningAid = LearningAid::findOrFail($id);
         $learningAid->competencies()->detach();
         $learningAid->delete();
+		
+		\DB::table('basic_statistics')->where('name', 'learningaids_count')->decrement('value');
 
         return Redirect::route('learningaids.index')->withMessage('O treinamento foi excluído com sucesso!');
 
