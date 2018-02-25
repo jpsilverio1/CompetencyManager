@@ -6,6 +6,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\DB;
 
 class RegisterController extends Controller
 {
@@ -63,6 +64,8 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+		\DB::table('basic_statistics')->where('name', 'users_count')->increment('value');
+		
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
