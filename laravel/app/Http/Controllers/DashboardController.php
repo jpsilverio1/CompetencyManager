@@ -112,8 +112,8 @@ class DashboardController extends Controller
 		$datatable_columnChart->addRow([$oneWeeksAgo, $users_Learningaids_Week4]);
 		
 
-		\Lava::ColumnChart('finished_tasks_div', $datatable_columnChart, [
-			'title' => 'Tarefas Finalizadas',
+		\Lava::ColumnChart('learning_aids_column_chart_for_dashboard', $datatable_columnChart, [
+			'title' => 'Treinamentos Realizados (por Semana)',
 			'legend' => [
 				'position' => 'none'
 			],

@@ -9,8 +9,8 @@
 			<div class="row">
 				
 				<div class="col-xs-5 col-xs-offset-1">
-					<?= Lava::render('ColumnChart', 'finished_tasks_div', 'finished_tasks_div') ?>
-					<div id="finished_tasks_div"></div>
+					<?= Lava::render('ColumnChart', 'learning_aids_column_chart_for_dashboard', 'learning_aids_column_chart_for_dashboard_div') ?>
+					<div id="learning_aids_column_chart_for_dashboard_div"></div>
 				</div>
 				
 				<div class="col-xs-5 col-xs-offset-1">
