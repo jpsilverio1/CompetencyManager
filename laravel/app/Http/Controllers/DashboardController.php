@@ -647,10 +647,10 @@ class DashboardController extends Controller
 		$competences_user = DB::table('user_competences')->select('competence_id as id')->distinct()->get()->map(function($x){ return $x->id; })->toArray();
 		$covered_competences_ids = array_merge($competences_learningaids, $competences_user);
 						
-		$competences = DB::table('competencies')->select('name', 'id')->whereNotIn('id', $covered_competences_ids)->get();
+		$competences_needed_in_tasks = DB::table('competencies')->select('name')->join('task_competencies', 'competencies.id', '=', 'task_competencies.competency_id')->select(DB::raw('competencies.name as name, task_competencies.competency_id as competency_id'))->whereNotIn('competency_id', $covered_competences_ids)->get();
 		
-		foreach ($competences as $competence) {
-			$datatable->addRow(["<a href='".route('competences.show', $competence->id)."'>".$competence->name."</a>"]);
+		foreach ($competences_needed_in_tasks as $competence) {
+			$datatable->addRow(["<a href='".route('competences.show', $competence->competency_id)."'>".$competence->name."</a>"]);
 		}
 		
 		\Lava::TableChart('needed_competences_report', $datatable, [
