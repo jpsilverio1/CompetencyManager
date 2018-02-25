@@ -82,6 +82,9 @@ class CompetenceController extends Controller
                     $competence->parent_id = $parentDBId;
                 }
                 $competence->save();
+				
+				\DB::table('basic_statistics')->where('name', 'competences_count')->increment('value');
+
                 $dbId = $competence->id;
                 //add to map
                 $parentIdDbIdMap[$uiId] = $dbId;
@@ -134,6 +137,9 @@ class CompetenceController extends Controller
             $result->parent()->associate($parentNode)->save();
         }
 		$competence->delete();
+		
+		\DB::table('basic_statistics')->where('name', 'competences_count')->decrement('value');
+		
         if (Competency::isBroken()) {
             Competency::fixTree();
             echo "consertar";
