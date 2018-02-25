@@ -11,8 +11,10 @@
 |
 */
 use  App\CompetenceProficiencyLevel;
+use App\User;
 
 Route::get('/', function () {
+    User::find(1)->notify(new \App\Notifications\TaskCompleted());
     return view('welcome');
 });
 
