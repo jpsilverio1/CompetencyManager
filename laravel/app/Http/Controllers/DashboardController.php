@@ -129,6 +129,8 @@ class DashboardController extends Controller
 	
 	public function index()
     {
+		$this->recalculateUnfeasibleTaskCountForDashboard();
+		
 		$users_count = DB::table('basic_statistics')->where('name', 'users_count')->select('value')->first()->value;
 		$competences_count = DB::table('basic_statistics')->where("name", "competences_count")->select('value')->first()->value;
 		$learningaids_count = DB::table('basic_statistics')->where("name", "learningaids_count")->select('value')->first()->value;
@@ -833,6 +835,51 @@ class DashboardController extends Controller
 		
 		
 		return view('dashboards.users_with_more_tasks_performed_report');
+	}
+	
+	public function recalculateUnfeasibleTaskCountForDashboard() {
+		// Counting Unfeasible tasks. This method is here because it consumes a lot of processing.
+		$unfeasible_tasks_count = 0;
+		
+		$tasks = \App\Task::all();
+		$all_learning_aids_competencies = DB::table('learning_aids_competencies')->select('competency_id', 'competency_proficiency_level_id')->distinct()->get();
+		$all_user_competences = DB::table('user_competences')->select('competence_id', 'competence_proficiency_level_id')->distinct()->get();
+
+		foreach ($tasks as $task) {
+			$count_competencies_required_in_task = count($task->competencies);
+			$count_competeces_attended_in_task = 0;
+			foreach ($task->competencies as $task_competence) {
+				$found_competence = false;
+				foreach($all_learning_aids_competencies as $learning_aid_competence) {
+					if ($learning_aid_competence->competency_id == $task_competence->id && $task_competence->competency_proficiency_level_id <= $learning_aid_competence->competency_proficiency_level_id) {
+						$found_competence = true;
+						break;
+					}
+				}
+				if ($found_competence == true) {
+					$count_competeces_attended_in_task += 1;
+					continue;
+				}
+				foreach($all_user_competences as $user_competence) {
+					if ($user_competence->competence_id == $task_competence->id && $task_competence->competency_proficiency_level_id <= $user_competence->competence_proficiency_level_id) {
+						$found_competence = true;
+						break;
+					}
+				}
+				if ($found_competence == true) {
+					$count_competeces_attended_in_task += 1;
+					continue;
+				}
+			}
+			if ($count_competeces_attended_in_task != $count_competencies_required_in_task) {
+				$unfeasible_tasks_count += 1;
+			}
+		}
+		
+		$task_count = count($tasks);
+		$feasible_tasks_count = $task_count - $unfeasible_tasks_count;
+		
+		\DB::table('basic_statistics')->where('name', 'feasible_tasks_count')->update(['value' => $feasible_tasks_count]);
 	}
 	
 }
