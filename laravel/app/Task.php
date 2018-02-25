@@ -110,24 +110,27 @@ class Task extends Model
 
     public function taskTeamRecommendations($candidates, $candidatesContribution)
     {
-        $satis = [];
+        $taskCompetenciesCoveredByCandidates = [];
         $keepCand = [];
         foreach($candidatesContribution as $candidateId => $data) {
             foreach($data["competenceRep"] as $taskCompetenceId) {
                 if ($this->isTaskCompetenceCoveredInAcceptableLevel($taskCompetenceId, $candidateId, $data["competenceInfo"])) {
-                    $satis[$taskCompetenceId] = $taskCompetenceId;
+                    $taskCompetenciesCoveredByCandidates[$taskCompetenceId] = $taskCompetenceId;
                     $keepCand[$candidateId] = $candidateId;
                 }
             }
         }
-        echo "satisfied task competencies: ";
-        print_r($satis);
-        echo "<br> suitable candidates: ";
-        print_r($keepCand);
-        $olar = $this->competencies()->pluck('competencies.id')->toArray();
-        echo "<br> tarefa: ";
-        print_r($olar);
-        $containsAllValues = !array_diff($olar, $satis);
+        $taskCompetenciesIds = $this->competencies()->pluck('competencies.id')->toArray();
+        if ($this->debugEnabled) {
+            echo "satisfied task competencies: ";
+            print_r($taskCompetenciesCoveredByCandidates);
+            echo "<br> suitable candidates: ";
+            print_r($keepCand);
+            echo "<br> tarefa: ";
+            print_r($taskCompetenciesIds);
+        }
+
+        $containsAllValues = !array_diff($taskCompetenciesIds, $taskCompetenciesCoveredByCandidates);
         if(!$containsAllValues) {
             echo "nao tem sugestao";
             //there is no user that has the competency in an acceptable level
