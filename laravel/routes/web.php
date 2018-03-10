@@ -24,7 +24,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 /* User has to be authenticated to acess all of the routes listed below*/
 Route::group(['middleware' => 'auth'], function() {
 	
-	Route::get('tasks/show_form/{taskId}', 'TaskController@showForm');
+	Route::get('tasks/show_form/{taskId}', 'TaskController@showForm')->name('show-task-form');
 	
     Route::resource('tasks', 'TaskController');
     //Route::resource('teams', 'TeamController');
