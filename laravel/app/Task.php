@@ -50,7 +50,7 @@ class Task extends Model
         $another = [];
 
         if (count($candidates) < 1) {
-            return ["candidates" => [], "novaRecomendacao" => []];
+            return ["candidates" => [], "novaRecomendacao" => ["finalResult" => [], "candidates" => [], "candidatesContribution" => []]];
         }
         foreach($candidates as $candidate) {
             $finalRanks[$candidate->id] = 0;
@@ -141,9 +141,8 @@ class Task extends Model
 
         $containsAllValues = !array_diff($taskCompetenciesIds, $taskCompetenciesCoveredByCandidates);
         if(!$containsAllValues) {
-            echo "nao tem sugestao";
             //there is no user that has the competency in an acceptable level
-            return [];
+            return ["finalResult" => [], "candidates" => [], "candidatesContribution" => []];
         }
 
         $allTaskCompetencesIdsAndLevels = [];
@@ -153,7 +152,7 @@ class Task extends Model
         }
 
         if (count($allTaskCompetencesIdsAndLevels) == 0) {
-            return [];
+            return ["finalResult" => [], "candidates" => [], "candidatesContribution" => []];
         }
         $newArray = [];
         foreach ($keepCand as $userId) {
