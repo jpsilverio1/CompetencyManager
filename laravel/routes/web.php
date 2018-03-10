@@ -26,13 +26,6 @@ Route::group(['middleware' => 'auth'], function() {
 	
 	Route::get('tasks/show_form/{taskId}', 'TaskController@showForm');
 	
-	/*
-	Route::get('/dashboards/tasks','DashboardController@taskReports');
-	Route::get('/dashboards/competences','DashboardController@competencesReports');
-	Route::get('/dashboards/users','DashboardController@usersReports');
-	Route::get('/dashboards/collaboration','DashboardController@collaborationReports');
-	Route::get('/dashboards/other','DashboardController@otherReports'); */
-	
     Route::resource('tasks', 'TaskController');
     //Route::resource('teams', 'TeamController');
     Route::resource('competences', 'CompetenceController');
@@ -51,7 +44,6 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/dashboards/competences/most-learned','DashboardController@mostLearnedCompetencesReport')->name('most-learned-competences-report');
 	Route::get('/dashboards/collaboration/most-collaborative-users','DashboardController@mostCollaborativeUsersReport')->name('most-collaborative-users-report');
 	Route::get('/dashboards/collaboration/most-collaborative-groups','DashboardController@mostCollaborativeGroupsReport')->name('most-collaborative-groups-report');
-	//Route::get('/dashboards/collaboration/unanswered-collaboration-form','DashboardController@usersWhoDidntAnswerCollaborationFormReport')->name('users-who-didnt-answer-collaboration-form-report');
 	Route::get('/dashboards/users/highest-competence-number','DashboardController@usersWithHighestCompetenceNumberReport')->name('users-with-highest-competence-number-report');
 	Route::get('/dashboards/users/most-tasks-performed','DashboardController@usersWithMoreTasksPerformedReport')->name('users-with-more-tasks-performed-report');
 
