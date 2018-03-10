@@ -128,7 +128,6 @@ class CompetenceController extends Controller
 		DB::table("user_endorsements")->where('competence_id', '=',$competence->id)->delete();
 		$competence->skilledUsers()->detach();
 		$competence->tasksThatRequireIt()->detach();
-		$competence->teamsThatHaveIt()->detach();
         $competence->learningAidsThatRequireIt()->detach();
         $children = $competence->children;
         $parentNode = $competence->parent;
