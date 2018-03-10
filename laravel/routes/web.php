@@ -27,7 +27,6 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('tasks/show_form/{taskId}', 'TaskController@showForm')->name('show-task-form');
 	
     Route::resource('tasks', 'TaskController');
-    //Route::resource('teams', 'TeamController');
     Route::resource('competences', 'CompetenceController');
     Route::resource('users','UserController');
 	Route::resource('jobroles','JobRoleController');
