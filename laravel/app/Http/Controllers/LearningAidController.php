@@ -149,6 +149,7 @@ class LearningAidController extends Controller
     {
         $learningAid = LearningAid::findOrFail($id);
         $learningAid->competencies()->detach();
+		$learningAid->usersInThisLearningAid()->detach();
         $learningAid->delete();
 		
 		\DB::table('basic_statistics')->where('name', 'learningaids_count')->decrement('value');
