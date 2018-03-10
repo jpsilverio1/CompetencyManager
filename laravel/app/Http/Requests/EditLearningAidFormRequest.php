@@ -26,6 +26,7 @@ class EditLearningAidFormRequest extends FormRequest
         $rules = [];
         $rules['name'] = 'required|min:2|max:255|unique:learning_aids,name,'.$this->get('id');
         $rules['description'] = 'required|min:2';
+		$rules['competence_ids'] = 'required';
         return $rules;
     }
 
@@ -38,6 +39,7 @@ class EditLearningAidFormRequest extends FormRequest
             'name.unique' => 'Um treinamento já foi cadastrado com este nome. Por favor utilize outro nome.',
             'description.required'  => 'O campo descrição é obrigatório',
             'description.min'  => 'O campo descrição está muito curto',
+			'competence_ids.required' => 'Você precisa cadastrar pelo menos uma competência necessária para a execução do treinamento',
         ];
     }
 }
