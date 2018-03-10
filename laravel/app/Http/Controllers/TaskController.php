@@ -150,8 +150,12 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
+		
         $task = Task::findOrFail($id);
 		$task->competencies()->detach();
+		\DB::table('answers')->where('task_id', $id)->delete();
+		$task->teamMembers()->detach();
+
 		$task->delete();
 		
 		\DB::table('basic_statistics')->where('name', 'tasks_count')->decrement('value');
