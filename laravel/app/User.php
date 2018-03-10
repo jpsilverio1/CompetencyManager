@@ -178,6 +178,11 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Task', 'author_id')->orderBy('title');
     }
+	
+	public function joinedTasks()
+    {
+        return $this->belongsToMany('App\Task', 'task_teams', 'task_team_member_id', 'task_id');
+    }
 
     //endorsements where the current user is the endorsed entity
     public function endorsements()

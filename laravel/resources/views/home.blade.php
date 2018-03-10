@@ -3,6 +3,7 @@
     <div class="container">
         <div class="row">
             @include('tasks.show_tasks')
+			@include('tasks.show_joined_tasks')
         </div>
         <div class="row">
             @include('users.show_competences')
