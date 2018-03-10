@@ -106,8 +106,14 @@ class CompetenceController extends Controller
                 }
             }
         }
-        $allCompetences = Competency::paginate(10);
-        return view('competences.index', ['competences' => $allCompetences, 'message' => 'As competências foram cadastradas com sucesso!']);
+		if (sizeOf($names) > 1) { // if we have more than one competence name, we redirect to competences index page
+			$allCompetences = Competency::paginate(10);
+			return view('competences.index', ['competences' => $allCompetences, 'message' => 'As competências foram cadastradas com sucesso!']);
+		} else { // if you have just one competence name, then it must be the name of the only created competence, so we'll redirect to it
+			$competence = Competency::where('name', '=', $names[0])->first();
+			return view('competences.show', ['id' => $competence, 'competence' => $competence, 'message' => 'A competência foi cadastrada com sucesso!']);
+		}
+        
 	}
 	public function update(EditCompetenceFormRequest $request, $id)
 	{
