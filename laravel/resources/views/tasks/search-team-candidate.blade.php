@@ -1,3 +1,19 @@
+<style>
+	.ui-autocomplete {
+		max-height: 300px;
+		width: 100px;
+		overflow-y: auto;
+		/* prevent horizontal scrollbar */
+		overflow-x: hidden;
+	}
+	/* IE 6 doesn't support max-height
+	 * we use height instead, but this forces the menu to always be this tall
+	 */
+	* html .ui-autocomplete {
+		height: 100px;
+	}
+</style>
+
 <div class="panel panel-default col-md-3 col-xs-1 col-md-offset-1">
     <div class="panel-heading" >
         Adicionar usuario especifico
