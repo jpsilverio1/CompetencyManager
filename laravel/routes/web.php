@@ -101,7 +101,7 @@ Route::group(['middleware' => 'auth'], function() {
     });
 });
 
-
+Route::get('verify/{email}/{verifyToken}','Auth\RegisterController@sendEmailDone')->name('sendEmailDone');
 
 
 
