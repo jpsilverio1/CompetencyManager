@@ -32,8 +32,11 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/dashboards/users','DashboardController@usersReports');
 	Route::get('/dashboards/collaboration','DashboardController@collaborationReports');
 	Route::get('/dashboards/other','DashboardController@otherReports'); */
-	
+
     Route::resource('tasks', 'TaskController');
+    Route::post('tasks', ['as' => 'tasks.index', 'uses' => 'TaskController@index']);
+    
+
     //Route::resource('teams', 'TeamController');
     Route::resource('competences', 'CompetenceController');
     Route::resource('users','UserController');

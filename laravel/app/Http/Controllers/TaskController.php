@@ -16,11 +16,21 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+
+    public function index(Request $request)
     {
-        $allTasks = Task::orderBy('title')->paginate(10);
-        return view('tasks.index', ['tasks' => $allTasks]);
+        $sortType = $request->get('sort_type');
+        if ($sortType == "name") {
+            $allTasks = Task::orderBy('title')->paginate(10);
+            return view('tasks.index', ['tasks' => $allTasks, 'sortType' => 'date']);
+        } else {
+            $allTasks = Task::paginate(10);
+            return view('tasks.index', ['tasks' => $allTasks, 'sortType' => 'name']);
+        }
+
     }
+
+
 
     /**
      * Show the form for creating a new resource.
