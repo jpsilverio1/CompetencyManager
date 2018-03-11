@@ -1,5 +1,39 @@
 @extends('layouts.app')
 @section('content')
+<script>
+    var dictionary;
+    function getLabelForSliderValue(val) {
+        return dictionary[val];
+    }
+    function updateTextInput(slider) {
+        var rowHit = $(slider).parent().parent().parent();
+        var sliderLabel = rowHit.find(".competence_level_label");
+        var newLabel = getLabelForSliderValue(slider.value);
+        sliderLabel.html(newLabel);
+    }
+    $(document).ready(function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        var url = "{{ route('competence-proficiency-level') }}";
+        dictionary = function () {
+            var tmp = null;
+            $.ajax({
+                'async': false,
+                'type': "GET",
+                'global': false,
+                'url': url,
+                'success': function (data) {
+                    tmp = data;
+                }
+            });
+            return tmp;
+        }();
+		document.getElementById("sliderName").innerHTML = getLabelForSliderValue(1);
+    });
+</script>
     <div class="container">
         <div class="panel panel-default">
             <div class="panel-heading text-center text-capitalize" >
@@ -31,6 +65,33 @@
                             Usuários que possuem a competência
                     </div>
                     @include('users.show_paginated_users', ['users' => $competence->skilledUsers()->paginate(10, ['*'],'users')])
+					
+					<div class="table table-striped task-table">
+						<?php 
+							$userHasThisCompetence = Auth::user()->hasCompetence($competence->id); 
+							$numberOfCategories = \App\CompetenceProficiencyLevel::count();
+						?>
+						<form action="/user-competence" method="POST">
+							{{ csrf_field() }}
+							<div>
+								<input type="hidden" name="name" value="{{$competence->name}}" />
+								<input type="hidden" name="competence_id" value="{{$competence->id}}" />
+								<div class="competency_level">
+									<span class="competence_level_label" name="levels[]" ><div id="sliderName"></div></span>
+									<input type="range" class="competence_level_slider"
+				name="competence_proficiency_level" min="1" max="{{ $numberOfCategories }}" value="1" onchange="updateTextInput(this)">
+								</div>
+								@if ($userHasThisCompetence)
+									Você possui o seguinte nível nesta competência: 
+									{{\App\CompetenceProficiencyLevel::findOrFail(Auth::user()->competences()->where('competence_id',$competence->id)->first()->pivot->competence_proficiency_level_id)->name}}
+									
+									<button type="submit" class="btn btn-primary">Alterar Nível</button>
+								@else
+									<button type="submit" class="btn btn-primary">Adicionar esta competência ao seu Perfil</button>
+								@endif
+							</div>
+						</form>
+					</div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading" >
@@ -57,10 +118,9 @@
                             </form>
                         </div>
                         @endif
-
-
                     </div>
             </div>
         </div>
     </div>
 @endsection
+

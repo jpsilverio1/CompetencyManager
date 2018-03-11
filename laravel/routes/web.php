@@ -57,6 +57,7 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/learningaid-finish/{learningAidId}', 'LearningAidController@finishLearningAid');
 
     Route::post('/user-competences', 'UserController@addCompetences');
+	Route::post('/user-competence', 'UserController@addCompetenceToUser');
     Route::post('/user-endorsements', 'EndorsementController@addEndorsement');
 
     Route::get('task-initialize/{taskId}',array('as'=>'task-initialize','uses'=>'TaskController@initializeTask'));
