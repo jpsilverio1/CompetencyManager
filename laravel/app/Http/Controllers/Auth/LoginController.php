@@ -35,4 +35,8 @@ protected function redirectPath()
     {
         $this->middleware('guest')->except('logout');
     }
+    public function credentials(Request $request){
+        return ['email'=>$request->{$this->username()},'password'=>$request->password, 'status'=>'1'];
+    }
+
 }

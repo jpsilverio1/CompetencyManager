@@ -4,8 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\verifyEmail;
 
 class RegisterController extends Controller
 {
@@ -63,11 +67,34 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'role' => $data['role'],
+            'verifyToken' => Str::random(40),
         ]);
+        $thisUser = User::findOrFail($user->id);
+        $this->sendEmail($thisUser);
+
     }
+
+    public function sendEmail($thisUser){
+        Mail::to($thisUser['email'])->send(new verifyEmail($thisUser));
+    }
+    public function sendEmailDone($email, $verifyToken){
+        $user=User::where(['email'=>$email,'verifyToken'=>$verifyToken])->first();
+        if($user){
+            User::where(['email'=>$email,'verifyToken'=>$verifyToken])->update(['status'=>'1','verifyToken'=>NULL]);
+            return redirect(route('login'))->with('status', 'Registro confirmado. Faça o login.');
+        }
+        else{
+            return redirect(route('login'))->with('status', 'Este link não é mais válido.');
+        }
+    }
+
+    /*public function verifyEmailFirst(){
+        return view('email.verifyEmailFirst');
+    }*/
+
 }
