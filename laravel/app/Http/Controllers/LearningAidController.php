@@ -29,8 +29,20 @@ class LearningAidController extends Controller
      */
     public function index()
     {
-        $allLearningAids = LearningAid::orderBy('name')->paginate(10);
-        return view('learningaids.index', ['learningAids' => $allLearningAids]);
+        $allLearningAids = LearningAid::paginate(10);
+        return view('learningaids.index', ['learningAids' => $allLearningAids, 'sortType' => 'name']);
+    }
+
+    public function sort(Request $request) {
+        $sortType = $request->get('sort_type');
+        if ($sortType == "name") {
+            $allLearningAids = LearningAid::orderBy('name')->paginate(10);
+            return view('learningaids.index', ['learningAids' => $allLearningAids, 'sortType' => 'date']);
+        } else {
+            $allLearningAids = LearningAid::paginate(10);
+            return view('learningaids.index', ['learningAids' => $allLearningAids, 'sortType' => 'name']);
+        }
+
     }
 
     /**
