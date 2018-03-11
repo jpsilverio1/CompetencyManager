@@ -34,12 +34,12 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/dashboards/other','DashboardController@otherReports'); */
 
     Route::resource('tasks', 'TaskController');
-    Route::post('tasks', ['as' => 'tasks.index', 'uses' => 'TaskController@index']);
+    Route::post('tasks-index', ['as' => 'tasks-index', 'uses' => 'TaskController@sort']);
 
 
     //Route::resource('teams', 'TeamController');
     Route::resource('competences', 'CompetenceController');
-    Route::post('competences', ['as' => 'competences.index', 'uses' => 'CompetenceController@index']);
+    Route::post('competences-index', ['as' => 'competences-index', 'uses' => 'CompetenceController@sort']);
 
 
     Route::resource('users','UserController');

@@ -8,7 +8,7 @@
                 @include('tasks.search_task')
             @endif
         </div>
-        <form class="form-horizontal" role="form" method="POST" action="{{ route('tasks.index') }}">
+        <form class="form-horizontal" role="form" method="POST" action="{{ route('tasks-index') }}">
             {{ csrf_field() }}
             <input type="hidden" name="sort_type" value="{{$sortType}}">
                 <div class="form-group">

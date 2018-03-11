@@ -5,7 +5,7 @@
             @if (!Auth::guest())
                 @include('competences.search_competence')
             @endif
-                <form class="form-horizontal" role="form" method="POST" action="{{ route('competences.index') }}">
+                <form class="form-horizontal" role="form" method="POST" action="{{ route('competences-index') }}">
                     {{ csrf_field() }}
                     <input type="hidden" name="sort_type" value="{{$sortType}}">
                     <div class="form-group">

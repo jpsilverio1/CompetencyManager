@@ -17,7 +17,13 @@ class TaskController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index(Request $request)
+    public function index()
+    {
+        $allTasks = Task::paginate(10);
+        return view('tasks.index', ['tasks' => $allTasks, 'sortType' => 'name']);
+    }
+
+    public function sort(Request $request)
     {
         $sortType = $request->get('sort_type');
         if ($sortType == "name") {

@@ -30,7 +30,13 @@ class CompetenceController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index(Request $request)
+    public function index()
+    {
+        $allCompetences = Competency::paginate(10);
+        return view('competences.index', ['competences' => $allCompetences, 'message' => '', 'sortType' => 'name']);
+    }
+
+    public function sort(Request $request)
     {
         $sortType = $request->get('sort_type');
         if ($sortType == "name") {
