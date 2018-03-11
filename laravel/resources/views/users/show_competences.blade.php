@@ -6,7 +6,6 @@
                     @include('competences.show_paginated_competences', ['competences' => Auth::user()->competences()->paginate(5, ['*'],'competences'),
                     'showCompetenceLevel' => True,
                     'showDeleteButton' => True,
-                    'useCompetency' => False,
                     'noCompetencesMessage' => 'Você ainda não cadastrou competências.',
                      'path_to_removal' => '/user-competence/'])
 

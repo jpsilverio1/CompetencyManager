@@ -30,7 +30,6 @@
                         @include('competences.show_paginated_competences', ['competences' => $team->competencies(),
                         'showCompetenceLevel' => False,
                         'showDeleteButton' => False,
-                        'useCompetency' => False,
                         'noCompetencesMessage' => 'Não há competências para exibição.'])
                     </div>
                 </div>

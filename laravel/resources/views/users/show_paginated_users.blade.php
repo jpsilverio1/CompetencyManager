@@ -1,12 +1,13 @@
 @if (count($users) > 0)
     <table class="table table-striped task-table" id="showCompetencesTable">
-        @if (isset($showDeleteButton))
-			@if($showDeleteButton)
+        @if (isset($showCompetenceLevel))
+			@if($showCompetenceLevel)
 				<th>Nome </th>
 				<th> Função</th>
-				<th>Excluir membro?</th>
+				<th>Nível</th>
 			@endif
 		@endif
+
         <!-- Table Body -->
         <tbody>
         @foreach ($users as $user)
@@ -24,16 +25,11 @@
                         @endif
                     </div>
                 </td>
-				@if (isset($showDeleteButton))
-					@if($showDeleteButton)
+				@if (isset($showCompetenceLevel))
+					@if($showCompetenceLevel)
 						<td>
 
-							<form action="{{$path_to_removal}}{{ $user->id }}" method="POST">
-								{{ csrf_field() }}
-								{{ method_field('DELETE') }}
-
-								<button>x</button>
-							</form>
+                            <div> {{$user->pivot->proficiency_level_name}}</div>
 						</td>
 					@endif
 				@endif

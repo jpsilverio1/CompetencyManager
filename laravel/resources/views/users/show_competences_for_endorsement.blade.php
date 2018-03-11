@@ -82,7 +82,6 @@
                 <!-- Table Body -->
                 <tbody>
                 @foreach ($competences as $competence)
-
                     @php($forgettingLevel = $user->forgettingLevel($competence))
                     @php($numberOfCompetenceLevels = \App\CompetenceProficiencyLevel::count())
                     @php($step = $numberOfCompetenceLevels/5)
@@ -100,7 +99,7 @@
 
                             </td>
                             <td class="table-text">
-                                <div> {{\App\CompetenceProficiencyLevel::findOrFail($competence->pivot->competence_proficiency_level_id)->name}}</div>
+                                <div> {{$competence->pivot->proficiency_level_name}}</div>
                             </td>
     <td>
         <div style="text-align: center">

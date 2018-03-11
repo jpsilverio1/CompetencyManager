@@ -55,7 +55,6 @@
                         @include('competences.show_paginated_competences', ['competences' => $learningAid->competencies()->paginate(5, ['*'],'competences'),
                         'showCompetenceLevel' => True,
                         'showDeleteButton' => False,
-                        'useCompetency' => True,
                         'noCompetencesMessage' => 'Não há competências para exibição.'])
                     </div>
                 </div>

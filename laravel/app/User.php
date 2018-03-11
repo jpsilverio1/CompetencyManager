@@ -18,11 +18,12 @@ class User extends Authenticatable
         'name', 'role', 'email', 'password',
     ];
 
-    public function competences()
-    {
-        return $this->belongsToMany('App\Competency', 'user_competences', 'user_id', 'competence_id')
-            ->withPivot('competence_proficiency_level_id')->withTimestamps()->orderBy('name');
-
+    public function competences(){
+        return $this->belongsToMany('App\Competency','user_competences','user_id','competence_id')
+            ->withPivot('competence_proficiency_level_id')
+            ->join('competence_proficiency_level','competence_proficiency_level_id','=','competence_proficiency_level.id')
+            ->select('competencies.*', 'competence_proficiency_level.name as pivot_proficiency_level_name')
+            ->withTimestamps()->orderBy('competencies.name');
     }
     public function forgettingLevel($competence) {
         $initTime = $competence->pivot->updated_at;

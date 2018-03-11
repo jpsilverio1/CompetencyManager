@@ -54,7 +54,6 @@
                         @include('competences.show_paginated_competences', ['competences' => $jobrole->competencies()->paginate(5, ['*'],'competences'),
                         'showCompetenceLevel' => False,
                         'showDeleteButton' => False,
-                        'useCompetency' => True,
                         'noCompetencesMessage' => 'Não há competências para exibição.'])
                     </div>
                 </div>

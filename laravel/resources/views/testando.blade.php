@@ -39,7 +39,7 @@
                                 <li>
                 <i class='fa fa-circle acceptableCompetenceLevel-{{$taskCandidatesInfo["individualCandidateValues"][$candidate->id]["number of competencies in acceptable level"][$candidateCompetence->id]}}' aria-hidden='true'></i>
                 {{$candidateCompetence->name}} -
-                {{$candidateCompetence->pivot->competence_proficiency_level_id}} -
+                {{$candidateCompetence->pivot->proficiency_level_name}} -
                 {{$taskCandidatesInfo["individualCandidateValues"][$candidate->id]["remembering level"][$candidateCompetence->id]}} -
                 {{$taskCandidatesInfo["individualCandidateValues"][$candidate->id]["number of endorsements"][$candidateCompetence->id]}}
                 </li>
@@ -68,7 +68,7 @@
                     <tr>
                         <!-- Task Name -->
                         <td class="table-text task-competence">
-                            <div><a href="{{ route('competences.show', $competence->id) }}">{{ $competence->name }}</a> - {{$competence->pivot->competency_proficiency_level_id}}</div>
+                            <div><a href="{{ route('competences.show', $competence->id) }}">{{ $competence->name }}</a> - {{$competence->pivot->proficiency_level_name}}</div>
                         </td>
                         <td>
                             <span accesskey="{{$competence->id}}" class="glyphicon glyphicon-ok competence_status unfulfilled-competency"></span>

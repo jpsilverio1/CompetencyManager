@@ -59,14 +59,19 @@ class Competency extends Model
             ->withPivot('competence_proficiency_level_id')
             ->wherePivotIn('competence_proficiency_level_id', $acceptableCompetenceLevels)->get();
     }
-    public function skilledUsers() {
-        return $this->belongsToMany('App\User', 'user_competences', 'competence_id', 'user_id')
-            ->withPivot('competence_proficiency_level_id');
+
+    public function skilledUsers(){
+        return $this->belongsToMany('App\User','user_competences','competence_id','user_id')
+            ->withPivot('competence_proficiency_level_id')
+            ->join('competence_proficiency_level','competence_proficiency_level_id','=','competence_proficiency_level.id')
+            ->select('users.*', 'competence_proficiency_level.name as pivot_proficiency_level_name');
     }
 
-    public function tasksThatRequireIt() {
-        return $this->belongsToMany('App\Task', 'task_competencies')
-            ->withPivot('competency_proficiency_level_id');
+    public function tasksThatRequireIt(){
+        return $this->belongsToMany('App\Task','task_competencies','competency_id','task_id')
+            ->withPivot('competency_proficiency_level_id')
+            ->join('competence_proficiency_level','competency_proficiency_level_id','=','competence_proficiency_level.id')
+            ->select('tasks.*', 'competence_proficiency_level.name as pivot_proficiency_level_name');
     }
 
     public function learningAidsThatRequireIt() {

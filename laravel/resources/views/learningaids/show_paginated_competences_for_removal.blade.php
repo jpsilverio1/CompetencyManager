@@ -6,7 +6,6 @@
             @include('competences.show_paginated_competences', ['competences' => $learningAid->competencies()->paginate(5, ['*'],'competences'),
             'showCompetenceLevel' => True,
             'showDeleteButton' => True,
-            'useCompetency' => True,
             'noCompetencesMessage' => 'Você ainda não cadastrou competências.',
              'path_to_removal' => '/learningaid-competency/'.$learningAid->id.'/'])
 

@@ -30,7 +30,7 @@
                     <div class="panel-heading" >
                             Usuários que possuem a competência
                     </div>
-                    @include('users.show_paginated_users', ['users' => $competence->skilledUsers()->paginate(10, ['*'],'users')])
+                    @include('users.show_paginated_users', ['users' => $competence->skilledUsers()->paginate(10, ['*'],'users'), 'showCompetenceLevel' => True])
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading" >
