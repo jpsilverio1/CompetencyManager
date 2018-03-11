@@ -11,7 +11,8 @@
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.2",
-		"khill/lavacharts" : "3.0.*"
+		"khill/lavacharts" : "3.0.*",
+		"nesbot/carbon": "1.22.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
