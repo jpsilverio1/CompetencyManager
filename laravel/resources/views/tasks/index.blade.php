@@ -20,7 +20,6 @@
                         @endif
                     </div>
                 </div>
-
         </form>
 
         <div class="col-md-6 row">

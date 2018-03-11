@@ -35,10 +35,13 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::resource('tasks', 'TaskController');
     Route::post('tasks', ['as' => 'tasks.index', 'uses' => 'TaskController@index']);
-    
+
 
     //Route::resource('teams', 'TeamController');
     Route::resource('competences', 'CompetenceController');
+    Route::post('competences', ['as' => 'competences.index', 'uses' => 'CompetenceController@index']);
+
+
     Route::resource('users','UserController');
 	Route::resource('jobroles','JobRoleController');
 	Route::resource('learningaids','LearningAidController');
