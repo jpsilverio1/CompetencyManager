@@ -5,15 +5,15 @@
             @if (!Auth::guest())
                 @include('competences.search_competence')
             @endif
-                <form class="form-horizontal" role="form" method="POST" action="{{ route('competences-index') }}">
+                <form class="navbar-form" role="form" method="POST" action="{{ route('competences-index') }}">
                     {{ csrf_field() }}
                     <input type="hidden" name="sort_type" value="{{$sortType}}">
                     <div class="form-group">
-                        <div class="col-xs-5 col-xs-offset-1">
+                        <div>
                             @if($sortType == "name")
-                                <button type="submit" class="btn btn-primary">Ordenar por nome</button>
+                                <button type="submit" class="btn btn-info">Ordenar por nome</button>
                             @else
-                                <button type="submit" class="btn btn-primary">Ordenar por data</button>
+                                <button type="submit" class="btn btn-info">Ordenar por data</button>
                             @endif
                         </div>
                     </div>
