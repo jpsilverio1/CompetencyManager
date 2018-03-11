@@ -33,12 +33,5 @@
                 @include('tasks.show_paginated_tasks', ['tasks' => $user->createdTasks()->paginate(10, ['*'],'tasks'), 'noTasksMessage' => 'Não há tarefas para exibição.'])
             </div>
         </div>
-
-        {{--<div class="panel panel-default">
-            <div class="panel-heading" >
-                Equipes das quais o usuário faz parte
-                @include('teams.show_paginated_teams', ['teams' => $user->teams()->paginate(10, ['*'],'teams')])
-            </div>
-        </div>--}}
     </div>
 @endsection

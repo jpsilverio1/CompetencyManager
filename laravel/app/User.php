@@ -210,11 +210,6 @@ class User extends Authenticatable
             $this->endorsements_endorser()->updateExistingPivot($competenceId, ['competence_proficiency_endorsement_level_id' => $competenceLevel]);
         }
     }
-
-    public function teams()
-    {
-        return $this->belongsToMany('App\Team', 'team_members');
-    }
 	
 	// Usuário tem autorização pra inicializar ou finalizar tarefa se ele está na tarefa ou se ele é Gerente
 	public function canInitializeOrFinishTask($taskId) {
