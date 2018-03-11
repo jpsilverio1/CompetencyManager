@@ -387,7 +387,6 @@ class Task extends Model
     }
 
     public function hasTeamAssigned() {
-        echo count($this->teamMembers);
         return count($this->teamMembers) > 0;
     }
 
@@ -538,6 +537,10 @@ class Task extends Model
 	public function canBeInitialized() {
         $start_date_original = $this->getOriginal('start_date');
         return (($start_date_original == null) && $this->hasTeamAssigned());
+    }
+
+    public function canHaveTeamAssigned() {
+        return ($this->taskStatus() != "finished");
     }
 
 }

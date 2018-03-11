@@ -6,6 +6,11 @@
             Assistente de criação de equipes
         </div>
         <div class="panel-body">
+            @if ($errors->has('team'))
+                <div class="alert alert-warning">
+                    {{$errors->first('team')}}<br />
+                </div>
+        @endif
     <!-- Simple List -->
     <div style="text-align:center;" class="row">
         <div class="layer title col-md-3 col-md-offset-1">Candidatos

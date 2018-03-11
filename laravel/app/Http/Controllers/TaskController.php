@@ -96,6 +96,14 @@ class TaskController extends Controller
         $taskId = $request->get('task_id');
         $teamMembersIds = $request->get('team_member_id');
         $task = Task::findOrFail($taskId);
+        $taskStatus = $task->taskStatus();
+        if($taskStatus == "finished") {
+            return Redirect::route('tasks.show',$task->id)->withErrors(["team" => "Não é possível alterar ou criar equipes para tarefas que já foram finalizadas"]);
+        }
+        if ($teamMembersIds == null) {
+            return Redirect::route('tasks.show',$task->id)->withErrors(["team" => "Você precisa adicionar pelo menos um membro a equipe"]);
+        }
+        $task->teamMembers()->detach();
         foreach ($teamMembersIds as $teamMemberId) {
             $results = $task->teamMembers()->where('task_team_member_id', '=', $teamMemberId)->get();
             if ($results->isEmpty()) {
@@ -169,7 +177,7 @@ class TaskController extends Controller
             $task->save();
             return Redirect::route('tasks.show',$taskId);
         } else {
-            return Redirect::route('tasks.show',$taskId)->withMessage('A tarefa não pôde ser inicializada pois nenhuma equipe foi desiganda para ela');
+            return Redirect::route('tasks.show',$taskId)->withMessage('A tarefa não pôde ser inicializada pois nenhuma equipe foi designada para ela');
         }
 
 	}

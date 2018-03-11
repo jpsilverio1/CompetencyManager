@@ -14,12 +14,12 @@
                             </thead>
                             <!-- Table Body -->
                             <tbody>
-                            @foreach ($suitableAssigneesForTask as $users)
-                                <tr>
-                                    <td>
+                            @foreach ($suitableAssigneesForTask as $index =>$users)
+                                <tr accesskey="{{$index}}">
+                                    <td class="candidatos">
                                         <ul class="suggested-task-team-members">
                                             @foreach($users as $user)
-                                                <li><a href="{{ route('users.show', $user->id) }}">{{ $user->name }}</a></li>
+                                                <li><a accesskey="{{$user->id}}" href="{{ route('users.show', $user->id) }}">{{ $user->name }}</a></li>
                                             @endforeach
 
                                         </ul>
@@ -42,7 +42,16 @@
 
     $(document).ready(function () {
         $("#team-suggestion-table").on('click', '.add-candidates-to-team', function () {
-            alert("cliquei aqui nesss bosta");
+            $(this).closest('tr').find('td:first').children('.suggested-task-team-members').find('li a').each(function(i, obj) {
+                var userId = $(this).attr('accesskey');
+                $("#candidateTeam").append($('#teamCandidates li[accesskey="'+userId+'"]'));
+                $.each(candidateContributions[userId]["competenceRep"], function (i, elem) {
+                    fulfilledCompetencies.push(String(elem));
+                });
+
+            });
+            updateCompetenciesFullfilment();
         });
+
     });
 </script>
