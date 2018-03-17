@@ -54,8 +54,6 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Visualizar <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{{ route('users.show', Auth::user()->id) }}">Seu perfil</a></li>
-                                    <li class="divider"></li>
                                     <li><a href="{{ route('competences.index') }}">Competências</a></li>
                                     <li class="divider"></li>
                                     <li><a href="{{ route('users.index') }}">Usuários</a></li>
@@ -103,6 +101,8 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
+									<li><a href="{{ route('users.show', Auth::user()->id) }}">Seu perfil</a></li>
+                                    <li class="divider"></li>
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
