@@ -164,7 +164,7 @@
         </tbody>
         </table>
     @else
-        Você ainda não cadastrou nenhuma competência.
+        Não há competências para exibição.
     @endif
 </div>
 </div>
