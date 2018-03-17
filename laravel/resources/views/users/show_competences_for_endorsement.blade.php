@@ -125,7 +125,7 @@
         </div>
     </td>
     <td>
-        <div class="col-md-8">
+        <div>
             @if($user->loggedUserEndorsedCompetence($user->endorsements(),$competence->id) > 0)
                 Você endossou essa competência no nível
                 <em>
