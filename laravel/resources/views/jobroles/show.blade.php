@@ -44,8 +44,8 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" >
                         Competências requeridas para este Cargo
-                        @include('competences.show_paginated_competences', ['competences' => $jobrole->competencies()->paginate(5, ['*'],'competences'),
-                        'showCompetenceLevel' => False,
+                        @include('competences.show_paginated_competences_jobrole', ['competences' => $jobrole->competencies()->paginate(5, ['*'],'competences'),
+                        'showCompetenceLevel' => True,
                         'showDeleteButton' => False,
                         'useCompetency' => True,
                         'noCompetencesMessage' => 'Não há competências para exibição.'])
