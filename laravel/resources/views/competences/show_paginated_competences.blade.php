@@ -33,7 +33,8 @@
                         <form action="{{$path_to_removal}}{{ $competence->id }}" method="POST">
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
-                            <button class="btn btn-link "><span class="glyphicon glyphicon-remove text-muted"></span></button>
+							<div id="removeCompetenceAlert"></div>
+                            <button class="btn btn-link "><span id="removeButton" class="glyphicon glyphicon-remove text-muted"></span></button>
                         </form>
                     </td>
                 @endif
@@ -57,3 +58,21 @@
     </tbody>
 </table>
     @endif
+	
+<script>
+	function getCurrentNumberOfRows(tableId) {
+        return document.getElementById(tableId).getElementsByTagName("tr").length - 1;
+    }
+	$(document).ready(function () {
+		 $("#removeButton").on('click', function (e) {
+			var current_number_rows = getCurrentNumberOfRows("showCompetencesTable");
+			if (current_number_rows == 1) {
+				e.preventDefault();
+				$("#removeCompetenceAlert").html("Você precisa de pelo menos uma competência selecionada. Se deseja deletar a atual, primeiro adicione outra e então exclua esta.")
+			} else {
+				$("#removeCompetenceAlert").html("")
+			}
+        });
+	});
+</script>
+
