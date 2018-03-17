@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Redirect;
 use DB;
 use App\LearningAid;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 
 class LearningAidController extends Controller
