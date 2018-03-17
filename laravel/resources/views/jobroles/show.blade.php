@@ -24,13 +24,6 @@
                 <p>{{$jobrole->description}}</p>
 
                 <div class="panel panel-default">
-                    <div class="panel-heading" >
-                        Usuários aptos a assumir este cargo
-                    </div>
-                    <div class="panel-body">
-                              Botão exibir usuários
-                    </div>
-                </div> <div class="panel panel-default">
                         <div class="panel-heading" >
                             Usuários que cumprem as exigências deste Cargo
                         </div>
