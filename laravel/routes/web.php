@@ -78,6 +78,8 @@ Route::group(['middleware' => 'auth'], function() {
     /* autocomplete-related routes */
     Route::get('search-competence',array('as'=>'search-competence','uses'=>'SearchController@autocompleteCompetence'));
     Route::get('search-user',array('as'=>'search-user','uses'=>'SearchController@autocompleteUser'));
+	
+	Route::get('search-jobrole',array('as'=>'search-jobrole','uses'=>'SearchController@autoCompleteJobRoles'));
 
     Route::get('search-team-candidate',array('as'=>'search-team-candidate','uses'=>'SearchController@autocompleteUser'));
     Route::post('search-competence-db',array('as'=>'search-competence-db','uses'=>'SearchController@searchCompetence'));

@@ -3,6 +3,11 @@
 
 
     <div class="container">
+		<div class="row">
+            @if (!Auth::guest())
+                @include('jobroles.search_jobrole')
+            @endif
+        </div>
         <div class="col-md-6">
             <div class="panel panel-default">
 				
