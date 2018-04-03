@@ -5,19 +5,14 @@
             @if (!Auth::guest())
                 @include('competences.search_competence')
             @endif
-                <form class="form-horizontal" role="form" method="POST" action="{{ route('competences-index') }}">
-                    {{ csrf_field() }}
-                    <input type="hidden" name="sort_type" value="{{$sortType}}">
-                    <div class="form-group">
-                        <div class="col-xs-5 col-xs-offset-1">
-                            @if($sortType == "name")
-                                <button type="submit" class="btn btn-primary">Ordenar por nome</button>
-                            @else
-                                <button type="submit" class="btn btn-primary">Ordenar por data</button>
-                            @endif
-                        </div>
-                    </div>
-                </form>
+            <div class="col-xs-5 col-xs-offset-1">
+                    @if($sortType == "name")
+                        <a href="{{ Request::fullUrlWithQuery(['sort' => 'name']) }}" class="btn btn-default" role="button">Ordenar por nome</a>
+                    @else
+                        <a href="{{ Request::fullUrlWithQuery(['sort' => 'date']) }}"class="btn btn-default" role="button">Ordenar por data</a>
+                    @endif
+            </div>
+
         </div>
 
         <div class="col-md-6 row">
@@ -69,6 +64,6 @@
     </div>
 
     <div align="center">
-        {{$competences->render()}}
+        {{ $competences->appends(Request::query())->render() }}
     </div>
 @endsection

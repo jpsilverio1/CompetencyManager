@@ -21,7 +21,7 @@
     </tbody>
 </table>
             <div align="center">
-                {{$tasks->render()}}
+                {{ $tasks->appends(Request::query())->render() }}
             </div>
         @else
             <tr>
