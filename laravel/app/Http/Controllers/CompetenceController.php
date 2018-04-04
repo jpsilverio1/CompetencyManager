@@ -110,8 +110,17 @@ class CompetenceController extends Controller
             }
         }
         $allCompetences = Competency::paginate(10);
-        return view('competences.index', ['competences' => $allCompetences, 'message' => 'As competências foram cadastradas com sucesso!']);
+        return view('competences.index', ['competences' => $allCompetences, 'message' => 'As competências foram cadastradas com sucesso!', "sortType" => 'date']);
 	}
+	public function deleteParentFromCompetence($competenceId) {
+        $competence = Competency::findOrFail($competenceId);
+        $competence->makeRoot()->save();
+        return view('competences.edit', ['competence' => $competence]);
+    }
+
+    public function updateCompetenceParent() {
+
+    }
 	public function update(EditCompetenceFormRequest $request, $id)
 	{
         $name = $request->get('name');
@@ -131,7 +140,6 @@ class CompetenceController extends Controller
 		DB::table("user_endorsements")->where('competence_id', '=',$competence->id)->delete();
 		$competence->skilledUsers()->detach();
 		$competence->tasksThatRequireIt()->detach();
-		$competence->teamsThatHaveIt()->detach();
         $competence->learningAidsThatRequireIt()->detach();
         $children = $competence->children;
         $parentNode = $competence->parent;

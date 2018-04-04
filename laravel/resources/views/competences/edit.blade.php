@@ -46,13 +46,61 @@
                                 </tr>
                                 </tbody>
                             </table>
-
                             <div class="form-group">
                                 <div class="col-xs-5 col-xs-offset-1">
                                     <button type="submit" class="btn btn-primary">Salvar Competência</button>
                                 </div>
                             </div>
                         </form>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Editar Hierarquia da Competência</div>
+                            <div class="panel-body">
+                                <table class="table">
+                                    <thead>
+                                    <th>Competência pai</th>
+                                    <th>Adicionar ou modificar competência pai</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            @if($competence->parent == null)
+                                                Esta competência não possui uma competência pai.
+                                            @else
+                                                <table>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{{ route('competences.show', $competence->parent->id) }}" class="btn btn-default" role="button">{{$competence->parent->name}}</a>
+                                                        </td>
+                                                        <td>
+                                                            <form action="{{ route('competence-parent', $competence->id) }}" method="POST">
+                                                                {{ csrf_field() }}
+                                                                {{ method_field('DELETE') }}
+                                                                <button class="btn btn-link "><span class="glyphicon glyphicon-remove"></span></button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class=" search-competence-div">
+                                                <div class="row col-xs-6 col-md-6">
+                                                    <div class="input-group stylish-input-group input-append ">
+                                                        <input type="text" name="search_competence" class="form-control"
+                                                        placeholder="Buscar competência" id="search_parent_competence">
+                                                        <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-search"></span></span>
+                                                        </div>
+
+                                                    </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                         <form class="col-xs-offset-1" id="deleteCompetencesForm" role="form" method="POST" action="{{ route('competences.destroy', $competence->id) }}">
 							{{ csrf_field() }}
 							<input type="hidden" name="_method" value="DELETE" />

@@ -66,6 +66,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::delete('/jobrole-competency/{jobroleId}/{competencyId}', 'JobRoleController@deleteCompetencyFromJobRole');
     Route::delete('/team-member/{teamId}/{memberId}', 'TeamController@deleteMemberFromTeam');
     Route::delete('/learningaid-competency/{learningAidId}/{competencyId}','LearningAidController@deleteCompetencyFromLearningAid');
+    //Route::delete('/competence-parent/{competenceId}', 'CompetenceController@deleteParentFromCompetence');
+    Route::delete('/competence-parent/{competenceId}', array('as'=>'competence-parent','uses'=>'CompetenceController@deleteParentFromCompetence'));
 	
 	Route::get('/learningaid-finish/{learningAidId}', 'LearningAidController@finishLearningAid');
 
