@@ -14,6 +14,7 @@ return [
     */
 
     'failed' => 'Credenciais não correspondem aos nossos registros.',
+    'notConfirmed' => 'Você precisa confirmar seu registro por email antes de logar',
     'throttle' => 'Muitas tentativas de login. Por favor, tente novamente em :seconds segundos.',
 
 ];

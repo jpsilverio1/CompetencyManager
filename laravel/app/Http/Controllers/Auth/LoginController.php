@@ -39,4 +39,21 @@ protected function redirectPath()
         return ['email'=>$request->{$this->username()},'password'=>$request->password, 'status'=>'1'];
     }
 
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        $errors = [$this->username() => trans('auth.failed')];
+        // Load user from database
+        $user = \App\User::where($this->username(), $request->{$this->username()})->first();
+        
+        if ($user && \Hash::check($request->password, $user->password) && $user->status != 1) {
+            $errors = [$this->username() => trans('auth.notConfirmed')];
+        }
+        if ($request->expectsJson()) {
+            return response()->json($errors, 422);
+        }
+        return redirect()->back()
+            ->withInput($request->only($this->username(), 'remember'))
+            ->withErrors($errors);
+    }
+
 }
