@@ -98,6 +98,7 @@
 					</div>
 					
 					<td><button type="submit" class="btn btn-primary">Enviar Respostas</button></td>
+
 					
 				</form>	
 				<td><a href='/tasks/{{ $task->id }} '/><button class="btn btn-primary">Voltar</button></td>	

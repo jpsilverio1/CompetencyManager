@@ -63,7 +63,13 @@ class AnswerController extends Controller
 				$user->competences()->attach($techinalCompetenceId, ['updated_at' => Carbon::now(), 'competence_proficiency_level_id' => $techinalCompetenceProficiencyLevelId ]);
 			}
 		}
-		
+
+		foreach($user->unreadNotifications as $notification){
+		    if($notification->data['id'] == $task_id){
+                $notification->markAsRead();
+            }
+        }
+
 		return Redirect::route('tasks.show',$task_id)->withMessage('O formulário foi recebido com sucesso!');
 		
     }
