@@ -5,13 +5,14 @@
             @if (!Auth::guest())
                 @include('competences.search_competence')
             @endif
-            <div class="col-xs-5 col-xs-offset-1">
+            <div class="navbar-form col-md-3">
                     @if($sortType == "name")
                         <a href="{{ Request::fullUrlWithQuery(['sort' => 'name']) }}" class="btn btn-default" role="button">Ordenar por nome</a>
                     @else
                         <a href="{{ Request::fullUrlWithQuery(['sort' => 'date']) }}"class="btn btn-default" role="button">Ordenar por data</a>
                     @endif
             </div>
+
 
         </div>
 

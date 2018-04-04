@@ -43,6 +43,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('users','UserController');
 	Route::resource('jobroles','JobRoleController');
 	Route::resource('learningaids','LearningAidController');
+    Route::post('learningaids-index', ['as' => 'learningaids-index', 'uses' => 'LearningAidController@sort']);
 	Route::resource('dashboards', 'DashboardController');
 	
 	/* dashboard routes */

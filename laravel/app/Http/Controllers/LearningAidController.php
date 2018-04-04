@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Redirect;
 use DB;
 use App\LearningAid;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 
 class LearningAidController extends Controller
@@ -29,8 +30,20 @@ class LearningAidController extends Controller
      */
     public function index()
     {
-        $allLearningAids = LearningAid::orderBy('name')->paginate(10);
-        return view('learningaids.index', ['learningAids' => $allLearningAids]);
+        $allLearningAids = LearningAid::paginate(10);
+        return view('learningaids.index', ['learningAids' => $allLearningAids, 'sortType' => 'name']);
+    }
+
+    public function sort(Request $request) {
+        $sortType = $request->get('sort_type');
+        if ($sortType == "name") {
+            $allLearningAids = LearningAid::orderBy('name')->paginate(10);
+            return view('learningaids.index', ['learningAids' => $allLearningAids, 'sortType' => 'date']);
+        } else {
+            $allLearningAids = LearningAid::paginate(10);
+            return view('learningaids.index', ['learningAids' => $allLearningAids, 'sortType' => 'name']);
+        }
+
     }
 
     /**
