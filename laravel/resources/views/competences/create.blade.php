@@ -3,6 +3,21 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 @section('content')
+<style>
+	.ui-autocomplete {
+		max-height: 300px;
+		width: 100px;
+		overflow-y: auto;
+		/* prevent horizontal scrollbar */
+		overflow-x: hidden;
+	}
+	/* IE 6 doesn't support max-height
+	 * we use height instead, but this forces the menu to always be this tall
+	 */
+	* html .ui-autocomplete {
+		height: 100px;
+	}
+</style>
     <div class="container">
         <div class="row">
             <div class="panel panel-fullScreen">

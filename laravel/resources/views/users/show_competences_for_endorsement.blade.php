@@ -124,7 +124,7 @@
         </div>
     </td>
     <td>
-        <div class="col-md-8">
+        <div>
             @if($user->loggedUserEndorsedCompetence($user->endorsements(),$competence->id) > 0)
                 Você endossou essa competência no nível
                 <em>
@@ -146,7 +146,7 @@
             <div class="competency_level">
                 <span class="competence_level_label" name="levels"><script>document.write(getLabelForSliderValue(1));</script></span>
                 <input type="range" class="competence_level_slider"
-                       name="competence_proficiency_level" min="1" max="3" value="1"
+                       name="competence_proficiency_level" min="{{\App\CompetenceProficiencyLevel::min('id')}}" max="{{\App\CompetenceProficiencyLevel::max('id')}}" value="{{\App\CompetenceProficiencyLevel::min('id')}}"
                        onchange="updateTextInput(this);">
             </div>
             <div class="form-group">
@@ -163,7 +163,7 @@
         </tbody>
         </table>
     @else
-        Você ainda não cadastrou nenhuma competência.
+        Não há competências para exibição.
     @endif
 </div>
 </div>

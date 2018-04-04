@@ -25,18 +25,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['middleware' => 'auth'], function() {
 	
 	Route::get('tasks/show_form/{taskId}', 'TaskController@showForm')->name('show-task-form');
-
-	/*
-	Route::get('/dashboards/tasks','DashboardController@taskReports');
-	Route::get('/dashboards/competences','DashboardController@competencesReports');
-	Route::get('/dashboards/users','DashboardController@usersReports');
-	Route::get('/dashboards/collaboration','DashboardController@collaborationReports');
-	Route::get('/dashboards/other','DashboardController@otherReports'); */
-
+	
     Route::resource('tasks', 'TaskController');
-
-
-    //Route::resource('teams', 'TeamController');
     Route::resource('competences', 'CompetenceController');
 
 
@@ -56,7 +46,6 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/dashboards/competences/most-learned','DashboardController@mostLearnedCompetencesReport')->name('most-learned-competences-report');
 	Route::get('/dashboards/collaboration/most-collaborative-users','DashboardController@mostCollaborativeUsersReport')->name('most-collaborative-users-report');
 	Route::get('/dashboards/collaboration/most-collaborative-groups','DashboardController@mostCollaborativeGroupsReport')->name('most-collaborative-groups-report');
-	//Route::get('/dashboards/collaboration/unanswered-collaboration-form','DashboardController@usersWhoDidntAnswerCollaborationFormReport')->name('users-who-didnt-answer-collaboration-form-report');
 	Route::get('/dashboards/users/highest-competence-number','DashboardController@usersWithHighestCompetenceNumberReport')->name('users-with-highest-competence-number-report');
 	Route::get('/dashboards/users/most-tasks-performed','DashboardController@usersWithMoreTasksPerformedReport')->name('users-with-more-tasks-performed-report');
 
@@ -73,6 +62,7 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/learningaid-finish/{learningAidId}', 'LearningAidController@finishLearningAid');
 
     Route::post('/user-competences', 'UserController@addCompetences');
+	Route::post('/user-competence', 'UserController@addCompetenceToUser');
     Route::post('/user-endorsements', 'EndorsementController@addEndorsement');
 
     Route::get('task-initialize/{taskId}',array('as'=>'task-initialize','uses'=>'TaskController@initializeTask'));
@@ -93,6 +83,8 @@ Route::group(['middleware' => 'auth'], function() {
     /* autocomplete-related routes */
     Route::get('search-competence',array('as'=>'search-competence','uses'=>'SearchController@autocompleteCompetence'));
     Route::get('search-user',array('as'=>'search-user','uses'=>'SearchController@autocompleteUser'));
+	
+	Route::get('search-jobrole',array('as'=>'search-jobrole','uses'=>'SearchController@autoCompleteJobRoles'));
 
     Route::get('search-team-candidate',array('as'=>'search-team-candidate','uses'=>'SearchController@autocompleteUser'));
     Route::post('search-competence-db',array('as'=>'search-competence-db','uses'=>'SearchController@searchCompetence'));

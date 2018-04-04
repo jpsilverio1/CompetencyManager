@@ -17,7 +17,7 @@
 <div class="navbar-left" >
     <form class="navbar-form" role="search">
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="Buscar tarefa" name="q" id="search_task">
+            <input type="text" class="form-control" placeholder="Buscar cargos" name="q" id="search_jobrole">
             <div class="input-group-btn">
                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
             </div>
@@ -27,29 +27,28 @@
 
 <script>
 
-    function retrieveTask(name, taskID) {
-        var path = '/tasks/'+taskID;
+    function retrieveJobRole(name, jobRoleID) {
+        var path = '/jobroles/'+jobRoleID;
         window.location.href = path;
     }
     $(document).ready(function () {
-        src_task = "{{ route('search-task') }}";
-        $("#search_task").autocomplete({
+        src_jobrole = "{{ route('search-jobrole') }}";
+        $("#search_jobrole").autocomplete({
             source: function (request, response) {
                 $.ajax({
-                    url: src_task,
+                    url: src_jobrole,
                     dataType: "json",
                     data: {
                         term: request.term
                     },
                     success: function (data) {
                         response(data);
-
                     }
                 });
             },
             minLength: 1,
             select: function (e, ui) {
-                retrieveTask(ui.item.value, ui.item.id);
+                retrieveJobRole(ui.item.value, ui.item.id);
                 $(this).val('');
                 return false;
             }

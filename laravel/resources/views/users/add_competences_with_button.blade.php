@@ -1,3 +1,19 @@
+<style>
+	.ui-autocomplete {
+		max-height: 300px;
+		width: 100px;
+		overflow-y: auto;
+		/* prevent horizontal scrollbar */
+		overflow-x: hidden;
+	}
+	/* IE 6 doesn't support max-height
+	 * we use height instead, but this forces the menu to always be this tall
+	 */
+	* html .ui-autocomplete {
+		height: 100px;
+	}
+</style>
+
 <div class="col-md-6">
     <div class="panel panel-default">
         <div class="panel-heading">Cadastrar competências</div>
@@ -12,7 +28,7 @@
                                    placeholder="Buscar competência" id="search_competence">
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-search"></span>
-                    </span>
+							</span>
                         </div>
                     </div>
                     <div class="form-group">

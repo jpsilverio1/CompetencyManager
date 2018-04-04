@@ -11,6 +11,8 @@ use App\User;
 
 use App\Task;
 
+use App\JobRole;
+
 class SearchController extends Controller
 {
     /**
@@ -87,6 +89,20 @@ class SearchController extends Controller
         $data=array();
         foreach ($learningAids as $learningAid) {
             $data[]=array('value'=>$learningAid->name,'id'=>$learningAid->id);
+        }
+        if(count($data))
+            return $data;
+        else
+            return ['value'=>'No Result Found','id'=>''];
+    }
+	
+	public function autoCompleteJobRoles(Request $request) {
+        $query = $request->get('term','');
+        $jobroles=JobRole::where('name','LIKE','%'.$query.'%')->limit(20)->get();
+
+        $data=array();
+        foreach ($jobroles as $jobrole) {
+            $data[]=array('value'=>$jobrole->name,'id'=>$jobrole->id);
         }
         if(count($data))
             return $data;

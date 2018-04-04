@@ -88,6 +88,9 @@ class CompetenceController extends Controller
                     $competence->parent_id = $parentDBId;
                 }
                 $competence->save();
+				
+				\DB::table('basic_statistics')->where('name', 'competences_count')->increment('value');
+
                 $dbId = $competence->id;
                 //add to map
                 $parentIdDbIdMap[$uiId] = $dbId;
@@ -109,9 +112,15 @@ class CompetenceController extends Controller
                 }
             }
         }
-        $allCompetences = Competency::paginate(10);
-        return view('competences.index', ['competences' => $allCompetences, 'message' => 'As competências foram cadastradas com sucesso!', "sortType" => 'date']);
-	}
+
+		if (sizeOf($names) > 1) { // if we have more than one competence name, we redirect to competences index page
+			$allCompetences = Competency::paginate(10);
+			return view('competences.index', ['competences' => $allCompetences, 'message' => 'As competências foram cadastradas com sucesso!', "sortType" => 'date']);
+		} else { // if you have just one competence name, then it must be the name of the only created competence, so we'll redirect to it
+			$competence = Competency::where('name', '=', $names[0])->first();
+			return view('competences.show', ['id' => $competence, 'competence' => $competence, 'message' => 'A competência foi cadastrada com sucesso!']);
+		}
+    }
 	public function deleteParentFromCompetence($competenceId) {
         $competence = Competency::findOrFail($competenceId);
         $competence->makeRoot()->save();
@@ -148,6 +157,9 @@ class CompetenceController extends Controller
             $result->parent()->associate($parentNode)->save();
         }
 		$competence->delete();
+		
+		\DB::table('basic_statistics')->where('name', 'competences_count')->decrement('value');
+		
         if (Competency::isBroken()) {
             Competency::fixTree();
             echo "consertar";

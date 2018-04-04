@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\DB;
 
 class User extends Authenticatable
 {
@@ -25,6 +26,15 @@ class User extends Authenticatable
             ->select('competencies.*', 'competence_proficiency_level.name as pivot_proficiency_level_name')
             ->withTimestamps()->orderBy('competencies.name');
     }
+	
+	public function collaborativeCompetencesWithAverageLevel() {
+		$personal_competence_level_id_max = \DB::table('personal_competence_proficiency_levels')->max('id');
+		
+		$collaboration_level_per_collaborative_competence = \DB::table('personal_competencies')->select('name')->join('answers', 'personal_competencies.id', '=', 'answers.personal_competence_id')->select(\DB::raw('avg(personal_competence_level_id) / ' . $personal_competence_level_id_max . ' as avg_collab_level, personal_competencies.name as name, personal_competencies.description as description'))->where('evaluated_user_id','=',$this->id)->groupBy('personal_competence_id', 'name', 'description')->get();
+		
+		return $collaboration_level_per_collaborative_competence;;
+	}
+	
     public function forgettingLevel($competence) {
         $initTime = $competence->pivot->updated_at;
         $newInitTime = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $initTime);
@@ -169,6 +179,11 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Task', 'author_id')->orderBy('title');
     }
+	
+	public function joinedTasks()
+    {
+        return $this->belongsToMany('App\Task', 'task_teams', 'task_team_member_id', 'task_id');
+    }
 
     //endorsements where the current user is the endorsed entity
     public function endorsements()
@@ -196,11 +211,6 @@ class User extends Authenticatable
             $this->endorsements_endorser()->updateExistingPivot($competenceId, ['competence_proficiency_endorsement_level_id' => $competenceLevel]);
         }
     }
-
-    public function teams()
-    {
-        return $this->belongsToMany('App\Team', 'team_members');
-    }
 	
 	// Usuário tem autorização pra inicializar ou finalizar tarefa se ele está na tarefa ou se ele é Gerente
 	public function canInitializeOrFinishTask($taskId) {
@@ -214,23 +224,6 @@ class User extends Authenticatable
 	public function answeredQuestions($taskId) {
 		$answers = \DB::table('answers')->where([ ['judge_user_id', '=', $this->id], ['task_id', '=', $taskId] ])->get();
 		return !$answers->isEmpty();
-	}
-	
-	// TODO: retornar algum tipo de calculo envolvendo competências pessoais (implementar caso julguemos necessário)
-	public function personalCompetences() {
-		$evaluatedAnswers = \DB::table('answers')->where("evaluated_user_id", $this->id)->get();
-		$personalCompetences = []; // array with personal Competences grades
-		foreach ($evaluatedAnswers as $answer) {
-			$personalCompetencesEvaluated = PersonalCompetence::findOrFail($answer["personal_competence_id"]);
-			foreach($personalCompetencesEvaluated as $personalCompetenceEvaluated) {
-				$personalCompetenceLevel = PersonalCompetenceLevel::findOrFail($answer["personal_competence_proficiency_level_id"]);
-				$value = 0;
-				// do some calculus with $value
-			}			
-			array_push($personalCompetences, $value);
-		}
-		
-		return $personalCompetences;
 	}
 
 	public function learningAidsThisUserJoined()

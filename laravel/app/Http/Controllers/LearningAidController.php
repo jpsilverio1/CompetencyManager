@@ -73,6 +73,8 @@ class LearningAidController extends Controller
         $learningAid->description = $description;
         //$learningAid->author_id = $author_id;
         $learningAid->save();
+		
+		\DB::table('basic_statistics')->where('name', 'learningaids_count')->increment('value');
 
         $competenceIds = $request->get('competence_ids');
         $competenceProficiencyLevels = $request->get('competency_proficiency_levels');
@@ -88,6 +90,7 @@ class LearningAidController extends Controller
                 $learningAid->competencies()->updateExistingPivot($competenceId, ['competency_proficiency_level_id'=>$competenceProficiencyLevel]);
             }
         }
+		$this->recalculateCoveredCompetencesNumberOnDB();
         return Redirect::route('learningaids.show',$learningAid->id)->withMessage('O treinamento foi cadastrado com sucesso!');
     }
 
@@ -145,6 +148,7 @@ class LearningAidController extends Controller
                 $learningAid->competencies()->updateExistingPivot($competenceId, ['competency_proficiency_level_id'=>$competenceProficiencyLevel]);
             }
         }
+		$this->recalculateCoveredCompetencesNumberOnDB();
         return Redirect::route('learningaids.show',$learningAid->id)->withMessage('O treinamento foi atualizado com sucesso!');
     }
 
@@ -158,8 +162,11 @@ class LearningAidController extends Controller
     {
         $learningAid = LearningAid::findOrFail($id);
         $learningAid->competencies()->detach();
+		$learningAid->usersInThisLearningAid()->detach();
         $learningAid->delete();
-
+		
+		\DB::table('basic_statistics')->where('name', 'learningaids_count')->decrement('value');
+		$this->recalculateCoveredCompetencesNumberOnDB();
         return Redirect::route('learningaids.index')->withMessage('O treinamento foi excluído com sucesso!');
 
     }
@@ -167,6 +174,7 @@ class LearningAidController extends Controller
     public function deleteCompetencyFromLearningAid($learningAidId, $competencyId) {
         $learningAid = LearningAid::findOrFail($learningAidId);
         $learningAid->competencies()->detach($competencyId);
+		$this->recalculateCoveredCompetencesNumberOnDB();
         return Redirect::route('learningaids.edit', $learningAidId);
     }
 	
@@ -184,5 +192,14 @@ class LearningAidController extends Controller
 			}
 		}
 		return Redirect::route('learningaids.show',$learningAidId);
+	}
+	
+	public function recalculateCoveredCompetencesNumberOnDB() {
+		$competences = DB::table('competencies as c')
+			->join('learning_aids_competencies as l', 'l.competency_id', '=', 'c.id')->select('c.name as competence_name', 'c.id as competence_id')->distinct();
+		$competences2 = DB::table('competencies as c')
+			->join('user_competences as u','u.competence_id','=','c.id')->union($competences)->select('c.name as competence_name', 'c.id as competence_id')->distinct()->get();
+		$covered_competences_number = count($competences2);	
+		\DB::table('basic_statistics')->where('name', 'covered_competences_count')->update(['value' => $covered_competences_number]);
 	}
 }

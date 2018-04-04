@@ -56,6 +56,8 @@ class TaskController extends Controller
         $task->description = $description;
         $task->author_id = $author_id;
         $task->save();
+		
+		\DB::table('basic_statistics')->where('name', 'tasks_count')->increment('value');
 
         $competenceIds = $request->get('competence_ids');
         $competenceProficiencyLevels = $request->get('competency_proficiency_levels');
@@ -162,9 +164,15 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
+		
         $task = Task::findOrFail($id);
 		$task->competencies()->detach();
+		\DB::table('answers')->where('task_id', $id)->delete();
+		$task->teamMembers()->detach();
+
 		$task->delete();
+		
+		\DB::table('basic_statistics')->where('name', 'tasks_count')->decrement('value');
 
         return Redirect::route('tasks.index')->withMessage('A tarefa foi excluída com sucesso!');
 

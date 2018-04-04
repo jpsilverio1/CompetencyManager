@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\verifyEmail;
+use App\DB;
 
 class RegisterController extends Controller
 {
@@ -67,7 +68,9 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $user = User::create([
+		\DB::table('basic_statistics')->where('name', 'users_count')->increment('value');
+		
+        return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),

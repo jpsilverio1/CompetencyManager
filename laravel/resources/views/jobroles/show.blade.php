@@ -24,13 +24,6 @@
                 <p>{{$jobrole->description}}</p>
 
                 <div class="panel panel-default">
-                    <div class="panel-heading" >
-                        Usuários aptos a assumir este cargo
-                    </div>
-                    <div class="panel-body">
-                              Botão exibir usuários
-                    </div>
-                </div> <div class="panel panel-default">
                         <div class="panel-heading" >
                             Usuários que cumprem as exigências deste Cargo
                         </div>
@@ -51,8 +44,8 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" >
                         Competências requeridas para este Cargo
-                        @include('competences.show_paginated_competences', ['competences' => $jobrole->competencies()->paginate(5, ['*'],'competences'),
-                        'showCompetenceLevel' => False,
+                        @include('competences.show_paginated_competences_jobrole', ['competences' => $jobrole->competencies()->paginate(5, ['*'],'competences'),
+                        'showCompetenceLevel' => True,
                         'showDeleteButton' => False,
                         'noCompetencesMessage' => 'Não há competências para exibição.'])
                     </div>

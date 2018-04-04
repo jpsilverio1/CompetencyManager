@@ -30,8 +30,7 @@
                      Equipe
                  </h4>
                   @php ($teamMembers = $task->teamMembers)
-                  @php($numberOfTeamMembers = count($teamMembers))
-                  @if ($numberOfTeamMembers > 0)
+                  @if (count($teamMembers) > 0)
                         @foreach($teamMembers as $index => $teamMember)
                             <a href="{{ route('users.show', $teamMember->id) }}">{{ $teamMember->name }}</a>
                             @if($index < ($numberOfTeamMembers - 1))
@@ -60,7 +59,6 @@
           'noCompetencesMessage' => 'Não há competências para exibição.'])
       </div>
    </div>
-<<<<<<< HEAD
                        <div>
                            <div class="col-md-2">
                                <td><a href='{{ route('tasks.edit', $task->id) }}'/><button type="submit" class="btn btn-primary">Editar Tarefa</button></td>
@@ -87,11 +85,9 @@
                                        @if ($userAnsweredQuestions)
                                            <td><a href=''/><button type="submit" class="btn btn-primary" disabled>Tarefa Finalizada - Questionário Respondido!</button></td>
                                        @else
-                                           <td><a href={{ route('show-task-form', $task->id) }}/><button type="submit" class="btn btn-primary">Tarefa Finalizada - Responder Questionário</button></td>
+                                           <td><a href="{{ route('show-task-form', $task->id) }}"/><button type="submit" class="btn btn-primary">Tarefa Finalizada - Responder Questionário</button></td>
                                        @endif
                                    @endif
-
-
                                @else
                                    @if ($taskStatus == "created")
                                        <td><a href=""/><button type="submit" class="btn btn-primary" disabled alt="Você não tem autorização para inicializar esta tarefa pois não faz parte desta equipe">Tarefa Não-Inicializada</button></td>
@@ -102,7 +98,7 @@
                                        @if ($userAnsweredQuestions)
                                            <td><a href=''/><button type="submit" class="btn btn-primary" disabled>Tarefa Finalizada - Questionário Respondido!</button></td>
                                        @else
-                                           <td><a href="{{ route('tasks/show_form', $task->id) }}"/><button type="submit" class="btn btn-primary">Tarefa Finalizada - Responder Questionário</button></td>
+                                           <td><a href="{{ route('show-task-form', $task->id) }}"/><button type="submit" class="btn btn-primary">Tarefa Finalizada - Responder Questionário</button></td>
                                        @endif
                                    @endif
                                @endif
@@ -113,3 +109,4 @@
            </div>
        </div>
    @endsection
+

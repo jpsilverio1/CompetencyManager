@@ -47,6 +47,13 @@ class AnswerController extends Controller
 			\DB::table('answers')->insert($values);
 		}
 		
+		// Recalculate average collaboration level 
+		$personal_competence_level_id_min = \DB::table('personal_competence_proficiency_levels')->min('id');
+		$personal_competence_level_id_max = \DB::table('personal_competence_proficiency_levels')->max('id');
+		$average_collaboration_level = ((\DB::table('answers')->avg('personal_competence_level_id')) - ($personal_competence_level_id_min)) / ($personal_competence_level_id_max - $personal_competence_level_id_min);
+		
+		\DB::table('basic_statistics')->where('name', 'average_collaboration_level')->update(['value' => $average_collaboration_level]);
+		
 		// Part 2 - add competencies to user_competencies table
 		$selectedTechnicalCompetencies = $request->get('selectedCompetences');
 		$selectedTechnicalCompetenciesProficiencyLevel = $request->get('selectedCompetencesProficiencyLevel');

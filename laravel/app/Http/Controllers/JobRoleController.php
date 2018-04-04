@@ -62,6 +62,8 @@ class JobRoleController extends Controller
         $jobrole->description = $description;
         $jobrole->save();
 
+		\DB::table('basic_statistics')->where('name', 'jobroles_count')->increment('value');
+		
         $competenceIds = $request->get('competence_ids');
         $competenceProficiencyLevels = $request->get('competency_proficiency_levels');
         for ($i=0; $i<sizeOf($competenceIds); $i++) {
@@ -147,6 +149,8 @@ class JobRoleController extends Controller
         $jobrole = JobRole::findOrFail($id);
 		$jobrole->competencies()->detach();
 		$jobrole->delete();
+		
+		\DB::table('basic_statistics')->where('name', 'jobroles_count')->decrement('value');
 
         return Redirect::route('jobroles.index')->withMessage('O cargo foi excluído com sucesso!');
     }

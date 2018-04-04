@@ -20,7 +20,11 @@
                 </td>
                 @if ($showCompetenceLevel)
                     <td class="table-text text-capitalize">
-                        {{$competence->pivot->proficiency_level_name}}
+                        @if($useCompetency)
+                            {{\App\CompetenceProficiencyLevel::findOrFail($competence->pivot->competence_proficiency_level_id)->name}}
+                        @else
+                            {{\App\CompetenceProficiencyLevel::findOrFail($competence->pivot->competence_proficiency_level_id)->name}}
+                        @endif
                     </td>
                 @endif
                 @if($showDeleteButton)

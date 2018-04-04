@@ -112,29 +112,64 @@ class UserController extends Controller
     }
     public function deleteCompetenceFromUser($competenceId) {
         \Auth::user()->competences()->detach($competenceId);
+		$this->recalculateCoveredCompetencesNumberOnDB();
         return redirect('/home');
     }
+	
+	public function recalculateCoveredCompetencesNumberOnDB() {
+		$competences = DB::table('competencies as c')
+			->join('learning_aids_competencies as l', 'l.competency_id', '=', 'c.id')->select('c.name as competence_name', 'c.id as competence_id')->distinct();
+		$competences2 = DB::table('competencies as c')
+			->join('user_competences as u','u.competence_id','=','c.id')->union($competences)->select('c.name as competence_name', 'c.id as competence_id')->distinct()->get();
+		$covered_competences_number = count($competences2);	
+		\DB::table('basic_statistics')->where('name', 'covered_competences_count')->update(['value' => $covered_competences_number]);
+	}
 
     public function addCompetences(Request $request) {
         $user = \Auth::user();
         $names = $request->get('name');
         $competenceIds = $request->get('competence_id');
         $competenceProficiencyLevels = $request->get('competence_proficiency_level');
-        var_dump($competenceProficiencyLevels);
         for ($i=0; $i<sizeOf($names); $i++) {
             $competenceId = $competenceIds[$i];
             $competenceLevel = $competenceProficiencyLevels[$i];
             $results = $user->competences()->where('competence_id', '=', $competenceId)->get();
             if ($results->isEmpty()) {
-                echo "adicionar";
                 $user->competences()->attach([$competenceId => ['competence_proficiency_level_id'=>$competenceLevel]]);
             } else {
-                echo "update";
                 //update competency level
                 $user->competences()->updateExistingPivot($competenceId, ['competence_proficiency_level_id'=>$competenceLevel]);
             }
         }
+		
+		$this->recalculateCoveredCompetencesNumberOnDB();
+		
         return redirect('/home');
+    }
+	
+	public function addCompetenceToUser(Request $request) {
+        $user = \Auth::user();
+        $name = $request->get('name');
+        $competenceId = $request->get('competence_id');
+        $competenceProficiencyLevel = $request->get('competence_proficiency_level');
+		$message = '';
+        
+		$results = $user->competences()->where('competence_id', '=', $competenceId)->get();
+        if ($results->isEmpty()) {
+			$user->competences()->attach([$competenceId => ['competence_proficiency_level_id'=>$competenceProficiencyLevel]]);
+			$message = 'A competência foi adicionada ao seu perfil com sucesso!';
+		} else {
+			//update competency level
+			$user->competences()->updateExistingPivot($competenceId, ['competence_proficiency_level_id'=>$competenceProficiencyLevel]);
+			$message = 'O nível que você possui nesta competência foi atualizado com sucesso!';
+		}
+        
+		$competence = Competency::findOrFail($competenceId);
+		
+		$this->recalculateCoveredCompetencesNumberOnDB();
+		
+		return view('competences.show', ['id' => $competenceId, 'competence' => $competence, 'message' => $message]);
+		
     }
 }
 
