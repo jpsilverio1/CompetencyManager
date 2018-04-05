@@ -18,10 +18,11 @@ class LearningAid extends Model
     ];
 
 
-    public function competencies()
-    {
-        return $this->belongsToMany('App\Competency', 'learning_aids_competencies', 'learning_aid_id', 'competency_id')
-            ->withPivot('competency_proficiency_level_id');
+    public function competencies(){
+        return $this->belongsToMany('App\Competency','learning_aids_competencies','learning_aid_id','competency_id')
+            ->withPivot('competency_proficiency_level_id')
+            ->join('competence_proficiency_level','competency_proficiency_level_id','=','competence_proficiency_level.id')
+            ->select('competencies.*', 'competence_proficiency_level.name as pivot_proficiency_level_name');
     }
 	
 	public function usersInThisLearningAid()

@@ -26,7 +26,7 @@
                             </div>
                         @endif
 					
-                    @include('jobroles.show_paginated_jobroles')
+                    @include('jobroles.show_paginated_jobroles', ['noJobRolesMessage' => 'Não há cargos para exibição.'])
                 </div>
             </div>
         </div>

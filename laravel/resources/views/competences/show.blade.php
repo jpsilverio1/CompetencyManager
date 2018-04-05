@@ -83,9 +83,8 @@
 				name="competence_proficiency_level" min="1" max="{{ $numberOfCategories }}" value="1" onchange="updateTextInput(this)">
 								</div>
 								@if ($userHasThisCompetence)
-									Você possui o seguinte nível nesta competência: 
-									{{\App\CompetenceProficiencyLevel::findOrFail(Auth::user()->competences()->where('competence_id',$competence->id)->first()->pivot->competence_proficiency_level_id)->name}}
-									
+									Você possui o seguinte nível nesta competência:
+                                    {{Auth::user()->competences()->where('competence_id',$competence->id)->first()->pivot->proficiency_level_name}}
 									<button type="submit" class="btn btn-primary">Alterar Nível</button>
 								@else
 									<button type="submit" class="btn btn-primary">Adicionar esta competência ao seu Perfil</button>

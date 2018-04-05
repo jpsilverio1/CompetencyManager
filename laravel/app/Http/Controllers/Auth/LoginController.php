@@ -44,7 +44,7 @@ protected function redirectPath()
         $errors = [$this->username() => trans('auth.failed')];
         // Load user from database
         $user = \App\User::where($this->username(), $request->{$this->username()})->first();
-        
+
         if ($user && \Hash::check($request->password, $user->password) && $user->status != 1) {
             $errors = [$this->username() => trans('auth.notConfirmed')];
         }

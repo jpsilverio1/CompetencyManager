@@ -114,47 +114,6 @@ class User extends Authenticatable
         return $meuMapa;
     }
 
-    public function computeThings($competenceId)
-    {
-        $meuMapa = [];
-        $totalEndorsements = 0;
-        $maximumValue = 0;
-        $maximumKeys = [];
-        foreach ($this->userEndorsementsForCompetence($competenceId) as $competenceEndorsement) {
-            $totalEndorsements++;
-            $endorsementLevel = $competenceEndorsement->pivot->competence_proficiency_endorsement_level_id;
-            if (isset($meuMapa[$endorsementLevel])) {
-                $meuMapa[$endorsementLevel]++;
-            } else {
-                $meuMapa[$endorsementLevel] = 1;
-            }
-            if ($meuMapa[$endorsementLevel] > $maximumValue) {
-                $maximumValue = $meuMapa[$endorsementLevel];
-                $maximumKeys = [];
-                $maximumKeys[] = $endorsementLevel;
-            } else {
-                if ($meuMapa[$endorsementLevel] == $maximumValue) {
-                    $maximumValue = $meuMapa[$endorsementLevel];
-                    $maximumKeys[] = $endorsementLevel;
-                }
-            }
-        }
-        if (isset($maximumKeys)) {
-            return [($maximumValue / $totalEndorsements) * 100, $this->getCompetenceProficiencyLevelNamesFromIds($maximumKeys)];
-        } else {
-            return [];
-        }
-    }
-
-    private function getCompetenceProficiencyLevelNamesFromIds($competenceProficiencyLevelIds)
-    {
-        $names = [];
-        foreach ($competenceProficiencyLevelIds as $competenceProficiencyLevelId) {
-            $names[] = \App\CompetenceProficiencyLevel::findOrFail($competenceProficiencyLevelId)->name;
-        }
-        return $names;
-    }
-
     public function loggedUserEndorsedCompetence($shownUserEndorsements, $competenceId)
     {
         $loggedUserId = \Auth::user()->id;
@@ -168,11 +127,10 @@ class User extends Authenticatable
     public function getEndorsementLevel($competenceId)
     {
         $loggedUserId = \Auth::user()->id;
-        $competenceProficiencyLevelId = $this->endorsements()->where([
+        return $this->endorsements()->where([
             ['endorser_id', '=', $loggedUserId],
             ['competence_id', '=', $competenceId],
-        ])->first()->pivot->competence_proficiency_endorsement_level_id;
-        return \App\CompetenceProficiencyLevel::findOrFail($competenceProficiencyLevelId)->name;
+        ])->first()->pivot->proficiency_level_name;
     }
 
     public function createdTasks()
@@ -188,8 +146,10 @@ class User extends Authenticatable
     //endorsements where the current user is the endorsed entity
     public function endorsements()
     {
-        return $this->belongsToMany('App\Competency', 'user_endorsements', 'endorsed_id', 'competence_id'/*,'endorser_id'*/)
-            ->withPivot('competence_proficiency_endorsement_level_id');
+        return $this->belongsToMany('App\Competency','user_endorsements','endorsed_id','competence_id')
+            ->withPivot('competence_proficiency_endorsement_level_id')
+            ->join('competence_proficiency_level','competence_proficiency_endorsement_level_id','=','competence_proficiency_level.id')
+            ->select('competencies.*', 'competence_proficiency_level.name as pivot_proficiency_level_name');
     }
 
     //endorsements where the current user is the endorser entity

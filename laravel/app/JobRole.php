@@ -17,10 +17,12 @@ class JobRole extends Model
     protected $fillable = [
         'name', 'description',
     ];
-	
-	public function competencies()
-    {
-        return $this->belongsToMany('App\Competency', 'jobroles_competencies', 'jobrole_id', 'competency_id')->withPivot('competence_proficiency_level_id');
+
+    public function competencies(){
+        return $this->belongsToMany('App\Competency','jobroles_competencies','jobrole_id','competency_id')
+            ->withPivot('competence_proficiency_level_id')
+            ->join('competence_proficiency_level','competence_proficiency_level_id','=','competence_proficiency_level.id')
+            ->select('competencies.*', 'competence_proficiency_level.name as pivot_proficiency_level_name');
     }
 
     private function powerSet($in, $minLength = 1)

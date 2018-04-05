@@ -25,7 +25,7 @@
         @else
             <tr>
                 <td class="table-text">
-                    {{$noTasksMessage}}
+                    {{$noJobRolesMessage}}
                 </td>
 
             </tr>

@@ -33,7 +33,7 @@
                   @if (count($teamMembers) > 0)
                         @foreach($teamMembers as $index => $teamMember)
                             <a href="{{ route('users.show', $teamMember->id) }}">{{ $teamMember->name }}</a>
-                            @if($index < ($numberOfTeamMembers - 1))
+                            @if($index < (count($teamMembers) - 1))
                                 ,
                             @endif
                         @endforeach
