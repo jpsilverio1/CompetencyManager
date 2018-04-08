@@ -15,7 +15,7 @@ return [
     */
 
     'mailgun' => [
-        'domain' => 'sandboxc92a4bce083641939aa6c50cc6bd9a04.mailgun.org',
+        'domain' => 'competencemanager.xyz',
         'secret' => 'key-8fd13b67b493a31cf9968a4e3d89f75e',
     ],
 
