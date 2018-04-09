@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\verifyEmail;
 use App\DB;
+use Illuminate\Auth\Events\Registered;
+
 
 class RegisterController extends Controller
 {
@@ -94,6 +96,16 @@ class RegisterController extends Controller
         else{
             return redirect(route('login'))->with('status', 'Este link não é mais válido.');
         }
+    }
+
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+
+        return redirect(route('login'))->with('status', 'Email de confirmação enviado. Por favor, verifique seu email.');
     }
 
     /*public function verifyEmailFirst(){

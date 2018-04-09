@@ -14,11 +14,6 @@ return [
     |
     */
 
-    'mailgun' => [
-        'domain' => 'sandboxc92a4bce083641939aa6c50cc6bd9a04.mailgun.org',
-        'secret' => 'key-8fd13b67b493a31cf9968a4e3d89f75e',
-    ],
-
     'ses' => [
         'key' => env('SES_KEY'),
         'secret' => env('SES_SECRET'),
@@ -33,6 +28,11 @@ return [
         'model' => App\User::class,
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
+    ],
+
+    'mailgun' => [
+        'domain' => 'competencemanager.xyz',
+        'secret' => 'key-8fd13b67b493a31cf9968a4e3d89f75e',
     ],
 
 ];
