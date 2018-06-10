@@ -62,6 +62,42 @@ class SearchController extends Controller
         else
             return ['value'=>'No Result Found','id'=>''];
     }
+
+    public function autocompleteParentCompetence(Request $request) {
+        $query = $request->get('term','');
+        $currentCompetenceId = $request->get('currentCompetence');
+        $competence = Competency::findOrFail($currentCompetenceId);
+        $ancestorsIds = Competency::ancestorsOf($currentCompetenceId)->pluck('id');
+        $descendantsIds = Competency::descendantsAndSelf($currentCompetenceId)->pluck('id');
+        $competencies=Competency::where('name','LIKE',$query.'%')->whereNotIn('id', $ancestorsIds)->whereNotIn('id', $descendantsIds)->limit(20)->get();
+
+        $data=array();
+        foreach ($competencies as $competence) {
+            $data[]=array('value'=>$competence->name,'id'=>$competence->id, 'description' => $competence->description);
+        }
+        if(count($data))
+            return $data;
+        else
+            return ['value'=>'No Result Found','id'=>''];
+    }
+
+    public function autocompleteChildCompetence(Request $request) {
+        $query = $request->get('term','');
+        $currentCompetenceId = $request->get('currentCompetence');
+        $competence = Competency::findOrFail($currentCompetenceId);
+        $childrenIds =$competence->children()->pluck('id');
+        $descendantsIds = Competency::descendantsAndSelf($currentCompetenceId)->pluck('id');
+        $competencies=Competency::where('name','LIKE',$query.'%')->whereNotIn('id', $childrenIds)->limit(20)->get();
+
+        $data=array();
+        foreach ($competencies as $competence) {
+            $data[]=array('value'=>$competence->name,'id'=>$competence->id, 'description' => $competence->description);
+        }
+        if(count($data))
+            return $data;
+        else
+            return ['value'=>'No Result Found','id'=>''];
+    }
     public function searchCompetence(Request $request) {
         $competenceId = $request->get('term','');
         $competence = Competency::findOrFail($competenceId);

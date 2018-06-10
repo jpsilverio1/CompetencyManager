@@ -124,10 +124,33 @@ class CompetenceController extends Controller
 	public function deleteParentFromCompetence($competenceId) {
         $competence = Competency::findOrFail($competenceId);
         $competence->makeRoot()->save();
-        return view('competences.edit', ['competence' => $competence]);
+        return Redirect::route('competences.edit', $competenceId)->withMessage('Relaçao de parentesco removida com sucesso!');
     }
 
-    public function updateCompetenceParent() {
+    public function deleteCompetenceChild($competenceId, $competenceChildId) {
+        $competence = Competency::findOrFail($competenceId);
+        $competenceChild = Competency::findOrFail($competenceChildId);
+        $competenceChild->makeRoot()->save();
+        return Redirect::route('competences.edit', $competenceId)->withMessage('Relaçao de parentesco removida com sucesso!');
+    }
+
+    public function addOrUpdateCompetenceParent($competenceId, Request $request) {
+        $newParentId = $request->get('parent_id');
+        $competence = Competency::findOrFail($competenceId);
+        $competence->parent_id = $newParentId;
+        $competence->save();
+        return Redirect::route('competences.edit', $competenceId)->withMessage('Competência pai atualizada com sucesso!');
+
+    }
+
+    public function addChildCompetence($competenceId, Request $request) {
+        $newChildId = $request->get('child_id');
+        $competenceChild = Competency::findOrFail($newChildId);
+
+        $competenceChild->parent_id = $competenceId;
+        $competenceChild->save();
+
+        return Redirect::route('competences.edit', $competenceId)->withMessage('Subcompetência adicionada com sucesso!');;
 
     }
 	public function update(EditCompetenceFormRequest $request, $id)

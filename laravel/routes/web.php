@@ -56,9 +56,10 @@ Route::group(['middleware' => 'auth'], function() {
     Route::delete('/jobrole-competency/{jobroleId}/{competencyId}', 'JobRoleController@deleteCompetencyFromJobRole');
     Route::delete('/team-member/{teamId}/{memberId}', 'TeamController@deleteMemberFromTeam');
     Route::delete('/learningaid-competency/{learningAidId}/{competencyId}','LearningAidController@deleteCompetencyFromLearningAid');
-    //Route::delete('/competence-parent/{competenceId}', 'CompetenceController@deleteParentFromCompetence');
-    Route::delete('/competence-parent/{competenceId}', array('as'=>'competence-parent','uses'=>'CompetenceController@deleteParentFromCompetence'));
-	
+    Route::delete('delete-competence-parent/{competenceId}', array('as'=>'delete-competence-parent','uses'=>'CompetenceController@deleteParentFromCompetence'));
+    Route::delete('delete-competence-child/{competenceId}/{competenceChildId}', array('as'=>'delete-competence-child','uses'=>'CompetenceController@deleteCompetenceChild'));
+
+
 	Route::get('/learningaid-finish/{learningAidId}', 'LearningAidController@finishLearningAid');
 
     Route::post('/user-competences', 'UserController@addCompetences');
@@ -80,8 +81,15 @@ Route::group(['middleware' => 'auth'], function() {
         return Response::json($lista);
     })->name('competence-proficiency-level');
 
+    Route::post('competence-parent/{competenceId}', array('as'=>'competence-parent','uses'=>'CompetenceController@addOrUpdateCompetenceParent'));
+    Route::post('competence-child/{competenceId}', array('as'=>'competence-child','uses'=>'CompetenceController@addChildCompetence'));
+
+
+
     /* autocomplete-related routes */
     Route::get('search-competence',array('as'=>'search-competence','uses'=>'SearchController@autocompleteCompetence'));
+    Route::get('search-parent-competence',array('as'=>'search-parent-competence','uses'=>'SearchController@autocompleteParentCompetence'));
+    Route::get('search-child-competence',array('as'=>'search-child-competence','uses'=>'SearchController@autocompleteChildCompetence'));
     Route::get('search-user',array('as'=>'search-user','uses'=>'SearchController@autocompleteUser'));
 	
 	Route::get('search-jobrole',array('as'=>'search-jobrole','uses'=>'SearchController@autoCompleteJobRoles'));

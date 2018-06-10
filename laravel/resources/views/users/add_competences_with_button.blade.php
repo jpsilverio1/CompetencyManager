@@ -25,7 +25,7 @@
                     <div class="col-xs-6 col-md-6">
                         <div class="input-group stylish-input-group input-append">
                             <input type="text" name="search_competence" class="form-control"
-                                   placeholder="Buscar competência" id="search_competence">
+                                   placeholder="Buscar competência" id="search_parent_competence">
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-search"></span>
 							</span>
