@@ -64,35 +64,44 @@
                     <div class="panel-heading" >
                             Usuários que possuem a competência
                     </div>
-
-                    @include('users.show_paginated_users', ['users' => $competence->skilledUsers()->paginate(10, ['*'],'users'), 'showCompetenceLevel' => True])
-					
-					<div class="table table-striped task-table">
-						<?php 
-							$userHasThisCompetence = Auth::user()->hasCompetence($competence->id); 
-							$numberOfCategories = \App\CompetenceProficiencyLevel::count();
-						?>
-						<form action="/user-competence" method="POST">
-							{{ csrf_field() }}
-							<div>
-								<input type="hidden" name="name" value="{{$competence->name}}" />
-								<input type="hidden" name="competence_id" value="{{$competence->id}}" />
-								<div class="competency_level">
-									<span class="competence_level_label" name="levels[]" ><div id="sliderName"></div></span>
-									<input type="range" class="competence_level_slider"
-				name="competence_proficiency_level" min="1" max="{{ $numberOfCategories }}" value="1" onchange="updateTextInput(this)">
-								</div>
-								@if ($userHasThisCompetence)
-									Você possui o seguinte nível nesta competência:
-                                    {{Auth::user()->competences()->where('competence_id',$competence->id)->first()->pivot->proficiency_level_name}}
-									<button type="submit" class="btn btn-primary">Alterar Nível</button>
-								@else
-									<button type="submit" class="btn btn-primary">Adicionar esta competência ao seu Perfil</button>
-								@endif
-							</div>
-						</form>
-					</div>
+                    <div class="panel-body">
+                        @include('users.show_paginated_users', ['users' => $competence->skilledUsers()->paginate(10, ['*'],'users'), 'showCompetenceLevel' => True])
+                    </div>
                 </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Editar ou adicionar competência ao seu perfil
+                        </div>
+                        <div class="panel-body">
+                            Selecione seu nível de conhecimento para esta competência
+                            <?php
+                            $userHasThisCompetence = Auth::user()->hasCompetence($competence->id);
+                            $numberOfCategories = \App\CompetenceProficiencyLevel::count();
+                            ?>
+                            <form action="/user-competence" method="POST">
+                                {{ csrf_field() }}
+                                <div class="row cl-md-7">
+                                    <input type="hidden" name="name" value="{{$competence->name}}" />
+                                    <input type="hidden" name="competence_id" value="{{$competence->id}}" />
+                                    <div class="competency_level col-md-4">
+                                        <span class="competence_level_label" name="levels[]" ><div id="sliderName"></div></span>
+                                        <input type="range" class="competence_level_slider"
+                                               name="competence_proficiency_level" min="1" max="{{ $numberOfCategories }}" value="1" onchange="updateTextInput(this)">
+                                    </div>
+                                    <div class="col-md-3">
+                                        @if ($userHasThisCompetence)
+                                            Você possui o seguinte nível nesta competência:
+                                            {{Auth::user()->competences()->where('competence_id',$competence->id)->first()->pivot->proficiency_level_name}}
+                                            <button type="submit" class="btn btn-primary">Alterar Nível</button>
+                                        @else
+                                            <button type="submit" class="btn btn-primary">Adicionar esta competência ao seu Perfil</button>
+                                        @endif
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
                 <div class="panel panel-default">
                     <div class="panel-heading" >
                         Tarefas que necessitam desta competência

@@ -107,7 +107,7 @@
                                         <li><a>Sem notificações</a></li>
                                     @else
                                         @foreach(auth()->user()->unreadNotifications as $notification)
-                                            <li><a href="{{ route( 'show-task-form', $notification->data['id']) }}">Tarefa "{{$notification->data['title']}}" terminada PLACEHOLDER</a></li>
+                                            <li><a href="{{ route( 'show-task-form', $notification->data['id']) }}">Tarefa "{{$notification->data['title']}}" terminada</a></li>
                                         @endforeach
                                     @endif
                                 </ul>

@@ -69,7 +69,8 @@
                 <!-- Table Headings -->
                 <thead >
                 <th >Competência</th>
-                <th >Nível</th>
+                <th >Nível <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                 title="Este é o nível de proficiência informado pelo usuário ao cadastrar esta competência em seu perfil"></span></th>
                 <th style="text-align: center">&nbsp;Número de endossos</th> <!-- number of endorsements -->
                 <th style="text-align: center" class="col-md-3">&nbsp;</th> <!--endorsement status -->
 				<th style="text-align: center" >Nível de Lembrança</th>
@@ -86,8 +87,7 @@
                     @php($numberOfCompetenceLevels = \App\CompetenceProficiencyLevel::count())
                     @php($step = $numberOfCompetenceLevels/5)
                     <?php $numberOfEndorsementsForCompetence = $user->getNumberOfEndorsementsForCompetence($user->endorsements(), $competence); ?>
-                    @php($numberOfEndorsementsPerLevel = $user->getNumberOfEndorsementsPerLevelForCompetence($competence, $user))
-
+                    @php($numberOfEndorsementsPerLevel = $user->getNumberOfEndorsementsPerLevelForCompetence($competence))
                     @php($endorsersPerLevel = $user->getEndorsersPerLevel($user,$competence))
                     <tr>
                         <form action="/user-endorsements" method="POST">
@@ -111,7 +111,7 @@
                      data-position="relative" data-container="body"
                      title='{{$numberOfEndorsementsForProficiencyLevel["proficiencyLevelName"]}}'
                      data-content="
-                                             @foreach($numberOfEndorsementsForProficiencyLevel["endorsers"] as $endorser)
+                               @foreach($numberOfEndorsementsForProficiencyLevel["endorsers"] as $endorser)
                              <a href='{{ route('users.show', $endorser->id) }}'>
                                                    <button type='button' class='btn btn-info btn-circle'>
                                                     {{$endorser->getInitialsFromName()}}

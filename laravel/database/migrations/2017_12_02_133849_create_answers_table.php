@@ -21,7 +21,7 @@ class CreateAnswersTable extends Migration
             $table->integer('evaluated_user_id')->unsigned();
             $table->integer('personal_competence_level_id')->unsigned();
 			$table->timestamps();
-            $table->foreign('personal_competence_id')->references('id')->on('competencies');
+            $table->foreign('personal_competence_id')->references('id')->on('personal_competencies');
             $table->foreign('task_id')->references('id')->on('tasks');
 			$table->foreign('judge_user_id')->references('id')->on('users');
             $table->foreign('evaluated_user_id')->references('id')->on('users');

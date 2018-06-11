@@ -42,7 +42,7 @@
 
                   @endif
                     @if($task->canHaveTeamAssigned())
-                        @include('testando')
+                        @include('tasks.task_team_creation_assistant')
                     @else
                         <div class="alert alert-warning">
                             Não é possível alterar ou criar equipes para tarefas que já foram finalizadas.

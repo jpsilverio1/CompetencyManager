@@ -28,9 +28,13 @@ class User extends Authenticatable
     }
 	
 	public function collaborativeCompetencesWithAverageLevel() {
+        //TODO:CONSERTAR ESSA BOSTA AQUI
 		$personal_competence_level_id_max = \DB::table('personal_competence_proficiency_levels')->max('id');
-		
-		$collaboration_level_per_collaborative_competence = \DB::table('personal_competencies')->select('name')->join('answers', 'personal_competencies.id', '=', 'answers.personal_competence_id')->select(\DB::raw('avg(personal_competence_level_id) / ' . $personal_competence_level_id_max . ' as avg_collab_level, personal_competencies.name as name, personal_competencies.description as description'))->where('evaluated_user_id','=',$this->id)->groupBy('personal_competence_id', 'name', 'description')->get();
+
+        $collaboration_level_per_collaborative_competence = \DB::table('personal_competencies')->select('name')->join('answers', 'personal_competencies.id', '=', 'answers.personal_competence_id')->select(\DB::raw('avg(personal_competence_level_id) / ' . $personal_competence_level_id_max . ' as avg_collab_level, personal_competencies.name as name, personal_competencies.description as description'))->where('evaluated_user_id','=',$this->id)->groupBy('personal_competence_id', 'name', 'description')->get();
+        $personal_competence_level_id_min = \DB::table('personal_competence_proficiency_levels')->min('id');
+
+        /*$collaboration_level_per_collaborative_competence = \DB::table('personal_competencies')->select('name')->join('answers', 'personal_competencies.id', '=', 'answers.personal_competence_id')->select(\DB::raw('(avg(personal_competence_level_id) - ' . $personal_competence_level_id_min .') / ' . $personal_competence_level_id_max . ' as avg_collab_level, personal_competencies.name as name, personal_competencies.description as description'))->where('evaluated_user_id','=',$this->id)->groupBy('personal_competence_id', 'name', 'description')->get();*/
 		
 		return $collaboration_level_per_collaborative_competence;;
 	}
@@ -77,12 +81,15 @@ class User extends Authenticatable
         return $this->endorsements()->where('competence_id', $competenceId)->get();
     }
 
-    public function getNumberOfEndorsementsPerLevelForCompetence($competence, $user)
+    public function getNumberOfEndorsementsPerLevelForCompetence($competence)
     {
+        $user = $this;
         $meuMapa = [];
         $allCompetenceLevels = CompetenceProficiencyLevel::all()->pluck('id')->toArray();
         foreach ($allCompetenceLevels as $competenceLevelId) {
-            $endorsersIds = $user->endorsements()->where('competence_id', $competence->id)->where('competence_proficiency_endorsement_level_id', $competenceLevelId)->pluck('endorser_id')->toArray();
+            $endorsersIds = $user->endorsements()->where('competence_id', $competence->id)
+                ->where('competence_proficiency_endorsement_level_id', $competenceLevelId)
+                ->pluck('endorser_id')->toArray();
             $endorsers = User::whereIn('id', $endorsersIds)->get();
             $meuMapa[$competenceLevelId] = ["endorsementPerLevel" => $user->endorsements()->where('competence_id', $competence->id)->where('competence_proficiency_endorsement_level_id', $competenceLevelId)->count(),
                 "proficiencyLevelName" => \App\CompetenceProficiencyLevel::findOrFail($competenceLevelId)->name,
@@ -149,7 +156,7 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Competency','user_endorsements','endorsed_id','competence_id')
             ->withPivot('competence_proficiency_endorsement_level_id')
             ->join('competence_proficiency_level','competence_proficiency_endorsement_level_id','=','competence_proficiency_level.id')
-            ->select('competencies.*', 'competence_proficiency_level.name as pivot_proficiency_level_name');
+            ->select('competencies.*', 'competence_proficiency_level.name as pivot_proficiency_level_name', 'user_endorsements.endorser_id');
     }
 
     //endorsements where the current user is the endorser entity

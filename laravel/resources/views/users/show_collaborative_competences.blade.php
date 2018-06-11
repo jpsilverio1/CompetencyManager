@@ -5,6 +5,8 @@
 		@php($collaborative_competences_for_this_user = $user->collaborativeCompetencesWithAverageLevel())
 		@if(count($collaborative_competences_for_this_user) > 0)
 			<table class="table table-striped task-table" id="showCompetencesTable">
+				<h4> Nível médio de colaboraçao: {{number_format($collaborative_competences_for_this_user->pluck('avg_collab_level')->avg()*100,2)}}% </h4>
+
 				<thead >
 					<th>Competência Colaborativa</th>
 					<th>Avaliação média recebida por outros Usuários</th>
@@ -12,7 +14,6 @@
 
 				<!-- Table Body -->
 				<tbody>
-
 					@foreach ($collaborative_competences_for_this_user as $competence)
 						<tr>
 							<!-- Task Name -->
@@ -20,7 +21,7 @@
 								<div><a href="" data-toggle="myToolTip" data-placement="top"  data-trigger="click" data-html="true"  title="{{ $competence->description }}">{{ $competence->name }}</a></div>
 							</td>
 							<td>
-								{{ $competence->avg_collab_level }}
+								{{ $competence->avg_collab_level*100 }}
 							</td>
 						</tr>
 					@endforeach
