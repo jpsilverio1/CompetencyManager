@@ -26,17 +26,21 @@ class User extends Authenticatable
             ->select('competencies.*', 'competence_proficiency_level.name as pivot_proficiency_level_name')
             ->withTimestamps()->orderBy('competencies.name');
     }
+
+    public function averageCollaborationLevel() {
+        return 	$this->collaborativeCompetencesWithAverageLevel()->pluck('avg_collab_level')->avg();
+
+    }
 	
 	public function collaborativeCompetencesWithAverageLevel() {
-        //TODO:CONSERTAR ESSA BOSTA AQUI
-		$personal_competence_level_id_max = \DB::table('personal_competence_proficiency_levels')->max('id');
-
-        $collaboration_level_per_collaborative_competence = \DB::table('personal_competencies')->select('name')->join('answers', 'personal_competencies.id', '=', 'answers.personal_competence_id')->select(\DB::raw('avg(personal_competence_level_id) / ' . $personal_competence_level_id_max . ' as avg_collab_level, personal_competencies.name as name, personal_competencies.description as description'))->where('evaluated_user_id','=',$this->id)->groupBy('personal_competence_id', 'name', 'description')->get();
-        $personal_competence_level_id_min = \DB::table('personal_competence_proficiency_levels')->min('id');
-
-        /*$collaboration_level_per_collaborative_competence = \DB::table('personal_competencies')->select('name')->join('answers', 'personal_competencies.id', '=', 'answers.personal_competence_id')->select(\DB::raw('(avg(personal_competence_level_id) - ' . $personal_competence_level_id_min .') / ' . $personal_competence_level_id_max . ' as avg_collab_level, personal_competencies.name as name, personal_competencies.description as description'))->where('evaluated_user_id','=',$this->id)->groupBy('personal_competence_id', 'name', 'description')->get();*/
-		
-		return $collaboration_level_per_collaborative_competence;;
+        $a = \App\PersonalCompetenceProficiencyLevel::count() -1;
+        $personal_competence_level_id_min =  \App\PersonalCompetenceProficiencyLevel::min('id');
+        $collaboration_level_per_collaborative_competence = \DB::table('personal_competencies')->select('name')
+            ->join('answers', 'personal_competencies.id', '=', 'answers.personal_competence_id')
+            ->select(\DB::raw('((avg(personal_competence_level_id) - '.$personal_competence_level_id_min.')/'.$a.') as avg_collab_level, personal_competencies.name as name, personal_competencies.description as description'))
+            ->where('evaluated_user_id','=',$this->id)
+            ->groupBy('personal_competence_id', 'name', 'description')->get();
+		return $collaboration_level_per_collaborative_competence;
 	}
 	
     public function forgettingLevel($competence) {

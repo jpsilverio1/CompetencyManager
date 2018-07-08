@@ -21,33 +21,52 @@
         </div>
 
         <ul id="teamCandidates" class="list-group col-md-3 col-md-offset-1" style="background-color: white; min-height: 40px;max-width: 50%; padding:0;">
-        @php ($taskCandidatesInfo = $task->allCandidates())
-     @php ($taskCandidatesInfo = $task->getFinalRankAndExplanations())
+        @php ($taskCandidatesInfo = $task->getFinalRankAndExplanations())
 
     @if (count($taskCandidatesInfo["candidates"]) > 0)
         @foreach ($taskCandidatesInfo["candidates"] as  $candidate)
             <li class="list-group-item" data-member-source="candidate" accesskey="{{$candidate->id}}">
                 {{$candidate->name}} -> {{$taskCandidatesInfo["ranking"][$candidate->id]}}
-               <div class="glyphicon glyphicon-info-sign" data-toggle = "popover" data-placement = "top"  data-html="true"
+               <div class="glyphicon glyphicon-info-sign task-team-creation-user-popover" data-container="body" data-toggle = "popover" data-placement = "right"  data-html="true"
                       data-content="
+                              <h4>Resumo </h4>
+                              <ul class='sub-competence'>
+                              <li> Número médio de endossos das competências exigidas pela tarefa:
+                                 {{ $taskCandidatesInfo["rankingData"]["individualRankingValues"]["number of endorsements"][$candidate->id] }}
+                              </li>
+                               <li>  Nível médio de colaboração:
+{{ number_format($taskCandidatesInfo["rankingData"]["individualRankingValues"]["collaborative competencies"][$candidate->id]*100,2) }}%
+                             </li>
+                             <li> Nível médio de lembrança das competências exigidas pela tarefa:
+                                 {{ $taskCandidatesInfo["rankingData"]["individualRankingValues"]["remembering level"][$candidate->id] }}%
+                             </li>
+                             <li> Número de competências que o usuário possui e são exigidas pela tarefa:
+                                {{ $taskCandidatesInfo["rankingData"]["individualRankingValues"]["number of competencies"][$candidate->id] }}
+                             </li>
+                             <li> Número de competências que o usuário possui num nivel igual ou superior ao exigido pela tarefa:
+                                {{ $taskCandidatesInfo["rankingData"]["individualRankingValues"]["number of competencies in acceptable level"][$candidate->id] }}
+                             </li>
+                              </ul>
 
-                 @foreach($task->competencies as $taskCompetence)
-                    @if(array_key_exists($taskCompetence->id, $taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"]))
+                              <h4> Descrição detalhada </h4>
+                               @foreach($task->competencies as $taskCompetence)
+                      @if(array_key_exists($taskCompetence->id, $taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"]))
                               <hX><b>{{$taskCompetence->name}}</b/></hX>
                               <ul class='sub-competence'>
                               @foreach($taskCandidatesInfo["candidatesContribution"][$candidate->id]["competenceInfo"][$taskCompetence->id]["competence"] as $index => $candidateCompetence)
-                                <li>
-                <i class='fa fa-circle acceptableCompetenceLevel-{{$taskCandidatesInfo["individualCandidateValues"][$candidate->id]["number of competencies in acceptable level"][$candidateCompetence->id]}}' aria-hidden='true'></i>
+                              <li>
+              <i class='fa fa-circle acceptableCompetenceLevel-{{$taskCandidatesInfo["individualCandidateValues"][$candidate->id]["number of competencies in acceptable level"][$candidateCompetence->id]}}' aria-hidden='true'></i>
                 {{$candidateCompetence->name}} -
                 {{$candidateCompetence->pivot->proficiency_level_name}} -
                 {{$taskCandidatesInfo["individualCandidateValues"][$candidate->id]["remembering level"][$candidateCompetence->id]}} -
                 {{$taskCandidatesInfo["individualCandidateValues"][$candidate->id]["number of endorsements"][$candidateCompetence->id]}}
-                </li>
-                                @endforeach
+                              </li>
+@endforeach
 
                               </ul>
                     @endif
-                @endforeach
+                      @endforeach
+
                         "></div>
             </li>
         @endforeach

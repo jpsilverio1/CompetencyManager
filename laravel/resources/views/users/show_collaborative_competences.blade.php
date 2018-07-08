@@ -18,10 +18,10 @@
 						<tr>
 							<!-- Task Name -->
 							<td class="table-text">
-								<div><a href="" data-toggle="myToolTip" data-placement="top"  data-trigger="click" data-html="true"  title="{{ $competence->description }}">{{ $competence->name }}</a></div>
+								<div><a href="" data-toggle="myToolTip" data-placement="right"  data-html="true"  title="{{ $competence->description }}">{{ $competence->name }}</a></div>
 							</td>
 							<td>
-								{{ $competence->avg_collab_level*100 }}
+								{{number_format($competence->avg_collab_level*100,2)}}%
 							</td>
 						</tr>
 					@endforeach
@@ -32,4 +32,11 @@
 		@endif
 	</div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="myToolTip"]').tooltip({
+            html:"true"
+        });
+    });
+</script>
 

@@ -10,6 +10,10 @@
     background-image: none;
     background-color: #EDF5F9;
 }
+.task-team-creation-user-popover {
+    cursor:pointer;
+    max-width:2000px;
+}
 .js-remove{
     color:#c00;
     font-weight: bold;

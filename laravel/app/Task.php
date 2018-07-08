@@ -91,11 +91,12 @@ class Task extends Model
             $fullInfo["candidatesContribution"] = $taskCandidatesInfo["candidatesContribution"];
             $fullInfo["rankingData"]["details"] = $outroInfo;
             // data by priority parameter and user
-            $fullInfo["rankingData"]["individualRankingValues"] = $individualAtributteValues;
+
             $fullInfo["individualCandidateValues"] = $another;
         // TODO - > finish and display the collaborative things in view
             $fullInfo["novaRecomendacao"] = $this->taskTeamRecommendations($candidates, $taskCandidatesInfo["candidatesContribution"]);
         }
+        $fullInfo["rankingData"]["individualRankingValues"] = $individualAtributteValues;
         return $fullInfo;
     }
 
@@ -317,16 +318,15 @@ class Task extends Model
         return ["finalValue" => ($rank/$total), "individualTaskValues" => $individualTaskValues, "individualCandidateValues" => $individualCandidateValues];
     }
     function candidateCollaborativeCompetencies($taskCandidatesInfo, $candidate) {
-        $candidateId = $candidate->id;
         $personal_competence_level_id_min = \DB::table('personal_competence_proficiency_levels')->min('id');
         $personal_competence_level_id_max = \DB::table('personal_competence_proficiency_levels')->max('id');
         if ($personal_competence_level_id_max == $personal_competence_level_id_min) {
             return ["finalValue" => 0, "individualTaskValues" => [], "individualCandidateValues" => []];
         }
-        $average_collaboration_level = ((\DB::table('answers')->where([
-            ['evaluated_user_id', '=', $candidateId],
-            ['judge_user_id', '<>', $candidateId],
-        ])->avg('personal_competence_level_id')) - ($personal_competence_level_id_min)) / ($personal_competence_level_id_max - $personal_competence_level_id_min);
+        $average_collaboration_level = $candidate->averageCollaborationLevel();
+        if ($average_collaboration_level == null) {
+           $average_collaboration_level = 0;
+        }
         return ["finalValue" => $average_collaboration_level, "individualTaskValues" => [], "individualCandidateValues" => []];
     }
 
