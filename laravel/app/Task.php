@@ -171,6 +171,22 @@ class Task extends Model
         //return $this::filterSets($suitableAssigneesIdsSet);
 
     }
+    public function isFeasible() {
+        foreach($this->competencies as $taskCompetence) {
+            $descendantsAndSelfIds = Competency::descendantsAndSelf($taskCompetence->id)->pluck('id');
+            $countUser = \DB::table('user_competences')
+                ->whereIn('competence_id', $descendantsAndSelfIds)
+                ->count();
+            $countLearning = \DB::table('learning_aids_competencies')
+                ->whereIn('competency_id', $descendantsAndSelfIds)
+                ->count();
+            $totalCount = $countLearning + $countUser;
+            if ($totalCount == 0) {
+               return False;
+            }
+        }
+        return True;
+    }
 
     public function allCandidates() {
         $candidates = [];
