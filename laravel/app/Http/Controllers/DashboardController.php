@@ -564,37 +564,9 @@ class DashboardController extends Controller
 		$datatable->addStringColumn('Status');
 		
 		$tasks = \App\Task::all();
-		$all_learning_aids_competencies = DB::table('learning_aids_competencies')->select('competency_id', 'competency_proficiency_level_id')->distinct()->get();
-		$all_user_competences = DB::table('user_competences')->select('competence_id', 'competence_proficiency_level_id')->distinct()->get();
-		$unfeasible_tasks_ids = array();
-		$unfeasible_tasks_titles = array();
+
 		foreach ($tasks as $task) {
-			$count_competencies_required_in_task = count($task->competencies);
-			$count_competeces_attended_in_task = 0;
-			foreach ($task->competencies as $task_competence) {
-				$found_competence = false;
-				foreach($all_learning_aids_competencies as $learning_aid_competence) {
-					if ($learning_aid_competence->competency_id == $task_competence->id && $task_competence->competency_proficiency_level_id <= $learning_aid_competence->competency_proficiency_level_id) {
-						$found_competence = true;
-						break;
-					}
-				}
-				if ($found_competence == true) {
-					$count_competeces_attended_in_task += 1;
-					continue;
-				}
-				foreach($all_user_competences as $user_competence) {
-					if ($user_competence->competence_id == $task_competence->id && $task_competence->competency_proficiency_level_id <= $user_competence->competence_proficiency_level_id) {
-						$found_competence = true;
-						break;
-					}
-				}
-				if ($found_competence == true) {
-					$count_competeces_attended_in_task += 1;
-					continue;
-				}
-			}
-			if ($count_competeces_attended_in_task != $count_competencies_required_in_task) {
+			if (!$task->isFeasible()) {
 				$datatable->addRow(["<a href='".route('tasks.show', $task->id)."'>".$task->title."</a>", "Não-executável", ]);
 			}
 		}
@@ -726,16 +698,21 @@ class DashboardController extends Controller
 	}
 	
 	
-	public function mostCollaborativeUsersReport() {	
-		$personal_competence_level_id_max = \DB::table('personal_competence_proficiency_levels')->max('id');
-		$users_with_collaboration_level = DB::table('users')->select('name')->join('answers', 'users.id', '=', 'answers.evaluated_user_id')->select(DB::raw('avg(personal_competence_level_id) / ' . $personal_competence_level_id_max . ' as collab_level, name, evaluated_user_id'))->groupBy('evaluated_user_id', 'name')->orderBy('collab_level', 'desc')->get();
-		
+	public function mostCollaborativeUsersReport() {
+        $a = \App\PersonalCompetenceProficiencyLevel::count() -1;
+        $personal_competence_level_id_min =  \App\PersonalCompetenceProficiencyLevel::min('id');
+		$users_with_collaboration_level = DB::table('users')->select('name')
+            ->join('answers', 'users.id', '=', 'answers.evaluated_user_id')
+            ->select(\DB::raw('((avg(personal_competence_level_id) - '.$personal_competence_level_id_min.')/'.$a.') as collab_level, name, evaluated_user_id'))
+            ->groupBy('evaluated_user_id', 'name')
+            ->orderBy('collab_level', 'desc')->get();
+
 		$datatable = \Lava::DataTable();
 		$datatable->addStringColumn('Nome do Usuário');
 		$datatable->addNumberColumn('Nível de Colaboração');
 		
 		foreach ($users_with_collaboration_level as $user) {
-			$datatable->addRow(["<a href='".route('users.show', $user->evaluated_user_id)."'>".$user->name."</a>", $user->collab_level]);
+			$datatable->addRow(["<a href='".route('users.show', $user->evaluated_user_id)."'>".$user->name."</a>", number_format($user->collab_level*100,2)]);
 			
 		}
 		
@@ -786,14 +763,14 @@ class DashboardController extends Controller
 	}
 	
 	public function usersWithHighestCompetenceNumberReport() {
-		$users_with_competence_number = DB::table('users')->select('name')->join('user_competences', 'users.id', '=', 'user_competences.user_id')->select(DB::raw('count(competence_id) as count_competences, users.name as user_name, users.id as user_id'))->groupBy('users.id', 'user_name')->orderBy('count_competences', 'desc')->get();
+        $users_with_competence_number = \App\User::withCount('competences')->orderBy('competences_count', 'desc')->get();
 		
 		$datatable = \Lava::DataTable();
 		$datatable->addStringColumn('Nome do Usuário');
 		$datatable->addNumberColumn('Número de Competências');
 		
 		foreach ($users_with_competence_number as $user) {
-			$datatable->addRow(["<a href='".route('users.show', $user->user_id)."'>".$user->user_name."</a>", $user->count_competences]);
+			$datatable->addRow(["<a href='".route('users.show', $user->id)."'>".$user->name."</a>", $user->competences_count]);
 		}
 		
 		\Lava::TableChart('users_with_highest_competence_number_table', $datatable, [
@@ -836,50 +813,17 @@ class DashboardController extends Controller
 		
 		return view('dashboards.users_with_more_tasks_performed_report');
 	}
-	
-	public function recalculateUnfeasibleTaskCountForDashboard() {
-		// Counting Unfeasible tasks. This method is here because it consumes a lot of processing.
-		$unfeasible_tasks_count = 0;
-		
-		$tasks = \App\Task::all();
-		$all_learning_aids_competencies = DB::table('learning_aids_competencies')->select('competency_id', 'competency_proficiency_level_id')->distinct()->get();
-		$all_user_competences = DB::table('user_competences')->select('competence_id', 'competence_proficiency_level_id')->distinct()->get();
 
-		foreach ($tasks as $task) {
-			$count_competencies_required_in_task = count($task->competencies);
-			$count_competeces_attended_in_task = 0;
-			foreach ($task->competencies as $task_competence) {
-				$found_competence = false;
-				foreach($all_learning_aids_competencies as $learning_aid_competence) {
-					if ($learning_aid_competence->competency_id == $task_competence->id && $task_competence->competency_proficiency_level_id <= $learning_aid_competence->competency_proficiency_level_id) {
-						$found_competence = true;
-						break;
-					}
-				}
-				if ($found_competence == true) {
-					$count_competeces_attended_in_task += 1;
-					continue;
-				}
-				foreach($all_user_competences as $user_competence) {
-					if ($user_competence->competence_id == $task_competence->id && $task_competence->competency_proficiency_level_id <= $user_competence->competence_proficiency_level_id) {
-						$found_competence = true;
-						break;
-					}
-				}
-				if ($found_competence == true) {
-					$count_competeces_attended_in_task += 1;
-					continue;
-				}
-			}
-			if ($count_competeces_attended_in_task != $count_competencies_required_in_task) {
-				$unfeasible_tasks_count += 1;
-			}
-		}
-		
-		$task_count = count($tasks);
-		$feasible_tasks_count = $task_count - $unfeasible_tasks_count;
-		
-		\DB::table('basic_statistics')->where('name', 'feasible_tasks_count')->update(['value' => $feasible_tasks_count]);
-	}
-	
+	public function recalculateUnfeasibleTaskCountForDashboard() {
+        $tasks = \App\Task::all();
+        $feasibleTasksCount = 0;
+        foreach ($tasks as $task) {
+            if ($task->isFeasible()) {
+                $feasibleTasksCount++;
+            }
+        }
+
+        \DB::table('basic_statistics')->where('name', 'feasible_tasks_count')->update(['value' => $feasibleTasksCount]);
+    }
+
 }
