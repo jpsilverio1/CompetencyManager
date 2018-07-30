@@ -615,7 +615,25 @@ class DashboardController extends Controller
 		return view('dashboards.covered_competences_report');
 	}
 	
-	
+	private function enrichListWithSubCategories($competenciesList) {
+	    $newList = $competenciesList;
+        foreach ($competenciesList as $competenceId) {
+            $descendants = Competency::descendantsOf($competenceId)->pluck('id');
+            foreach($descendants as $descendantId) {
+                $newList[] = $descendantId;
+            }
+        }
+        return array_unique($newList);
+    }
+
+    private function arrayContains($descendantsIds, $coveredCompetenciesIds) {
+	    foreach($descendantsIds as $descendantId) {
+	        if (in_array($descendantId, $coveredCompetenciesIds)) {
+	            return True;
+            }
+        }
+        return False;
+    }
 	public function neededCompetencesReport() {
 		$datatable = \Lava::DataTable();
 		$datatable->addStringColumn('Nome da Competência');
@@ -623,11 +641,15 @@ class DashboardController extends Controller
 		$competences_learningaids = DB::table('learning_aids_competencies')->select('competency_id as id')->distinct()->get()->map(function($x){ return $x->id; })->toArray();
 		$competences_user = DB::table('user_competences')->select('competence_id as id')->distinct()->get()->map(function($x){ return $x->id; })->toArray();
 		$covered_competences_ids = array_merge($competences_learningaids, $competences_user);
-						
+
+        $covered_competences_ids = $this->enrichListWithSubCategories($covered_competences_ids);
 		$competences_needed_in_tasks = DB::table('competencies')->select('name')->join('task_competencies', 'competencies.id', '=', 'task_competencies.competency_id')->select(DB::raw('competencies.name as name, task_competencies.competency_id as competency_id'))->whereNotIn('competency_id', $covered_competences_ids)->get();
 		
 		foreach ($competences_needed_in_tasks as $competence) {
-			$datatable->addRow(["<a href='".route('competences.show', $competence->competency_id)."'>".$competence->name."</a>"]);
+		    $descendantsIds = Competency::descendantsOf($competence->competency_id)->pluck('id');
+            if (!$this->arrayContains($descendantsIds, $covered_competences_ids)) {
+                $datatable->addRow(["<a href='".route('competences.show', $competence->competency_id)."'>".$competence->name."</a>"]);
+            }
 		}
 		
 		\Lava::TableChart('needed_competences_report', $datatable, [
