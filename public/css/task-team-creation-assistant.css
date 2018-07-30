@@ -1,0 +1,34 @@
+.unfulfilled-competency {
+    color: #d3d3d3;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+.fulfilled-competency {
+    color: #41be47;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+.task-team-creation-assistant-panel {
+    background-image: none;
+    background-color: #EDF5F9;
+}
+.task-team-creation-user-popover {
+    cursor:pointer;
+    max-width:2000px;
+}
+.js-remove{
+    color:#c00;
+    font-weight: bold;
+}
+.acceptableCompetenceLevel-false {
+    color:orange;
+}
+.acceptableCompetenceLevel-true {
+    color: green;
+}
+
+.sub-competence {
+    padding-left: 1.875em;
+}
+ul.suggested-task-team-members {
+    list-style-type: none;
+}
+
