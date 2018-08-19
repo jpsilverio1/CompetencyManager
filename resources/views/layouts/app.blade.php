@@ -143,6 +143,13 @@
                 </div>
             </div>
         </nav>
+        @if(count($globalCompetenceProficiencyLevels) > 0)
+            <ul hidden class="competence-proficiency-level-labels">
+                @foreach($globalCompetenceProficiencyLevels as $competenceProficiencyLevel)
+                    <li>{{$competenceProficiencyLevel->name}}</li>
+                @endforeach
+            </ul>
+        @endif
 
         @yield('content')
     </div>
