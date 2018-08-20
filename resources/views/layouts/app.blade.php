@@ -25,6 +25,8 @@
     <link href="{{ asset('css/task-team-creation-assistant.css') }}" rel="stylesheet">
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/> -->
 
+    <script src="{{ asset('js/competences/competence-proficiency-level.js') }}"></script>
+
 </head>
 <body>
     <div id="app">
@@ -155,6 +157,7 @@
     </div>
 
     <!-- Scripts -->
+
    <!-- <script src="{{ asset('js/app.js') }}"></script> -->
 </body>
 </html>
