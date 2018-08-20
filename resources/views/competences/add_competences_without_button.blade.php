@@ -59,9 +59,6 @@
         var lTable = document.getElementById("addCompetenceTable");
         lTable.style.display = (lTable.style.display == "table") ? "none" : "table";
     }
-    function getCurrentNumberOfRows(tableId) {
-        return document.getElementById(tableId).getElementsByTagName("tr").length - 1;
-    }
     function getCompetenceRowCode(name, competenceId) {
         var minProficiencyLevelId = {{$globalMinConpetenceProficiencyLevelId}};
         var maxProficiencyLevelId = {{$globalMaxConpetenceProficiencyLevelId}};

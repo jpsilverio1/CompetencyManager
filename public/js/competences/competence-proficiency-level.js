@@ -13,3 +13,7 @@ function updateTextInput(slider) {
     var newLabel = getLabelForSliderValue(slider.value);
     sliderLabel.html(newLabel);
 }
+
+function getCurrentNumberOfRows(tableId) {
+    return document.getElementById(tableId).getElementsByTagName("tr").length - 1;
+}
