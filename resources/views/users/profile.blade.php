@@ -17,6 +17,12 @@
             </center>
         </div>
 
+     @if (Auth::user()->id == $user->id)
+            @include('users.show_competences_for_endorsement', ['competences' => $user->competences, 'profile_user' => $user, 'showEndorsementSection' => False])
+        @else
+            @include('users.show_competences_for_endorsement', ['competences' => $user->competences, 'profile_user' => $user, 'showEndorsementSection' => True])
+        @endif
+
 		
 		@if (Auth::user()->isManager())
             @include('users.show_collaborative_competences')

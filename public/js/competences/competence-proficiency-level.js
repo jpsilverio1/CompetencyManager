@@ -2,9 +2,8 @@
  * Created by Jéssica on 2018-08-20.
  */
 function getLabelForSliderValue(val) {
-    console.log("estou dentro do asset");
     //TODO: THIS WILL NOT WORK IF THE PROFICIENCY LEVEL IDS DON'T START AT 1. FIX IT!
-    return $('.competence-proficiency-level-labels').find('li:nth-child('+val+')').text() + 'indiozinho';
+    return $('.competence-proficiency-level-labels').find('li:nth-child('+val+')').text();
 }
 
 function updateTextInput(slider) {
