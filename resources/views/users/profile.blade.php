@@ -20,7 +20,7 @@
      @if (Auth::user()->id == $user->id)
             @include('users.show_competences_for_endorsement', ['competences' => $user->competences, 'profile_user' => $user, 'showEndorsementSection' => False])
         @else
-            @include('users.show_competences_for_endorsement', ['competences' => $user->competences, 'profile_user' => $user, 'showEndorsementSection' => True])
+            @include('users.show_competences_for_endorsement', ['competences' => $user->competences, 'profile_user' => $user, 'showEndorsementSection' => False])
         @endif
 
 		
