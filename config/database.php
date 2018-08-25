@@ -60,7 +60,7 @@ return [
             'database' => substr(parse_url(getenv("DATABASE_URL"))["path"], 1),
             'username' => parse_url(getenv("DATABASE_URL"))["user"],
             'password' => parse_url(getenv("DATABASE_URL"))["pass"],
-            'charset'  => 'utf8mb4',
+            'charset'  => 'utf8',
             'prefix'   => '',
             'schema'   => 'public',
             'sslmode' => 'prefer',
