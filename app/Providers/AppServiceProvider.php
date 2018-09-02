@@ -16,12 +16,17 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        $competenceProficiencyLevels = \App\CompetenceProficiencyLevel::all();
-        $globalMinConpetenceProficiencyLevelId = \App\CompetenceProficiencyLevel::min('id');
-        $globalMaxConpetenceProficiencyLevelId = \App\CompetenceProficiencyLevel::max('id');
-        View::share('globalCompetenceProficiencyLevels', $competenceProficiencyLevels);
-        View::share('globalMinConpetenceProficiencyLevelId', $globalMinConpetenceProficiencyLevelId);
-        View::share('globalMaxConpetenceProficiencyLevelId', $globalMaxConpetenceProficiencyLevelId);
+        //if (! $this->app->runningInConsole()) {
+        if (\Schema::hasTable(\App\CompetenceProficiencyLevel::getTableName())) {
+            // App is not running in CLI context
+            // Do HTTP-specific stuff here
+            $competenceProficiencyLevels = \App\CompetenceProficiencyLevel::all();
+            $globalMinConpetenceProficiencyLevelId = \App\CompetenceProficiencyLevel::min('id');
+            $globalMaxConpetenceProficiencyLevelId = \App\CompetenceProficiencyLevel::max('id');
+            View::share('globalCompetenceProficiencyLevels', $competenceProficiencyLevels);
+            View::share('globalMinConpetenceProficiencyLevelId', $globalMinConpetenceProficiencyLevelId);
+            View::share('globalMaxConpetenceProficiencyLevelId', $globalMaxConpetenceProficiencyLevelId);
+        }
         //Builder::defaultStringLength(191‌​);
     }
 
