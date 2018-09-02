@@ -10,4 +10,9 @@ class CompetenceProficiencyLevel extends Model
     protected $fillable = [
         'name'
     ];
+
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
 }
