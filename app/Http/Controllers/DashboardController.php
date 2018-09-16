@@ -67,7 +67,9 @@ class DashboardController extends Controller
 		$average_collaboration_level_circle = \Lava::DataTable();
 		$average_collaboration_level_circle->addStringColumn('Índice médio de Colaboração');
 		$average_collaboration_level_circle->addNumberColumn('Índice Médio de Colaboração');
-		$average_collaboration_level_circle->addRow(['Colaboração', $average_collaboration_level]);
+        //$average_collaboration_level_circle->addRow(['Colaboração', $average_collaboration_level]);
+
+        $average_collaboration_level_circle->addRow(['Colaboração', 0.3]);
 		
 		
 		return \Lava::GaugeChart('average_collaboration_level_circle', $average_collaboration_level_circle, [
