@@ -24,8 +24,17 @@
 					<div id="feasible_tasks_pie_chart_div"></div>
 				</div>
 				<div class="col-xs-5 col-xs-offset-1">
-					<?= Lava::render('GaugeChart', 'average_collaboration_level_circle', 'average_collaboration_level_circle_div') ?>
-					<div id="average_collaboration_level_circle_div"></div>	
+					@if (Lava::exists('GaugeChart', 'average_collaboration_level_circle'))
+						<?= Lava::render('GaugeChart', 'average_collaboration_level_circle', 'average_collaboration_level_circle_div') ?>
+							<div id="average_collaboration_level_circle_div"></div>
+					@else
+						<div id="average_collaboration_level_circle_div">
+							<h6><b>Indicador de nível médio de colaboraçao</b></h6>
+							Ainda não há dados suficientes para exibiçao desta métrica.
+						</div>
+
+					@endif
+
 				</div>
 			</div>
 			

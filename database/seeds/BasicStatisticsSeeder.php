@@ -54,7 +54,11 @@ class BasicStatisticsSeeder extends Seeder
         if (Schema::hasTable('answers')) {
             $a = \App\PersonalCompetenceProficiencyLevel::count() -1;
             $personal_competence_level_id_min =  \App\PersonalCompetenceProficiencyLevel::min('id');
-            return ((\DB::table('answers')->avg('personal_competence_level_id')) - ($personal_competence_level_id_min)) / $a;
+            $avg = (\DB::table('answers')->avg('personal_competence_level_id'));
+            if ($avg == NULL) {
+                return $avg;
+            }
+            return ($avg - ($personal_competence_level_id_min)) / $a;
         }
         return 0;
     }
