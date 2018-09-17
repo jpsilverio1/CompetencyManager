@@ -146,7 +146,11 @@ class DashboardController extends Controller
 		$tasks_count = DB::table('basic_statistics')->where("name", "tasks_count")->select('value')->first()->value;
 		$feasible_tasks_count = DB::table('basic_statistics')->where("name", "=", "feasible_tasks_count")->select('value')->first()->value;
 		$not_feasible_tasks_count = $tasks_count - $feasible_tasks_count;
-		$average_collaboration_level = DB::table('basic_statistics')->where("name", "average_collaboration_level")->first()->value;
+
+		$average_collaboration_level = DB::table('basic_statistics')->where("name", "average_collaboration_level")->first();
+		if ($average_collaboration_level != null) {
+		    $average_collaboration_level = $average_collaboration_level->value;
+        }
 		
 		// Tabela de Estatísticas Básicas
 		$this->basicStatisticsTableForDashboard($users_count, $competences_count, $learningaids_count, $jobroles_count, $tasks_count);
