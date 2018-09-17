@@ -58,15 +58,15 @@ class DashboardController extends Controller
 		$feasible_tasks_pie_chart = \Lava::DataTable();
 		$feasible_tasks_pie_chart->addStringColumn('Tarefas');
 		$feasible_tasks_pie_chart->addNumberColumn('Porcentagem');
-		/*if ($feasible_tasks_count > 0) {
-            $feasible_tasks_pie_chart->addRow(['Executáveis',$feasible_tasks_count]);
+		if ($feasible_tasks_count > 0) {
+            $feasible_tasks_pie_chart->addRow(['Executáveis',floor($feasible_tasks_count)]);
         }
 		if ($not_feasible_tasks_count > 0) {
-            $feasible_tasks_pie_chart->addRow(['Não-executáveis',$not_feasible_tasks_count]);
-        } */
+            $feasible_tasks_pie_chart->addRow(['Não-executáveis',floor($not_feasible_tasks_count)]);
+        }
 
-        $feasible_tasks_pie_chart->addRow(['Executáveis',1]);
-        $feasible_tasks_pie_chart->addRow(['Não-executáveis',1]);
+        //$feasible_tasks_pie_chart->addRow(['Executáveis',1]);
+        //$feasible_tasks_pie_chart->addRow(['Não-executáveis',1]);
 		return \Lava::PieChart('feasible_tasks_pie_chart', $feasible_tasks_pie_chart, [
 			'title' => 'Gráfico de Tarefas Executáveis vs Não-Executáveis',
 			'legend' => [
