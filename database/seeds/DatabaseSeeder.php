@@ -14,5 +14,6 @@ class DatabaseSeeder extends Seeder
          $this->call(CompetenceTableSeeder::class);
 		 $this->call(PersonalCompetenciesTableSeeder::class);
 		 $this->call(BasicStatisticsSeeder::class);
+		 $this->call(CompetencyProficiencyLevelSeeder::class);
     }
 }
