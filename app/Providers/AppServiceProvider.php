@@ -21,11 +21,13 @@ class AppServiceProvider extends ServiceProvider
             // App is not running in CLI context
             // Do HTTP-specific stuff here
             $competenceProficiencyLevels = \App\CompetenceProficiencyLevel::all();
-            $globalMinConpetenceProficiencyLevelId = \App\CompetenceProficiencyLevel::min('id');
-            $globalMaxConpetenceProficiencyLevelId = \App\CompetenceProficiencyLevel::max('id');
+            $globalMinCompetenceProficiencyLevelId = \App\CompetenceProficiencyLevel::min('id');
+            $globalMaxCompetenceProficiencyLevelId = \App\CompetenceProficiencyLevel::max('id');
+            /*echo "min = $globalMinCompetenceProficiencyLevelId <br>";
+            echo "max = $globalMaxCompetenceProficiencyLevelId <br>";*/
             View::share('globalCompetenceProficiencyLevels', $competenceProficiencyLevels);
-            View::share('globalMinConpetenceProficiencyLevelId', $globalMinConpetenceProficiencyLevelId);
-            View::share('globalMaxConpetenceProficiencyLevelId', $globalMaxConpetenceProficiencyLevelId);
+            View::share('globalMinCompetenceProficiencyLevelId', $globalMinCompetenceProficiencyLevelId);
+            View::share('globalMaxCompetenceProficiencyLevelId', $globalMaxCompetenceProficiencyLevelId);
         }
         //Builder::defaultStringLength(191‌​);
     }
