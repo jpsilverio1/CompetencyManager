@@ -113,10 +113,10 @@
     @if ($showEndorsementSection)
         <td class="col-md-3">
             <div class="competency_level">
-                <span class="competence_level_label" name="levels"><script>document.write(getLabelForSliderValue({{$globalMinConpetenceProficiencyLevelId}}));</script></span>
+                <span class="competence_level_label" name="levels"><script>document.write(getLabelForSliderValue(1));</script></span>
                 <input type="range" class="competence_level_slider"
-                       name="competence_proficiency_level" min="{{$globalMinConpetenceProficiencyLevelId}}" max="{{$globalMaxConpetenceProficiencyLevelId}}" value="{{$globalMinConpetenceProficiencyLevelId}}"
-                       onchange="updateTextInput(this);">
+                       name="competence_proficiency_level" min="{{$globalMinCompetenceProficiencyLevelId}}" max="{{$globalMaxCompetenceProficiencyLevelId}}" value="{{$globalMinCompetenceProficiencyLevelId}}"
+                       onchange="updateTextInput(this, {{$globalMinCompetenceProficiencyLevelId}})">
             </div>
             <div class="form-group">
                 <div class=" col-sm-1">

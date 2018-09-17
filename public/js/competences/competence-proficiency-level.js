@@ -2,14 +2,15 @@
  * Created by Jéssica on 2018-08-20.
  */
 function getLabelForSliderValue(val) {
-    //TODO: THIS WILL NOT WORK IF THE PROFICIENCY LEVEL IDS DON'T START AT 1. FIX IT!
     return $('.competence-proficiency-level-labels').find('li:nth-child('+val+')').text();
 }
 
-function updateTextInput(slider) {
+function updateTextInput(slider, minProficiencyLevel) {
     var rowHit = $(slider).parent().parent().parent();
     var sliderLabel = rowHit.find(".competence_level_label");
-    var newLabel = getLabelForSliderValue(slider.value);
+
+    var translated_idx = parseInt(slider.value) + 1 - minProficiencyLevel;
+    var newLabel = getLabelForSliderValue(translated_idx);
     sliderLabel.html(newLabel);
 }
 

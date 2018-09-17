@@ -60,8 +60,8 @@
         lTable.style.display = (lTable.style.display == "table") ? "none" : "table";
     }
     function getCompetenceRowCode(name, competenceId) {
-        var minProficiencyLevelId = {{$globalMinConpetenceProficiencyLevelId}};
-        var maxProficiencyLevelId = {{$globalMaxConpetenceProficiencyLevelId}};
+        var minProficiencyLevelId = {{$globalMinCompetenceProficiencyLevelId}};
+        var maxProficiencyLevelId = {{$globalMaxCompetenceProficiencyLevelId}};
         var code;
         @if($showCompetenceLevel)
             code = '<tr>' +
@@ -73,9 +73,9 @@
             '</td>' +
             '<td class="table-text">' +
             '<div class="competency_level">' +
-            '<span class="competence_level_label" name="competence_levels[]">'+getLabelForSliderValue(minProficiencyLevelId)+'</span>'
+            '<span class="competence_level_label" name="competence_levels[]">'+getLabelForSliderValue(1)+'</span>'
             + '<input type="range" class="competence_level_slider" ' +
-            'name="competency_proficiency_levels[]" min="'+minProficiencyLevelId+'" max="'+maxProficiencyLevelId+'" value ="'+minProficiencyLevelId+'" onchange="updateTextInput(this);">' +
+            'name="competency_proficiency_levels[]" min="'+minProficiencyLevelId+'" max="'+maxProficiencyLevelId+'" value ="'+minProficiencyLevelId+'" onchange="updateTextInput(this, {{$globalMinCompetenceProficiencyLevelId}});">' +
             '</div>' +
             '</td>' +
             '<td>' +
