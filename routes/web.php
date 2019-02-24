@@ -21,6 +21,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/testa', 'HomeController@testa')->name('testa');
+Route::get('/testat', 'HomeController@testat')->name('testat');
 
 /* User has to be authenticated to acess all of the routes listed below*/
 Route::group(['middleware' => 'auth'], function() {
@@ -90,7 +91,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('search-task',array('as'=>'search-task','uses'=>'SearchController@autocompleteTask'));
     Route::get('search-learningAid',array('as'=>'search-learningAid','uses'=>'SearchController@autocompleteLearningAid'));
     
-    Route::post('tasks.store-team',array('as'=>'tasks.store-team','uses'=>'TaskCOntroller@storeTaskTeam'));
+    Route::post('tasks.store-team',array('as'=>'tasks.store-team','uses'=>'TaskController@storeTaskTeam'));
     
 
     Route::get('testao/{taskId}', function ($taskId) {

@@ -38,8 +38,8 @@ class HomeController extends Controller
     {
         $last_indentation = 0;
         $database_id_stack = [];
-        $competenciesHierarchy = file(base_path('resources/assets/seeds/teste_seeding.txt'));
-        $competenciesDescription = file(base_path('resources/assets/seeds/teste_seeding_descriptions.txt'));
+        $competenciesHierarchy = file(base_path('resources/assets/seeds/competency_hierarchy.txt'));
+        $competenciesDescription = file(base_path('resources/assets/seeds/competency_descriptions.txt'));
         for ($k = 0; $k < count($competenciesHierarchy); $k++) {
             $competenceName = $competenciesHierarchy[$k];
             $i = substr_count($competenceName,'	');
@@ -65,5 +65,50 @@ class HomeController extends Controller
         }
     }
 
+    public function testat() {
+        $tasks = file(base_path('resources/assets/seeds/test_task_seed.txt'));
+        echo count($tasks);
+        foreach($tasks as $taskInfo) {
+            $splitTaskInfo = explode(";", $taskInfo);
+            /*echo "tamanho = ";
+            echo count($splitTaskInfo);
+            echo "<br>"; */
+            $taskTitle = $splitTaskInfo[0];
+            $taskDescription =  $splitTaskInfo[1];
+            echo "nome: $taskTitle -- $taskDescription <br>";
+            $task = new \App\Task;
+            $task->title = $taskTitle;
+            $task->description = $taskDescription;
+            $task->author_id = $author_id;
+            $task->save();
+
+            \DB::table('basic_statistics')->where('name', 'tasks_count')->increment('value');
+
+            $competenceIds = $request->get('competence_ids');
+            $competenceProficiencyLevels = $request->get('competency_proficiency_levels');
+            for ($i=0; $i<sizeOf($competenceIds); $i++) {
+                $competenceId = $competenceIds[$i];
+                $competenceProficiencyLevel = $competenceProficiencyLevels[$i];
+                $results = $task->competencies()->where('competency_id', '=', $competenceId)->get();
+                if ($results->isEmpty()) {
+                    //add competency
+                    $task->competencies()->attach([$competenceId => ['competency_proficiency_level_id'=>$competenceProficiencyLevel]]);
+                } else {
+                    //update competency level
+                    $task->competencies()->updateExistingPivot($competenceId, ['competency_proficiency_level_id'=>$competenceProficiencyLevel]);
+                }
+            }
+            $co = count(explode("|",$splitTaskInfo[2]));
+            echo " numero de competencias =  $co <br>";
+            foreach(explode("|",$splitTaskInfo[2]) as $singleCompetenceInfo) {
+               $competenceInfo =  explode("/", $singleCompetenceInfo);
+               $competenceName = trim($competenceInfo[0]);
+               $competenceProficencyLevelStr = trim($competenceInfo[1]);
+               echo count(explode("/", $singleCompetenceInfo));
+               echo "<br>";
+                echo " * $singleCompetenceInfo <br>";
+            }
+        }
+    }
 
 }
