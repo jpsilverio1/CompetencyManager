@@ -72,7 +72,6 @@
                            </div>
                            <div class="col-md-2">
                                <?php $taskStatus = $task->taskStatus(); $userCanInitializeTask = \Auth::user()->canInitializeOrFinishTask($task->id); ?>
-                                {{$taskStatus}}
                                @if ($userCanInitializeTask)
                                    @if ($taskStatus == "created")
                                        <td><a href=""/><button type="submit" class="btn btn-primary" disabled alt="A tarefa só pode ser inicializada após a designação de uma equipe à ela">Tarefa Não-Inicializada</button></td>
