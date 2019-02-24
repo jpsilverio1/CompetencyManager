@@ -49,7 +49,7 @@ class HomeController extends Controller
             $parent_id = $this->array_peek($database_id_stack);
             //save to database
             $competence = new \App\Competency;
-            $competence->name = $competenceName;
+            $competence->name = trim($competenceName);
             $competence->description = "olar mundo";
             if ($parent_id > 0) {
                 $competence->parent_id = $parent_id;
