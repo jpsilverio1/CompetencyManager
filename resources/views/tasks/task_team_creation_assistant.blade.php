@@ -1,6 +1,6 @@
 
     <!-- Latest Sortable -->
-    <script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <div class="panel panel-info task-team-creation-assistant-panel">
         <div class="panel-heading" >
             Assistente de criação de equipes
