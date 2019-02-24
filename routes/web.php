@@ -89,7 +89,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('search-task',array('as'=>'search-task','uses'=>'SearchController@autocompleteTask'));
     Route::get('search-learningAid',array('as'=>'search-learningAid','uses'=>'SearchController@autocompleteLearningAid'));
     
-    Route::post('tasks.store-team',array('as'=>'tasks.store-team','uses'=>'TaskCOntroller@storeTaskTeam'));
+    Route::post('tasks.store-team',array('as'=>'tasks.store-team','uses'=>'TaskController@storeTaskTeam'));
     
 
     Route::get('testao/{taskId}', function ($taskId) {
