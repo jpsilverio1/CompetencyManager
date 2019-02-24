@@ -38,7 +38,10 @@ class HomeController extends Controller
     {
         $last_indentation = 0;
         $database_id_stack = [];
-        foreach(file(base_path('resources/assets/seeds/teste_seeding.txt')) as $competenceName) {
+        $competenciesHierarchy = file(base_path('resources/assets/seeds/teste_seeding.txt'));
+        $competenciesDescription = file(base_path('resources/assets/seeds/teste_seeding_descriptions.txt'));
+        for ($k = 0; $k < count($competenciesHierarchy); $k++) {
+            $competenceName = $competenciesHierarchy[$k];
             $i = substr_count($competenceName,'	');
             if ($i<=$last_indentation) {
                 $most = ($last_indentation - $i)+1;
@@ -50,7 +53,7 @@ class HomeController extends Controller
             //save to database
             $competence = new \App\Competency;
             $competence->name = trim($competenceName);
-            $competence->description = "olar mundo";
+            $competence->description = trim($competenciesDescription[$k]);
             if ($parent_id > 0) {
                 $competence->parent_id = $parent_id;
             }
@@ -58,6 +61,7 @@ class HomeController extends Controller
             $database_id = $competence->id;
             array_unshift($database_id_stack,$database_id);
             $last_indentation = $i;
+
         }
     }
 
