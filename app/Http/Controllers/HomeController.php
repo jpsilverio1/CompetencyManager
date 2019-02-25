@@ -76,16 +76,11 @@ class HomeController extends Controller
     }
     public function testat() {
         $tasks = file(base_path('resources/assets/seeds/test_task_seed.txt'));
-        echo count($tasks);
         foreach($tasks as $taskInfo) {
             $splitTaskInfo = explode(";", $taskInfo);
-            echo "tamanho = ";
-            echo count($splitTaskInfo);
-            echo "<br>"; 
             $taskTitle = $splitTaskInfo[0];
             $taskDescription =  $splitTaskInfo[1];
             $taskCreatorEmail = $splitTaskInfo[2];
-            echo "nome: $taskTitle -- $taskDescription <br>";
             $task = new \App\Task;
             $task->title = $taskTitle;
             $task->description = $taskDescription;
@@ -93,9 +88,6 @@ class HomeController extends Controller
             $task->save();
 
             \DB::table('basic_statistics')->where('name', 'tasks_count')->increment('value');
-
-            $co = count(explode("|",$splitTaskInfo[3]));
-            echo " numero de competencias =  $co <br>";
             $map = $this->getAllProficiencyLevels();
             foreach(explode("|",$splitTaskInfo[2]) as $singleCompetenceInfo) {
                $competenceInfo =  explode("\\", $singleCompetenceInfo);
@@ -107,15 +99,11 @@ class HomeController extends Controller
                else {
                    $competenceId = -1;
                }
-               echo "$competenceName -> $competenceId <br>";
                $competenceProficencyLevelStr = trim($competenceInfo[1]);
                $competenceProficiencyLevelId = $map[$competenceProficencyLevelStr];
                if (array_key_exists($competenceProficencyLevelStr, $map) && ($competenceId <> -1)) {
                    $task->competencies()->attach([$competenceId => ['competency_proficiency_level_id'=>$competenceProficiencyLevelId]]);
                }
-               echo count(explode("\\", $singleCompetenceInfo));
-               echo "<br>";
-                echo " * $singleCompetenceInfo - $competenceProficiencyLevelId<br>";
             }
         }
     }
