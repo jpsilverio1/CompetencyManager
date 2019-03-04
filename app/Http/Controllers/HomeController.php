@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Competency;
+use App\User;
 
 
 class HomeController extends Controller
@@ -88,7 +89,7 @@ class HomeController extends Controller
             $task->save();
 
             \DB::table('basic_statistics')->where('name', 'tasks_count')->increment('value');
-            $map = $this->getAllProficiencyLevels();
+            $competenceProficiencyLevelMap = $this->getAllProficiencyLevels();
             foreach(explode("|",$splitTaskInfo[2]) as $singleCompetenceInfo) {
                $competenceInfo =  explode("\\", $singleCompetenceInfo);
                $competenceName = trim($competenceInfo[0]);
@@ -100,11 +101,47 @@ class HomeController extends Controller
                    $competenceId = -1;
                }
                $competenceProficencyLevelStr = trim($competenceInfo[1]);
-               $competenceProficiencyLevelId = $map[$competenceProficencyLevelStr];
-               if (array_key_exists($competenceProficencyLevelStr, $map) && ($competenceId <> -1)) {
+               $competenceProficiencyLevelId = $competenceProficiencyLevelMap[$competenceProficencyLevelStr];
+               if (array_key_exists($competenceProficencyLevelStr, $competenceProficiencyLevelMap) && ($competenceId <> -1)) {
                    $task->competencies()->attach([$competenceId => ['competency_proficiency_level_id'=>$competenceProficiencyLevelId]]);
                }
             }
+        }
+    }
+
+    public function testau() {
+        $users = file(base_path('resources/assets/seeds/teste_user_seed.txt'));
+        $competenceProficiencyLevelMap = $this->getAllProficiencyLevels();
+        foreach($users as $userInfo) {
+            $splitUserInfo = explode(";", $userInfo);
+            $userName = trim($splitUserInfo[0]);
+            $userEmail = trim($splitUserInfo[1]);
+            $userRole = trim($splitUserInfo[2]);
+            $userPassword = trim($splitUserInfo[3]);
+            echo " olar  $userName";
+            echo count(explode("|",$splitUserInfo[4]));
+            foreach(explode("|",$splitUserInfo[4]) as $singleCompetenceInfo) {
+                $competenceInfo =  explode("\\", $singleCompetenceInfo);
+                echo "c: $singleCompetenceInfo <br>";
+                $competenceName = trim($competenceInfo[0]);
+                $competenceIdAttempt = Competency::getByName($competenceName);
+                if ($competenceIdAttempt) {
+                    $competenceId = $competenceIdAttempt->id;
+                }
+                else {
+                    $competenceId = -1;
+                }
+                $competenceProficencyLevelStr = trim($competenceInfo[1]);
+                $competenceProficiencyLevelId = $competenceProficiencyLevelMap[$competenceProficencyLevelStr];
+                echo "$competenceName - $competenceId - $competenceProficiencyLevelId <br>";
+                if (array_key_exists($competenceProficencyLevelStr, $competenceProficiencyLevelMap) && ($competenceId <> -1)) {
+                    //$task->competencies()->attach([$competenceId => ['competency_proficiency_level_id'=>$competenceProficiencyLevelId]]);
+                }
+            }
+            echo count($splitUserInfo);
+            echo " - ";
+            echo count(explode("|",$splitUserInfo[4]));
+            echo "<br>";
         }
     }
 
