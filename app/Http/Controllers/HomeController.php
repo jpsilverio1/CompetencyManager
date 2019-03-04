@@ -144,5 +144,33 @@ class HomeController extends Controller
             echo "<br>";
         }
     }
+    public function testatr() {
+        echo " tudo bom";
+        $learningAids = file(base_path('resources/assets/seeds/teste_learningaids_seed.txt'));
+        $competenceProficiencyLevelMap = $this->getAllProficiencyLevels();
+        echo count($learningAids);
+        echo " <br>";
+        foreach($learningAids as $learningAidInfo) {
+            $splitLearningAidInfo = explode(";", $learningAidInfo);
+            echo count($splitLearningAidInfo);
+            echo " <br>";
+            $learningAidTitle = trim($splitLearningAidInfo[0]);
+            $learningAidDescription = trim($splitLearningAidInfo[1]);
+            foreach(explode("|",$splitLearningAidInfo[2]) as $singleCompetenceInfo) {
+                $competenceInfo =  explode("\\", $singleCompetenceInfo);
+                $competenceName = trim($competenceInfo[0]);
+                $competenceIdAttempt = Competency::getByName($competenceName);
+                if ($competenceIdAttempt) {
+                    $competenceId = $competenceIdAttempt->id;
+                }
+                else {
+                    $competenceId = -1;
+                }
+                $competenceProficencyLevelStr = trim($competenceInfo[1]);
+                $competenceProficiencyLevelId = $competenceProficiencyLevelMap[$competenceProficencyLevelStr];
+                echo "$competenceName - $competenceId - $competenceProficencyLevelStr - $competenceProficiencyLevelId <br>";
+            }
+        }
+    }
 
 }
