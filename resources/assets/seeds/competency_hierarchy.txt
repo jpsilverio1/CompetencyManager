@@ -1,0 +1,61 @@
+Conhecimentos gerais
+	Entretenimento
+		Universo POP
+	Informática básica
+		Pacote Office
+		Photoshop
+Design
+	Paradigmas de design
+		Material Design 
+		Metro UI  
+		User Interface
+		User Experience 
+	Ferramentas de design
+		Adobe After Effects 
+		Adobe Illustrator
+Tecnologia da Informação
+	Desenvolvimento
+		Desenvolvimento Web
+			Desenvolvimento frontend
+				Linguagem CSS  
+				Web Debuggers (ex. Google Dev Tools) 
+				Linguagem HTML
+				Linguagem Javascript
+			Desenvolvimento backend
+				API/RESTful
+				Linux Terminal
+				Linguagem Python 
+				Linguagem Java 
+				Linguagem Node.js 
+	Arquitetura de softwares
+		Arquitetura Microservices
+	Suporte a desenvolvimento
+		Automação de Deploy
+	Técnicas de desenvolvimento
+		TDD 
+		UML
+		Orientação de Objetos 
+		SEO 
+		Design Patterns 
+	Infraestrutura
+		Redes
+	TI orientada a negócios
+		Redação Técnica
+		Desenvolvimento (orientado a negócios) 
+		Scrum
+Marketing
+	Comunicação
+		Comunicação Escrita
+	Ferramentas e tecnologias para marketing
+		SEO direcionado a conteúdo
+		DoubleClick 
+		ElasticSearch 
+		Facebook Business 
+		Ferramentas de Email Marketing (ex MailChimp) 
+		Ferramentas de Posts Programados 
+		Google Analytics
+Línguas
+	Língua portuguesa
+		Revisão de texto
+	Inglês
+	Espanhol

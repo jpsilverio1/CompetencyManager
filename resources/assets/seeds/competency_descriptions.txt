@@ -1,0 +1,61 @@
+descriçao da competencia Conhecimentos gerais
+descriçao da competencia Conhecimentos sobre Entretenimento
+descriçao da competencia Conhecimento do Universo POP
+descriçao da competencia Informática básica
+descriçao da competencia Conhecimento em Pacote Office
+descriçao da competencia Conhecimento em Photoshop
+descriçao da competencia Design
+descriçao da competencia Paradigmas de design
+descriçao da competencia Conhecimento em Material Design 
+descriçao da competencia Conhecimento em Metro UI  
+descriçao da competencia Conhecimento em User Interface
+descriçao da competencia Conhecimento em User Experience 
+descriçao da competencia Ferramentas de design
+descriçao da competencia Adobe After Effects 
+descriçao da competencia Adobe Illustrator
+descriçao da competencia Tecnologia da Informação
+descriçao da competencia Desenvolvimento
+descriçao da competencia Desenvolvimento Web
+descriçao da competencia Conhecimento de desenvolvimento frontend
+descriçao da competencia Linguagem CSS  
+descriçao da competencia Conhecimento em Web Debuggers (ex. Google Dev Tools) 
+descriçao da competencia Conhecimento em Linguagem HTML
+descricao da competencia Linguagem Javascript
+descriçao da competencia Conhecimento de desenvolvimento backend
+descriçao da competencia Conhecimento em API/RESTful
+descriçao da competencia Conhecimento em Linux Terminal
+descriçao da competencia Linguagem Python 
+descriçao da competencia Linguagem Java 
+descriçao da competencia Linguagem Node.js 
+descriçao da competencia Arquitetura de softwares
+descriçao da competencia Conhecimento em Arquitetura Microservices
+descriçao da competencia Suporte a desenvolvimento
+descriçao da competencia Conhecimento em Automação de Deploy
+descriçao da competencia Técnicas de desenvolvimento
+descriçao da competencia Conhecimento em TDD 
+descriçao da competencia Conhecimento em UML
+descriçao da competencia Conhecimento em Orientação de Objetos 
+descriçao da competencia Conhecimento em SEO 
+descriçao da competencia Conhecimento em Design Patterns 
+descriçao da competencia Infraestrutura
+descriçao da competencia Conhecimento sobre Redes
+descriçao da competencia TI orientada a negócios
+descriçao da competencia Conhecimento em Redação Técnica
+descriçao da competencia Conhecimento sobre Desenvolvimento (orientado a negócios) 
+descriçao da competencia Conhecimento em Scrum
+descriçao da competencia Marketing
+descriçao da competencia Conhecimento sobre comunicação
+descriçao da competencia Comunicação Escrita
+descriçao da competencia Ferramentas e tecnologias para marketing
+descriçao da competencia SEO direcionado a conteúdo
+descriçao da competencia Conhecimento em DoubleClick 
+descriçao da competencia Conhecimento em ElasticSearch 
+descriçao da competencia Conhecimento em Facebook Business 
+descriçao da competencia Conhecimento em Ferramentas de Email Marketing (ex MailChimp) 
+descriçao da competencia Conhecimento em Ferramentas de Posts Programados 
+descriçao da competencia Conhecimento em Google Analytics
+descriçao da competencia Línguas
+descriçao da competencia Língua portuguesa
+descriçao da competencia Revisão de texto
+descriçao da competencia Inglês
+descriçao da competencia Espanhol
