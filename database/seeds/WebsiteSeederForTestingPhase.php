@@ -88,7 +88,6 @@ class WebsiteSeederForTestingPhase extends Seeder
                 else {
                     $competenceId = -1;
                 }
-                echo "$singleCompetenceInfo oi <br>";
                 $competenceProficencyLevelStr = trim($competenceInfo[1]);
                 $competenceProficiencyLevelId = $competenceProficiencyLevelMap[$competenceProficencyLevelStr];
                 if (array_key_exists($competenceProficencyLevelStr, $competenceProficiencyLevelMap) && ($competenceId <> -1)) {
@@ -118,11 +117,9 @@ class WebsiteSeederForTestingPhase extends Seeder
             $thisUser->status = 1;
             $thisUser->save();
 
-            echo empty($splitUserInfo[4]);
             if (!empty($splitUserInfo[4])) {
                 foreach (explode("|", $splitUserInfo[4]) as $singleCompetenceInfo) {
                     $competenceInfo = explode("\\", $singleCompetenceInfo);
-                    echo "c: $singleCompetenceInfo <br>";
                     $competenceName = trim($competenceInfo[0]);
                     $competenceIdAttempt = Competency::getByName($competenceName);
                     if ($competenceIdAttempt) {
@@ -131,28 +128,18 @@ class WebsiteSeederForTestingPhase extends Seeder
                         $competenceId = -1;
                     }
                     $competenceProficencyLevelStr = trim($competenceInfo[1]);
-                    echo "$competenceName - $competenceId - $competenceProficiencyLevelMap[$competenceProficencyLevelStr] <br>";
                     if (array_key_exists($competenceProficencyLevelStr, $competenceProficiencyLevelMap) && ($competenceId <> -1)) {
                         $thisUser->competences()->attach([$competenceId => ['competence_proficiency_level_id'=>$competenceProficiencyLevelMap[$competenceProficencyLevelStr]]]);
                     }
                 }
             }
-            echo count($splitUserInfo);
-            echo " - ";
-            echo count(explode("|",$splitUserInfo[4]));
-            echo "<br>";
         }
     }
     public function seedLearningAids() {
-        echo " <br>tudo bom";
         $learningAids = file(base_path('resources/assets/seeds/teste_learningaids_seed.txt'));
         $competenceProficiencyLevelMap = $this->getAllProficiencyLevels();
-        echo count($learningAids);
-        echo " <br>";
         foreach($learningAids as $learningAidInfo) {
             $splitLearningAidInfo = explode(";", $learningAidInfo);
-            echo count($splitLearningAidInfo);
-            echo " <br>";
             $learningAidTitle = trim($splitLearningAidInfo[0]);
             $learningAidDescription = trim($splitLearningAidInfo[1]);
             $learningAid = new \App\LearningAid;
@@ -173,7 +160,6 @@ class WebsiteSeederForTestingPhase extends Seeder
                 if (array_key_exists($competenceProficencyLevelStr, $competenceProficiencyLevelMap) && ($competenceId <> -1)) {
                     $learningAid->competencies()->attach([$competenceId => ['competency_proficiency_level_id'=>$competenceProficiencyLevelMap[$competenceProficencyLevelStr]]]);
                 }
-                echo "$competenceName - $competenceId - $competenceProficencyLevelStr - $competenceProficiencyLevelMap[$competenceProficencyLevelStr] <br>";
             }
         }
     }
