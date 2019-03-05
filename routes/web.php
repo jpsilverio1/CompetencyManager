@@ -20,8 +20,6 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/testa', 'HomeController@testa')->name('testa');
-Route::get('/testat', 'HomeController@testat')->name('testat');
 
 /* User has to be authenticated to acess all of the routes listed below*/
 Route::group(['middleware' => 'auth'], function() {
