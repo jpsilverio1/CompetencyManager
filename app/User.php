@@ -202,6 +202,10 @@ class User extends Authenticatable
 		return $this->belongsToMany('App\LearningAid', 'learning_aids_user', 'user_id', 'learning_aid_id');
     }
 
+    public static function getByEmail($userEmail) {
+        return User::where(['email'=>trim($userEmail)])->first();
+    }
+
     /**
      * The attributes that should be hidden for arrays.
      *

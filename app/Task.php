@@ -85,9 +85,11 @@ class Task extends Model
         }
         $fullInfo = [];
         asort($finalRanks);
+        $order =1;
         foreach ($finalRanks as $candidateId => $finalRank) {
             $fullInfo["candidates"][] =  $taskCandidatesInfo["candidates"][$candidateId];
             $fullInfo["ranking"][$candidateId] = $finalRank;
+            $fullInfo["candidateRanking"][$candidateId] = $order;
             $fullInfo["candidatesContribution"] = $taskCandidatesInfo["candidatesContribution"];
             $fullInfo["rankingData"]["details"] = $outroInfo;
             // data by priority parameter and user
@@ -95,6 +97,7 @@ class Task extends Model
             $fullInfo["individualCandidateValues"] = $another;
         // TODO - > finish and display the collaborative things in view
             $fullInfo["novaRecomendacao"] = $this->taskTeamRecommendations($candidates, $taskCandidatesInfo["candidatesContribution"]);
+            $order = $order + 1;
         }
         $fullInfo["rankingData"]["individualRankingValues"] = $individualAtributteValues;
         return $fullInfo;

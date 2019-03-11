@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
 
+
 class Competency extends Model
 {
     use NodeTrait;
@@ -101,5 +102,9 @@ class Competency extends Model
             $acceptableCompetenceLevels = array_slice($allCompetenceLevels, $start);
         }
         return $acceptableCompetenceLevels;
+    }
+
+    public static function getByName($competenceName) {
+        return Competency::where(['name'=>trim($competenceName)])->first();
     }
 }
