@@ -42,7 +42,6 @@ class Task extends Model
         self::NUMBER_OF_ENDORSEMENTS => 'getRankBiggerAtributtesFirst');
 
     public function getFinalRankAndExplanations() {
-
         $taskCandidatesInfo = $this->allCandidates();
         $finalRanks = [];
         $individualRanks = [];
@@ -90,15 +89,18 @@ class Task extends Model
             $fullInfo["candidates"][] =  $taskCandidatesInfo["candidates"][$candidateId];
             $fullInfo["ranking"][$candidateId] = $finalRank;
             $fullInfo["candidateRanking"][$candidateId] = $order;
-            $fullInfo["candidatesContribution"] = $taskCandidatesInfo["candidatesContribution"];
-            $fullInfo["rankingData"]["details"] = $outroInfo;
+
+
             // data by priority parameter and user
 
             $fullInfo["individualCandidateValues"] = $another;
         // TODO - > finish and display the collaborative things in view
-            $fullInfo["novaRecomendacao"] = $this->taskTeamRecommendations($candidates, $taskCandidatesInfo["candidatesContribution"]);
+
             $order = $order + 1;
         }
+        $fullInfo["rankingData"]["details"] = $outroInfo;
+        $fullInfo["candidatesContribution"] = $taskCandidatesInfo["candidatesContribution"];
+        $fullInfo["novaRecomendacao"] = $this->taskTeamRecommendations($candidates, $taskCandidatesInfo["candidatesContribution"]);
         $fullInfo["rankingData"]["individualRankingValues"] = $individualAtributteValues;
         return $fullInfo;
     }
@@ -118,6 +120,7 @@ class Task extends Model
 
     public function taskTeamRecommendations($candidates, $candidatesContribution)
     {
+
         $taskCompetenciesCoveredByCandidates = [];
         $keepCand = [];
 
