@@ -66,7 +66,7 @@
    <div class="panel panel-default">
       <div class="panel-heading" >
           Competências requeridas pela tarefa
-          @include('competences.show_paginated_competences', ['competences' => $task->competencies()->paginate(5, ['*'],'competences'),
+          @include('competences.show_paginated_competences', ['competences' => $task->competencies()->paginate(20, ['*'],'competences'),
           'showCompetenceLevel' => True,
           'showDeleteButton' => False,
           'noCompetencesMessage' => 'Não há competências para exibição.'])
