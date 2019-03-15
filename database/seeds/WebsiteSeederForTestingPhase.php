@@ -27,6 +27,7 @@ class WebsiteSeederForTestingPhase extends Seeder
 
     public function seedCompetencies()
     {
+        echo "Seed competencies \n";
         $last_indentation = 0;
         $database_id_stack = [];
         $competenciesHierarchy = file(base_path('resources/assets/seeds/competency_hierarchy.txt'));
@@ -64,6 +65,7 @@ class WebsiteSeederForTestingPhase extends Seeder
         return $map;
     }
     public function seedTasks() {
+        echo "Seed Tasks \n";
         $tasks = file(base_path('resources/assets/seeds/test_task_seed.txt'));
         foreach($tasks as $taskInfo) {
             $splitTaskInfo = explode(";", $taskInfo);
@@ -86,6 +88,7 @@ class WebsiteSeederForTestingPhase extends Seeder
                     $competenceId = $competenceIdAttempt->id;
                 }
                 else {
+                    echo "competencia nao encontrada na tarefa: $competenceName \n";
                     $competenceId = -1;
                 }
                 $competenceProficencyLevelStr = trim($competenceInfo[1]);
@@ -93,11 +96,15 @@ class WebsiteSeederForTestingPhase extends Seeder
                 if (array_key_exists($competenceProficencyLevelStr, $competenceProficiencyLevelMap) && ($competenceId <> -1)) {
                     $task->competencies()->attach([$competenceId => ['competency_proficiency_level_id'=>$competenceProficiencyLevelId]]);
                 }
+                if (!array_key_exists($competenceProficencyLevelStr, $competenceProficiencyLevelMap)) {
+                    echo "nivel da competencia nao encontrada na tarefa: $competenceProficencyLevelStr \n";
+                }
             }
         }
     }
 
     public function seedUsers() {
+        echo "Seed users \n";
         $users = file(base_path('resources/assets/seeds/teste_user_seed.txt'));
         $competenceProficiencyLevelMap = $this->getAllProficiencyLevels();
         foreach($users as $userInfo) {
@@ -125,17 +132,22 @@ class WebsiteSeederForTestingPhase extends Seeder
                     if ($competenceIdAttempt) {
                         $competenceId = $competenceIdAttempt->id;
                     } else {
+                        echo "competencia nao encontrada no usuario: $competenceName \n";
                         $competenceId = -1;
                     }
                     $competenceProficencyLevelStr = trim($competenceInfo[1]);
                     if (array_key_exists($competenceProficencyLevelStr, $competenceProficiencyLevelMap) && ($competenceId <> -1)) {
                         $thisUser->competences()->attach([$competenceId => ['competence_proficiency_level_id'=>$competenceProficiencyLevelMap[$competenceProficencyLevelStr]]]);
                     }
+                    if (!array_key_exists($competenceProficencyLevelStr, $competenceProficiencyLevelMap)) {
+                        echo "nivel da competencia nao encontrada no usuario: $competenceProficencyLevelStr \n";
+                    }
                 }
             }
         }
     }
     public function seedLearningAids() {
+        echo "Seed learning aids \n";
         $learningAids = file(base_path('resources/assets/seeds/teste_learningaids_seed.txt'));
         $competenceProficiencyLevelMap = $this->getAllProficiencyLevels();
         foreach($learningAids as $learningAidInfo) {
@@ -154,11 +166,15 @@ class WebsiteSeederForTestingPhase extends Seeder
                     $competenceId = $competenceIdAttempt->id;
                 }
                 else {
+                    echo "competencia nao encontrada no treinamento: $competenceName \n";
                     $competenceId = -1;
                 }
                 $competenceProficencyLevelStr = trim($competenceInfo[1]);
                 if (array_key_exists($competenceProficencyLevelStr, $competenceProficiencyLevelMap) && ($competenceId <> -1)) {
                     $learningAid->competencies()->attach([$competenceId => ['competency_proficiency_level_id'=>$competenceProficiencyLevelMap[$competenceProficencyLevelStr]]]);
+                }
+                if (!array_key_exists($competenceProficencyLevelStr, $competenceProficiencyLevelMap)) {
+                    echo "nivel da competencia nao encontrada no treinamento: $competenceProficencyLevelStr \n";
                 }
             }
         }
