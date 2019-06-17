@@ -57,7 +57,7 @@
 					<h3>Competências</h3>
 					<div><a href="{{ route('covered-competences-report') }}">Listar Competências Abrangidas (em Treinamentos ou Pessoas)</a></div>
 					<div><a href="{{ route('needed-competences-report') }}">Listar Competências Não-mapeadas (em Treinamentos ou Pessoas)</a></div>
-					<div><a href="{{ route('most-learned-competences-report') }}">Listar Competências com Maior Nível de Aprendizado Médio</a></div>
+					<div><a href="{{ route('most-learned-competences-report') }}">Listar Competências com Maior Nível de Lembrança Médio</a></div>
 					
 					<h3>Colaboração</h3>
 					<div><a href="{{ route('most-collaborative-users-report') }}">Listar Usuários mais Colaborativos</a></div>
