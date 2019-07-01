@@ -1,39 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<script>
-    var dictionary;
-    function getLabelForSliderValue(val) {
-        return dictionary[val];
-    }
-    function updateTextInput(slider) {
-        var rowHit = $(slider).parent().parent().parent();
-        var sliderLabel = rowHit.find(".competence_level_label");
-        var newLabel = getLabelForSliderValue(slider.value);
-        sliderLabel.html(newLabel);
-    }
-    $(document).ready(function () {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        var url = "{{ route('competence-proficiency-level') }}";
-        dictionary = function () {
-            var tmp = null;
-            $.ajax({
-                'async': false,
-                'type': "GET",
-                'global': false,
-                'url': url,
-                'success': function (data) {
-                    tmp = data;
-                }
-            });
-            return tmp;
-        }();
-		document.getElementById("sliderName").innerHTML = getLabelForSliderValue(1);
-    });
-</script>
     <div class="container">
         <div class="panel panel-default">
             <div class="panel-heading text-center text-capitalize" >
@@ -76,7 +42,6 @@
                             Selecione seu nível de conhecimento para esta competência
                             <?php
                             $userHasThisCompetence = Auth::user()->hasCompetence($competence->id);
-                            $numberOfCategories = \App\CompetenceProficiencyLevel::count();
                             ?>
                             <form action="/user-competence" method="POST">
                                 {{ csrf_field() }}
@@ -84,9 +49,9 @@
                                     <input type="hidden" name="name" value="{{$competence->name}}" />
                                     <input type="hidden" name="competence_id" value="{{$competence->id}}" />
                                     <div class="competency_level col-md-4">
-                                        <span class="competence_level_label" name="levels[]" ><div id="sliderName"></div></span>
+                                        <span class="competence_level_label" name="levels[]" ><script>document.write(getLabelForSliderValue(1));</script></span>
                                         <input type="range" class="competence_level_slider"
-                                               name="competence_proficiency_level" min="1" max="{{ $numberOfCategories }}" value="1" onchange="updateTextInput(this)">
+                                               name="competence_proficiency_level" min="{{$globalMinCompetenceProficiencyLevelId}}" max="{{$globalMaxCompetenceProficiencyLevelId}}" value="{{$globalMinCompetenceProficiencyLevelId}}" onchange="updateTextInput(this, {{$globalMinCompetenceProficiencyLevelId}})">
                                     </div>
                                     <div class="col-md-3">
                                         @if ($userHasThisCompetence)

@@ -37,7 +37,7 @@ class SearchController extends Controller
     public function autoCompleteUser(Request $request) {
         $query = $request->get('term','');
         $blackListedIds = $request->get('blacklistedIds',[]);
-        $users=User::where('name','LIKE','%'.$query.'%')->whereNotIn('id', $blackListedIds)->limit(20)->get();
+        $users=User::where(\DB::raw('LOWER(name)'),'LIKE','%'.strtolower($query).'%')->whereNotIn('id', $blackListedIds)->limit(20)->get();
 
         $data=array();
         foreach ($users as $user) {
@@ -48,11 +48,11 @@ class SearchController extends Controller
         else
             return ['value'=>'No Result Found','id'=>''];
     }
+
     public function autoCompleteCompetence(Request $request) {
         $query = $request->get('term','');
         $blackListedIds = $request->get('blacklistedIds',[]);
-        $competencies=Competency::where('name','LIKE',$query.'%')->whereNotIn('id', $blackListedIds)->limit(20)->get();
-
+        $competencies=Competency::where(\DB::raw('LOWER(name)'),'LIKE','%'.strtolower($query).'%')->whereNotIn('id', $blackListedIds)->limit(20)->get();
         $data=array();
         foreach ($competencies as $competence) {
             $data[]=array('value'=>$competence->name,'id'=>$competence->id, 'description' => $competence->description);
@@ -69,7 +69,7 @@ class SearchController extends Controller
         $competence = Competency::findOrFail($currentCompetenceId);
         $ancestorsIds = Competency::ancestorsOf($currentCompetenceId)->pluck('id');
         $descendantsIds = Competency::descendantsAndSelf($currentCompetenceId)->pluck('id');
-        $competencies=Competency::where('name','LIKE',$query.'%')->whereNotIn('id', $ancestorsIds)->whereNotIn('id', $descendantsIds)->limit(20)->get();
+        $competencies=Competency::where(\DB::raw('LOWER(name)'),'LIKE','%'.strtolower($query).'%')->whereNotIn('id', $ancestorsIds)->whereNotIn('id', $descendantsIds)->limit(20)->get();
 
         $data=array();
         foreach ($competencies as $competence) {
@@ -87,7 +87,7 @@ class SearchController extends Controller
         $competence = Competency::findOrFail($currentCompetenceId);
         $childrenIds =$competence->children()->pluck('id');
         $descendantsIds = Competency::descendantsAndSelf($currentCompetenceId)->pluck('id');
-        $competencies=Competency::where('name','LIKE',$query.'%')->whereNotIn('id', $childrenIds)->limit(20)->get();
+        $competencies=Competency::where(\DB::raw('LOWER(name)'),'LIKE','%'.strtolower($query).'%')->whereNotIn('id', $childrenIds)->limit(20)->get();
 
         $data=array();
         foreach ($competencies as $competence) {
@@ -106,7 +106,7 @@ class SearchController extends Controller
 
     public function autoCompleteTask(Request $request) {
         $query = $request->get('term','');
-        $tasks=Task::where('title','LIKE','%'.$query.'%')->limit(20)->get();
+        $tasks=Task::where(\DB::raw('LOWER(title)'),'LIKE','%'.strtolower($query).'%')->limit(20)->get();
 
         $data=array();
         foreach ($tasks as $task) {
@@ -120,7 +120,7 @@ class SearchController extends Controller
 
     public function autoCompleteLearningAid(Request $request) {
         $query = $request->get('term','');
-        $learningAids=LearningAid::where('name','LIKE','%'.$query.'%')->limit(20)->get();
+        $learningAids=LearningAid::where(\DB::raw('LOWER(name)'),'LIKE','%'.strtolower($query).'%')->limit(20)->get();
 
         $data=array();
         foreach ($learningAids as $learningAid) {
@@ -134,7 +134,7 @@ class SearchController extends Controller
 	
 	public function autoCompleteJobRoles(Request $request) {
         $query = $request->get('term','');
-        $jobroles=JobRole::where('name','LIKE','%'.$query.'%')->limit(20)->get();
+        $jobroles=JobRole::where(\DB::raw('LOWER(name)'),'LIKE','%'.strtolower($query).'%')->limit(20)->get();
 
         $data=array();
         foreach ($jobroles as $jobrole) {

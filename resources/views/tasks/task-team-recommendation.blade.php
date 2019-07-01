@@ -4,7 +4,7 @@
         Equipes sugeridas
     </div>
     <div class="panel-body">
-                <?php $suitableAssigneesForTask = $task->getFinalRankAndExplanations()["novaRecomendacao"]["finalResult"]; ?>
+                <?php $suitableAssigneesForTask = $taskCandidatesInfo["novaRecomendacao"]["finalResult"]; ?>
                 @if (count($suitableAssigneesForTask) > 0)
                         <table class="table table-striped" id="team-suggestion-table">
                             <!-- Table Headings -->

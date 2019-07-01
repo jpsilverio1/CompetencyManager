@@ -24,8 +24,17 @@
 					<div id="feasible_tasks_pie_chart_div"></div>
 				</div>
 				<div class="col-xs-5 col-xs-offset-1">
-					<?= Lava::render('GaugeChart', 'average_collaboration_level_circle', 'average_collaboration_level_circle_div') ?>
-					<div id="average_collaboration_level_circle_div"></div>	
+					@if (Lava::exists('GaugeChart', 'average_collaboration_level_circle'))
+						<?= Lava::render('GaugeChart', 'average_collaboration_level_circle', 'average_collaboration_level_circle_div') ?>
+							<div id="average_collaboration_level_circle_div"></div>
+					@else
+						<div id="average_collaboration_level_circle_div">
+							<h6><b>Indicador de nível médio de colaboraçao</b></h6>
+							Ainda não há dados suficientes para exibiçao desta métrica.
+						</div>
+
+					@endif
+
 				</div>
 			</div>
 			
@@ -48,7 +57,7 @@
 					<h3>Competências</h3>
 					<div><a href="{{ route('covered-competences-report') }}">Listar Competências Abrangidas (em Treinamentos ou Pessoas)</a></div>
 					<div><a href="{{ route('needed-competences-report') }}">Listar Competências Não-mapeadas (em Treinamentos ou Pessoas)</a></div>
-					<div><a href="{{ route('most-learned-competences-report') }}">Listar Competências com Maior Nível de Aprendizado Médio</a></div>
+					<div><a href="{{ route('most-learned-competences-report') }}">Listar Competências com Maior Nível de Lembrança Médio</a></div>
 					
 					<h3>Colaboração</h3>
 					<div><a href="{{ route('most-collaborative-users-report') }}">Listar Usuários mais Colaborativos</a></div>

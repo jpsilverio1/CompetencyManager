@@ -93,35 +93,37 @@
                             <!-- final -->
                             @php ($nameIdx = 1)
                             @php ($dbIdIdx = 0)
-                            @for ($i=1; $i<sizeOf(old('competence_ui_id')); $i++)
-                                @php ($parentId = old("parent_ui_id.$i"))
-                                @php ($competenceUiId = old("competence_ui_id.$i"))
-                                @if (old("isNewCompetence.$i") === "true")
-                                    @php ($competenceName = old("name.$nameIdx"))
-                                    @php ($competenceDescription = old("description.$nameIdx"))
-                                    @php ($descriptionError = $errors->has("description.$nameIdx") ? $errors->first("description.$nameIdx") : '')
-                                    @php ($nameError = $errors->has("name.$nameIdx") ? $errors->first("name.$nameIdx") : '')
-                                    @if ($parentId == -1)
-                                        <script type="text/javascript">
-                                            console.log("nova root"+{{$parentId}});
-                                            createNewRootCompetence({{$competenceUiId}}, true, 'in', '', '{{$competenceName}}', '{{$competenceDescription}}', '{{$nameError}}', '{{$descriptionError}}');
-                                        </script>
+                            @if(!empty(old('competence_ui_id')))
+                                @for ($i=1; $i<sizeOf(old('competence_ui_id')); $i++)
+                                    @php ($parentId = old("parent_ui_id.$i"))
+                                    @php ($competenceUiId = old("competence_ui_id.$i"))
+                                    @if (old("isNewCompetence.$i") === "true")
+                                        @php ($competenceName = old("name.$nameIdx"))
+                                        @php ($competenceDescription = old("description.$nameIdx"))
+                                        @php ($descriptionError = $errors->has("description.$nameIdx") ? $errors->first("description.$nameIdx") : '')
+                                        @php ($nameError = $errors->has("name.$nameIdx") ? $errors->first("name.$nameIdx") : '')
+                                        @if ($parentId == -1)
+                                            <script type="text/javascript">
+                                                console.log("nova root"+{{$parentId}});
+                                                createNewRootCompetence({{$competenceUiId}}, true, 'in', '', '{{$competenceName}}', '{{$competenceDescription}}', '{{$nameError}}', '{{$descriptionError}}');
+                                            </script>
+                                        @else
+                                            <script type="text/javascript">
+                                                console.log("nova sub"+{{$parentId}});
+                                                addNewSubCompetence(true, {{$competenceUiId}}, {{$parentId}}, '{{$competenceName}}', '{{$competenceDescription}}', '{{$nameError}}', '{{$descriptionError}}');
+                                            </script>
+                                        @endif
+                                        @php ($nameIdx++)
                                     @else
                                         <script type="text/javascript">
-                                            console.log("nova sub"+{{$parentId}});
-                                            addNewSubCompetence(true, {{$competenceUiId}}, {{$parentId}}, '{{$competenceName}}', '{{$competenceDescription}}', '{{$nameError}}', '{{$descriptionError}}');
+                                            console.log("database");
+                                            @php ($competenceUiId =  old("competence_db_id.$dbIdIdx"))
+                                            tryThisThing({{$competenceUiId}}, {{$competenceUiId}}, {{$parentId}});
                                         </script>
+                                        @php ($dbIdIdx++)
                                     @endif
-                                    @php ($nameIdx++)
-                                @else
-                                    <script type="text/javascript">
-                                        console.log("database");
-                                        @php ($competenceUiId =  old("competence_db_id.$dbIdIdx"))
-                                        tryThisThing({{$competenceUiId}}, {{$competenceUiId}}, {{$parentId}});
-                                    </script>
-                                    @php ($dbIdIdx++)
-                                @endif
-                            @endfor
+                                @endfor
+                            @endif
                         </div>
 
                         <div class="col-md-12 text-center" style="margin-top:15px;">

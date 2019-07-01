@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <div class="container">
+        <?php $taskStatus = $task->taskStatus(); ?>
         <div class="panel panel-default">
             <div class="panel-heading text-center text-capitalize" >
                 <h2>
@@ -26,9 +27,21 @@
                     Autor
                 </h4>
                 <p> {{$task->author->name}}</p>
+                @if ($taskStatus == "created")
+                    <h4>Status
+                        <div class="glyphicon glyphicon-info-sign task-team-creation-user-popover" data-container="body" data-toggle = "popover" data-placement = "right"  data-html="true"
+                             data-content="Uma tarefa é executável se para cada competência requerida pela tarefa, existe pelo menos um usuário que possua tal competência ou um treinamento que ensine a mesma."></div>
+                    </h4>
+                    @if($task->isFeasible())
+                        <p>Executável</p>
+                    @else
+                        <p>Não executável</p>
+                    @endif
+                @endif
                  <h4>
                      Equipe
                  </h4>
+
                   @php ($teamMembers = $task->teamMembers)
                   @if (count($teamMembers) > 0)
                         @foreach($teamMembers as $index => $teamMember)
@@ -53,7 +66,7 @@
    <div class="panel panel-default">
       <div class="panel-heading" >
           Competências requeridas pela tarefa
-          @include('competences.show_paginated_competences', ['competences' => $task->competencies()->paginate(5, ['*'],'competences'),
+          @include('competences.show_paginated_competences', ['competences' => $task->competencies()->orderBy('id')->paginate(5, ['*'],'competences'),
           'showCompetenceLevel' => True,
           'showDeleteButton' => False,
           'noCompetencesMessage' => 'Não há competências para exibição.'])
@@ -71,8 +84,8 @@
                                </form>
                            </div>
                            <div class="col-md-2">
-                               <?php $taskStatus = $task->taskStatus(); $userCanInitializeTask = \Auth::user()->canInitializeOrFinishTask($task->id); ?>
-                                {{$taskStatus}}
+                               <?php $userCanInitializeTask = \Auth::user()->canInitializeOrFinishTask($task->id); ?>
+
                                @if ($userCanInitializeTask)
                                    @if ($taskStatus == "created")
                                        <td><a href=""/><button type="submit" class="btn btn-primary" disabled alt="A tarefa só pode ser inicializada após a designação de uma equipe à ela">Tarefa Não-Inicializada</button></td>

@@ -4,7 +4,7 @@
         <div class="panel panel-default">
             <div class="panel-heading text-center text-capitalize" >
                 <h2>
-                    Lista de Competências com o Maior Nível de Aprendizado
+                    Lista de Competências com o Maior Nível de Lembrança
                 </h2>
             </div>
             <div class="panel-body">

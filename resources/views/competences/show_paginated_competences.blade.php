@@ -56,9 +56,6 @@
     @endif
 	
 <script>
-	function getCurrentNumberOfRows(tableId) {
-        return document.getElementById(tableId).getElementsByTagName("tr").length - 1;
-    }
 	$(document).ready(function () {
 		 $("#removeButton").on('click', function (e) {
 			var current_number_rows = getCurrentNumberOfRows("showCompetencesTable");

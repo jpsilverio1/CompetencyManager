@@ -52,9 +52,13 @@ class DashboardController extends Controller
 		$feasible_tasks_pie_chart = \Lava::DataTable();
 		$feasible_tasks_pie_chart->addStringColumn('Tarefas');
 		$feasible_tasks_pie_chart->addNumberColumn('Porcentagem');
-		$feasible_tasks_pie_chart->addRow(['Executáveis',$feasible_tasks_count]);
-		$feasible_tasks_pie_chart->addRow(['Não-executáveis',$not_feasible_tasks_count]);
-		
+		if ($feasible_tasks_count > 0) {
+            $feasible_tasks_pie_chart->addRow(['Executáveis',floor($feasible_tasks_count)]);
+        }
+		if ($not_feasible_tasks_count > 0) {
+            $feasible_tasks_pie_chart->addRow(['Não-executáveis',floor($not_feasible_tasks_count)]);
+        }
+
 		return \Lava::PieChart('feasible_tasks_pie_chart', $feasible_tasks_pie_chart, [
 			'title' => 'Gráfico de Tarefas Executáveis vs Não-Executáveis',
 			'legend' => [
@@ -64,12 +68,15 @@ class DashboardController extends Controller
 	}
 	
 	public function averageCollaborationLevelIndicator($average_collaboration_level){
+	    if ($average_collaboration_level == null) {
+	        return null;
+        }
 		$average_collaboration_level_circle = \Lava::DataTable();
 		$average_collaboration_level_circle->addStringColumn('Índice médio de Colaboração');
 		$average_collaboration_level_circle->addNumberColumn('Índice Médio de Colaboração');
-		$average_collaboration_level_circle->addRow(['Colaboração', $average_collaboration_level]);
-		
-		
+        $average_collaboration_level_circle->addRow(['Colaboração', $average_collaboration_level]);
+
+
 		return \Lava::GaugeChart('average_collaboration_level_circle', $average_collaboration_level_circle, [
 			'title' => 'Indicador do Nível Médio de Colaboração',
 			'width'      => 400,
@@ -138,7 +145,11 @@ class DashboardController extends Controller
 		$tasks_count = DB::table('basic_statistics')->where("name", "tasks_count")->select('value')->first()->value;
 		$feasible_tasks_count = DB::table('basic_statistics')->where("name", "=", "feasible_tasks_count")->select('value')->first()->value;
 		$not_feasible_tasks_count = $tasks_count - $feasible_tasks_count;
-		$average_collaboration_level = DB::table('basic_statistics')->where("name", "average_collaboration_level")->first()->value;
+
+		$average_collaboration_level = DB::table('basic_statistics')->where("name", "average_collaboration_level")->first();
+		if ($average_collaboration_level != null) {
+		    $average_collaboration_level = $average_collaboration_level->value;
+        }
 		
 		// Tabela de Estatísticas Básicas
 		$this->basicStatisticsTableForDashboard($users_count, $competences_count, $learningaids_count, $jobroles_count, $tasks_count);

@@ -70,16 +70,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('task-finish/{taskId}',array('as'=>'task-finish','uses'=>'TaskController@finishTask'));
 	
 	Route::post('task-answer-form', 'AnswerController@addAnswer');
-	
-
-    Route::get('competence-proficiency-level',function(){
-        $competenceProficiencyLevels = CompetenceProficiencyLevel::all();
-        $lista = [];
-        foreach ($competenceProficiencyLevels as $level) {
-            $lista[$level->id] = $level->name;
-        }
-        return Response::json($lista);
-    })->name('competence-proficiency-level');
 
     Route::post('competence-parent/{competenceId}', array('as'=>'competence-parent','uses'=>'CompetenceController@addOrUpdateCompetenceParent'));
     Route::post('competence-child/{competenceId}', array('as'=>'competence-child','uses'=>'CompetenceController@addChildCompetence'));
@@ -99,7 +89,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('search-task',array('as'=>'search-task','uses'=>'SearchController@autocompleteTask'));
     Route::get('search-learningAid',array('as'=>'search-learningAid','uses'=>'SearchController@autocompleteLearningAid'));
     
-    Route::post('tasks.store-team',array('as'=>'tasks.store-team','uses'=>'TaskCOntroller@storeTaskTeam'));
+    Route::post('tasks.store-team',array('as'=>'tasks.store-team','uses'=>'TaskController@storeTaskTeam'));
     
 
     Route::get('testao/{taskId}', function ($taskId) {

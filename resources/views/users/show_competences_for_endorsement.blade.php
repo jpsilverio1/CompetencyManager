@@ -1,43 +1,11 @@
 <script>
-    var dictionary;
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    var url = "{{ route('competence-proficiency-level') }}";
-    dictionary = function () {
-        var tmp = null;
-        $.ajax({
-            'async': false,
-            'type': "GET",
-            'global': false,
-            'url': url,
-            'success': function (data) {
-                tmp = data;
-            }
-        });
-        return tmp;
-    }();
-
-    function getLabelForSliderValue(val) {
-        return dictionary[val];
-    }
-
-    function updateTextInput(slider) {
-        var rowHit = $(slider).parent().parent().parent();
-        var sliderLabel = rowHit.find(".competence_level_label");
-        var newLabel = getLabelForSliderValue(slider.value);
-        sliderLabel.html(newLabel);
-    }
 
     $(document).ready(function () {
-
-        var numberOfCategories = {{\App\CompetenceProficiencyLevel::count()}}
-        $('.competence_level_slider').each(function (i, obj) {
-            //console.log(obj.max);
-            obj.max = numberOfCategories;
-        });
         //information tooltip
         $('[data-toggle="tooltip"]').tooltip();
         //popover
@@ -84,7 +52,7 @@
                 <tbody>
                 @foreach ($competences as $competence)
                     @php($forgettingLevel = $user->forgettingLevel($competence))
-                    @php($numberOfCompetenceLevels = \App\CompetenceProficiencyLevel::count())
+                    @php($numberOfCompetenceLevels =count($globalCompetenceProficiencyLevels))
                     @php($step = $numberOfCompetenceLevels/5)
                     <?php $numberOfEndorsementsForCompetence = $user->getNumberOfEndorsementsForCompetence($user->endorsements(), $competence); ?>
                     @php($numberOfEndorsementsPerLevel = $user->getNumberOfEndorsementsPerLevelForCompetence($competence))
@@ -147,8 +115,8 @@
             <div class="competency_level">
                 <span class="competence_level_label" name="levels"><script>document.write(getLabelForSliderValue(1));</script></span>
                 <input type="range" class="competence_level_slider"
-                       name="competence_proficiency_level" min="{{\App\CompetenceProficiencyLevel::min('id')}}" max="{{\App\CompetenceProficiencyLevel::max('id')}}" value="{{\App\CompetenceProficiencyLevel::min('id')}}"
-                       onchange="updateTextInput(this);">
+                       name="competence_proficiency_level" min="{{$globalMinCompetenceProficiencyLevelId}}" max="{{$globalMaxCompetenceProficiencyLevelId}}" value="{{$globalMinCompetenceProficiencyLevelId}}"
+                       onchange="updateTextInput(this, {{$globalMinCompetenceProficiencyLevelId}})">
             </div>
             <div class="form-group">
                 <div class=" col-sm-1">
